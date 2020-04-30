@@ -1,3 +1,8 @@
+# system
 .DS_Store
 
+# Juptiter notebook checkpoints
 *_checkpoints
+
+# Turnstile data
+data/Turnstiles/Turnstile_Usage_Data__2020.csv
