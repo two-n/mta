@@ -1,0 +1,762 @@
+Station ID,Stop Name,GTFS Stop ID,ca,Line,Daytime Routes,ct2010,ntaname,ctlabel
+1,Astoria - Ditmars Blvd,R01,R515,Astoria,N W,011500,Steinway,115
+2,Astoria Blvd,R03,R514,Astoria,N W,012500,Steinway,125
+3,30 Av,R04,R513,Astoria,N W,006300,Astoria,63
+4,Broadway,R05,R512,Astoria,N W,005900,Astoria,59
+5,36 Av,R06,R511,Astoria,N W,005300,Astoria,53
+6,39 Av,R08,R510,Astoria,N W,003100,Queensbridge-Ravenswood-Long Island City,31
+7,Lexington Av/59 St,R11,A002,Astoria,N W R,011402,Upper East Side-Carnegie Hill,114.02
+8,5 Av/59 St,R13,A006,Astoria,N W R,014300,park-cemetery-etc-Manhattan,143
+8,5 Av/59 St,R13,A007,Astoria,N W R,014300,park-cemetery-etc-Manhattan,143
+9,57 St - 7 Av,R14,A010,Broadway - Brighton,N Q R W,013700,Midtown-Midtown South,137
+9,57 St - 7 Av,R14,A011,Broadway - Brighton,N Q R W,013700,Midtown-Midtown South,137
+10,49 St,R15,A013,Broadway - Brighton,N R W,012500,Midtown-Midtown South,125
+10,49 St,R15,A014,Broadway - Brighton,N R W,012500,Midtown-Midtown South,125
+10,49 St,R15,A015,Broadway - Brighton,N R W,012500,Midtown-Midtown South,125
+10,49 St,R15,A016,Broadway - Brighton,N R W,012500,Midtown-Midtown South,125
+11,Times Sq - 42 St,R16,A021,Broadway - Brighton,N Q R W,011300,Midtown-Midtown South,113
+11,Times Sq - 42 St,R16,N060,Broadway - Brighton,N Q R W,011300,Midtown-Midtown South,113
+11,Times Sq - 42 St,R16,N062,Broadway - Brighton,N Q R W,011300,Midtown-Midtown South,113
+11,Times Sq - 42 St,R16,N062A,Broadway - Brighton,N Q R W,011300,Midtown-Midtown South,113
+12,34 St - Herald Sq,R17,,Broadway - Brighton,N Q R W,010100,Midtown-Midtown South,101
+13,28 St,R18,A027,Broadway - Brighton,R W,007600,Midtown-Midtown South,76
+13,28 St,R18,A029,Broadway - Brighton,R W,007600,Midtown-Midtown South,76
+14,23 St,R19,A030,Broadway - Brighton,R W,005600,Hudson Yards-Chelsea-Flatiron-Union Square,56
+14,23 St,R19,A031,Broadway - Brighton,R W,005600,Hudson Yards-Chelsea-Flatiron-Union Square,56
+15,14 St - Union Sq,R20,,Broadway - Brighton,N Q R W,005200,Hudson Yards-Chelsea-Flatiron-Union Square,52
+16,8 St - NYU,R21,A038,Broadway - Brighton,R W,005700,West Village,57
+16,8 St - NYU,R21,A039,Broadway - Brighton,R W,005700,West Village,57
+17,Prince St,R22,A041,Broadway - Brighton,R W,004300,SoHo-TriBeCa-Civic Center-Little Italy,43
+17,Prince St,R22,A042,Broadway - Brighton,R W,004300,SoHo-TriBeCa-Civic Center-Little Italy,43
+18,Canal St,R23,,Broadway,R W,004700,SoHo-TriBeCa-Civic Center-Little Italy,47
+19,Canal St,Q01,A043,Manhattan Bridge,N Q,004500,SoHo-TriBeCa-Civic Center-Little Italy,45
+19,Canal St,Q01,A046,Manhattan Bridge,N Q,004500,SoHo-TriBeCa-Civic Center-Little Italy,45
+19,Canal St,Q01,A066,Manhattan Bridge,N Q,004500,SoHo-TriBeCa-Civic Center-Little Italy,45
+20,City Hall,R24,A047,Broadway,R W,003100,SoHo-TriBeCa-Civic Center-Little Italy,31
+21,Cortlandt St,R25,A049,Broadway,R W,001300,Battery Park City-Lower Manhattan,13
+21,Cortlandt St,R25,A050,Broadway,R W,001300,Battery Park City-Lower Manhattan,13
+22,Rector St,R26,A054,Broadway,R W,001300,Battery Park City-Lower Manhattan,13
+22,Rector St,R26,A055,Broadway,R W,001300,Battery Park City-Lower Manhattan,13
+23,Whitehall St,R27,A058,Broadway,R W,000900,Battery Park City-Lower Manhattan,9
+23,Whitehall St,R27,A060,Broadway,R W,000900,Battery Park City-Lower Manhattan,9
+24,Court St,R28,,Broadway,R,000900,Brooklyn Heights-Cobble Hill,9
+25,Jay St - MetroTech,R29,C003,Broadway,R,001100,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,11
+25,Jay St - MetroTech,R29,C004,Broadway,R,001100,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,11
+26,DeKalb Av,R30,C008,Broadway - Brighton,B Q R,003100,Fort Greene,31
+27,Atlantic Av - Barclays Ctr,R31,,4th Av,D N R,012901,Park Slope-Gowanus,129.01
+28,Union St,R32,C010,4th Av,R,011900,Park Slope-Gowanus,119
+28,Union St,R32,C011,4th Av,R,011900,Park Slope-Gowanus,119
+29,9 St,R33,C012,4th Av,R,013700,Park Slope-Gowanus,137
+29,9 St,R33,N537,4th Av,R,013700,Park Slope-Gowanus,137
+30,Prospect Av,R34,C014,4th Av,R,014300,Park Slope-Gowanus,143
+30,Prospect Av,R34,C015,4th Av,R,014300,Park Slope-Gowanus,143
+31,25 St,R35,C016,4th Av,R,010100,Sunset Park West,101
+31,25 St,R35,C017,4th Av,R,010100,Sunset Park West,101
+32,36 St,R36,C018,4th Av,D N R,008400,Sunset Park West,84
+33,45 St,R39,C019,4th Av,R,008000,Sunset Park West,80
+34,53 St,R40,C020,4th Av,R,007600,Sunset Park West,76
+35,59 St,R41,C021,4th Av,N R,007400,Sunset Park West,74
+35,59 St,R41,C022,4th Av,N R,007400,Sunset Park West,74
+36,Bay Ridge Av,R42,C023,4th Av,R,013000,Bay Ridge,130
+37,77 St,R43,C024,4th Av,R,013600,Bay Ridge,136
+38,86 St,R44,C025,4th Av,R,006000,Bay Ridge,60
+38,86 St,R44,C026,4th Av,R,006000,Bay Ridge,60
+39,Bay Ridge - 95 St,R45,C027,4th Av,R,005400,Bay Ridge,54
+39,Bay Ridge - 95 St,R45,C028,4th Av,R,005400,Bay Ridge,54
+40,Atlantic Av - Barclays Ctr,D24,C009,Broadway - Brighton,B Q,003500,Fort Greene,35
+40,Atlantic Av - Barclays Ctr,D24,R610,Broadway - Brighton,B Q,003500,Fort Greene,35
+40,Atlantic Av - Barclays Ctr,D24,R612,Broadway - Brighton,B Q,003500,Fort Greene,35
+41,7 Av,D25,B004,Broadway - Brighton,B Q,016100,Prospect Heights,161
+42,Prospect Park,D26,B012,Broadway - Brighton,B Q,032700,Prospect Lefferts Gardens-Wingate,327
+42,Prospect Park,D26,B013,Broadway - Brighton,B Q,032700,Prospect Lefferts Gardens-Wingate,327
+43,Parkside Av,D27,B014,Broadway - Brighton,B Q,079802,Prospect Lefferts Gardens-Wingate,798.02
+44,Church Av,D28,B015,Broadway - Brighton,B Q,050600,Flatbush,506
+44,Church Av,D28,B016,Broadway - Brighton,B Q,050600,Flatbush,506
+45,Beverley Rd,D29,B017,Broadway - Brighton,B Q,152200,Flatbush,1522
+46,Cortelyou Rd,D30,B018,Broadway - Brighton,B Q,052000,Flatbush,520
+47,Newkirk Plaza,D31,B019,Broadway - Brighton,B Q,052000,Flatbush,520
+48,Avenue H,D32,B020,Broadway - Brighton,B Q,053200,Midwood,532
+49,Avenue J,D33,B021,Broadway - Brighton,B Q,053200,Midwood,532
+50,Avenue M,D34,B022,Broadway - Brighton,B Q,076800,Midwood,768
+51,Kings Hwy,D35,B023,Broadway - Brighton,B Q,055200,Madison,552
+51,Kings Hwy,D35,B024,Broadway - Brighton,B Q,055200,Madison,552
+51,Kings Hwy,D35,B024A,Broadway - Brighton,B Q,055200,Madison,552
+52,Avenue U,D37,B025,Broadway - Brighton,B Q,058000,Madison,580
+53,Neck Rd,D38,B026,Broadway - Brighton,B Q,058600,Sheepshead Bay-Gerritsen Beach-Manhattan Beach,586
+54,Sheepshead Bay,D39,B027,Broadway - Brighton,B Q,060600,Sheepshead Bay-Gerritsen Beach-Manhattan Beach,606
+54,Sheepshead Bay,D39,B028,Broadway - Brighton,B Q,060600,Sheepshead Bay-Gerritsen Beach-Manhattan Beach,606
+55,Brighton Beach,D40,B029,Broadway - Brighton,B Q,036002,Brighton Beach,360.02
+55,Brighton Beach,D40,B031,Broadway - Brighton,B Q,036002,Brighton Beach,360.02
+56,Ocean Pkwy,D41,B032,Broadway - Brighton,Q,036200,Brighton Beach,362
+56,Ocean Pkwy,D41,B034,Broadway - Brighton,Q,036200,Brighton Beach,362
+57,W 8 St - NY Aquarium,D42,G011,Broadway - Brighton,F Q,035400,West Brighton,354
+57,W 8 St - NY Aquarium,D42,G015,Broadway - Brighton,F Q,035400,West Brighton,354
+58,Coney Island - Stillwell Av,D43,G001,Sea Beach / West End / Culver / Brighton,D F N Q,035000,West Brighton,350
+58,Coney Island - Stillwell Av,D43,G009,Sea Beach / West End / Culver / Brighton,D F N Q,035000,West Brighton,350
+59,9 Av,B12,E001,West End,D,011000,Sunset Park East,110
+60,Fort Hamilton Pkwy,B13,E003,West End,D,011200,Sunset Park East,112
+61,50 St,B14,E004,West End,D,022000,Borough Park,220
+62,55 St,B15,E005,West End,D,024000,Borough Park,240
+63,62 St,B16,,West End,D,025000,Bensonhurst West,250
+64,71 St,B17,E009,West End,D,019000,Bensonhurst West,190
+65,79 St,B18,E011,West End,D,018200,Bensonhurst West,182
+66,18 Av,B19,E012,West End,D,027800,Bensonhurst West,278
+67,20 Av,B20,E013,West End,D,028800,Bensonhurst West,288
+68,Bay Pkwy,B21,E014,West End,D,029600,Bensonhurst West,296
+69,25 Av,B22,E015,West End,D,030000,Bensonhurst East,300
+70,Bay 50 St,B23,E016,West End,D,030800,Gravesend,308
+71,8 Av,N02,D002,Sea Beach,N,011800,Sunset Park East,118
+72,Fort Hamilton Pkwy,N03,D003,Sea Beach,N,021400,Borough Park,214
+72,Fort Hamilton Pkwy,N03,D004,Sea Beach,N,021400,Borough Park,214
+73,New Utrecht Av,N04,D005,Sea Beach,N,025000,Bensonhurst West,250
+73,New Utrecht Av,N04,D006,Sea Beach,N,025000,Bensonhurst West,250
+74,18 Av,N05,D008,Sea Beach,N,024800,Bensonhurst West,248
+75,20 Av,N06,D009,Sea Beach,N,025400,Bensonhurst West,254
+76,Bay Pkwy,N07,D010,Sea Beach,N,043200,Bensonhurst East,432
+76,Bay Pkwy,N07,D011,Sea Beach,N,043200,Bensonhurst East,432
+77,Kings Hwy,N08,D012,Sea Beach,N,042600,Bensonhurst East,426
+78,Avenue U,N09,D015,Sea Beach,N,040000,Bensonhurst East,400
+79,86 St,N10,D016,Sea Beach,N,038600,Gravesend,386
+80,121 St,J12,J037,Jamaica,J Z,014400,Richmond Hill,144
+81,111 St,J13,J035,Jamaica,J,012400,Richmond Hill,124
+82,104 St,J14,J034,Jamaica,J Z,002600,Richmond Hill,26
+83,Woodhaven Blvd,J15,J031,Jamaica,J Z,002000,Woodhaven,20
+83,Woodhaven Blvd,J15,J032,Jamaica,J Z,002000,Woodhaven,20
+84,85 St - Forest Pkwy,J16,J030,Jamaica,J,001200,Woodhaven,12
+85,75 St,J17,J028,Jamaica,J Z,000400,Woodhaven,4
+86,Cypress Hills,J19,J025,Jamaica,J,118201,Cypress Hills-City Line,1182.01
+87,Crescent St,J20,J024,Jamaica,J Z,117800,Cypress Hills-City Line,1178
+88,Norwood Av,J21,J023,Jamaica,J Z,117400,Cypress Hills-City Line,1174
+89,Cleveland St,J22,J022,Jamaica,J,116800,East New York,1168
+90,Van Siclen Av,J23,J021,Jamaica,J Z,119800,East New York,1198
+91,Alabama Av,J24,J020,Jamaica,J,119800,East New York,1198
+92,Broadway Jct,J27,,Jamaica,J Z,040500,Bushwick South,405
+93,Chauncey St,J28,J017,Jamaica,J Z,036900,Ocean Hill,369
+94,Halsey St,J29,J016,Jamaica,J,039700,Bushwick South,397
+95,Gates Av,J30,J013,Jamaica,J Z,039700,Bushwick South,397
+96,Kosciuszko St,J31,J012,Jamaica,J,039300,Bushwick South,393
+97,Myrtle Av,M11,J009,Jamaica,J M Z,028700,Stuyvesant Heights,287
+98,Flushing Av,M12,J007,Jamaica,J M,028501,Bushwick South,285.01
+99,Lorimer St,M13,J005,Jamaica,J M,049100,East Williamsburg,491
+100,Hewes St,M14,J003,Jamaica,J M,052900,Williamsburg,529
+101,Marcy Av,M16,J001,Jamaica,J M Z,052900,Williamsburg,529
+101,Marcy Av,M16,J002,Jamaica,J M Z,052900,Williamsburg,529
+102,Essex St,M18,,Jamaica,J M Z,001800,Chinatown,18
+103,Bowery,M19,A064,Jamaica,J Z,001800,Chinatown,18
+104,Canal St,M20,,Jamaica,J Z,004100,SoHo-TriBeCa-Civic Center-Little Italy,41
+105,Chambers St,M21,A069,Jamaica,J Z,002900,Chinatown,29
+105,Chambers St,M21,A071,Jamaica,J Z,002900,Chinatown,29
+106,Fulton St,M22,,Jamaica,J Z,001501,Battery Park City-Lower Manhattan,15.01
+107,Broad St,M23,A083,Jamaica,J Z,000700,Battery Park City-Lower Manhattan,7
+107,Broad St,M23,A084,Jamaica,J Z,000700,Battery Park City-Lower Manhattan,7
+107,Broad St,M23,A085,Jamaica,J Z,000700,Battery Park City-Lower Manhattan,7
+108,Middle Village - Metropolitan Av,M01,K026,Myrtle Av,M,061301,Ridgewood,613.01
+109,Fresh Pond Rd,M04,K025,Myrtle Av,M,061301,Ridgewood,613.01
+110,Forest Av,M05,K024,Myrtle Av,M,058900,Ridgewood,589
+111,Seneca Av,M06,K022,Myrtle Av,M,054900,Ridgewood,549
+112,Myrtle - Wyckoff Avs,M08,,Myrtle Av,M,043900,Bushwick North,439
+113,Knickerbocker Av,M09,K019,Myrtle Av,M,043100,Bushwick North,431
+114,Central Av,M10,K017,Myrtle Av,M,042300,Bushwick South,423
+115,8 Av,L01,H001,Canarsie,L,008300,Hudson Yards-Chelsea-Flatiron-Union Square,83
+116,6 Av,L02,H003,Canarsie,L,006300,West Village,63
+117,Union Sq - 14 St,L03,A033,Canarsie,L,006100,West Village,61
+117,Union Sq - 14 St,L03,A034,Canarsie,L,006100,West Village,61
+117,Union Sq - 14 St,L03,A035,Canarsie,L,006100,West Village,61
+117,Union Sq - 14 St,L03,A037,Canarsie,L,006100,West Village,61
+118,3 Av,L05,H005,Canarsie,L,004800,Gramercy,48
+118,3 Av,L05,H006,Canarsie,L,004800,Gramercy,48
+119,1 Av,L06,H007,Canarsie,L,003400,East Village,34
+119,1 Av,L06,H008,Canarsie,L,003400,East Village,34
+120,Bedford Av,L08,H009,Canarsie,L,055300,North Side-South Side,553
+121,Lorimer St,L10,H012,Canarsie,L,051300,North Side-South Side,513
+122,Graham Av,L11,H013,Canarsie,L,049700,East Williamsburg,497
+122,Graham Av,L11,H014,Canarsie,L,049700,East Williamsburg,497
+123,Grand St,L12,H015,Canarsie,L,049500,East Williamsburg,495
+123,Grand St,L12,H016,Canarsie,L,049500,East Williamsburg,495
+124,Montrose Av,L13,H017,Canarsie,L,049300,Bushwick South,493
+125,Morgan Av,L14,H019,Canarsie,L,045300,Bushwick North,453
+126,Jefferson St,L15,H022,Canarsie,L,044700,Bushwick North,447
+127,DeKalb Av,L16,H023,Canarsie,L,044300,Bushwick North,443
+128,Myrtle - Wyckoff Avs,L17,H026,Canarsie,L,043900,Bushwick North,439
+128,Myrtle - Wyckoff Avs,L17,H027,Canarsie,L,043900,Bushwick North,439
+129,Halsey St,L19,H028,Canarsie,L,055500,Ridgewood,555
+129,Halsey St,L19,H030,Canarsie,L,055500,Ridgewood,555
+130,Wilson Av,L20,H032,Canarsie,L,040900,Bushwick North,409
+131,Bushwick Av - Aberdeen St,L21,H033,Canarsie,L,040500,Bushwick South,405
+132,Broadway Jct,L22,,Canarsie,L,114201,Cypress Hills-City Line,1142.01
+133,Atlantic Av,L24,H035,Canarsie,L,114400,East New York (Pennsylvania Ave),1144
+134,Sutter Av,L25,H037,Canarsie,L,090800,Brownsville,908
+135,Livonia Av,L26,H038,Canarsie,L,091000,Brownsville,910
+136,New Lots Av,L27,H039,Canarsie,L,092000,Brownsville,920
+137,E 105 St,L28,H040,Canarsie,L,109800,East New York,1098
+138,Canarsie - Rockaway Pkwy,L29,H041,Canarsie,L,097400,Canarsie,974
+139,Franklin Av,S01,,Franklin Shuttle,S,022700,Clinton Hill,227
+141,Park Pl,S03,B009,Franklin Shuttle,S,030500,Crown Heights North,305
+142,Botanic Garden,S04,B010,Franklin Shuttle,S,021300,Crown Heights South,213
+143,Inwood - 207 St,A02,N001,8th Av - Fulton St,A,029300,Marble Hill-Inwood,293
+143,Inwood - 207 St,A02,N002A,8th Av - Fulton St,A,029300,Marble Hill-Inwood,293
+144,Dyckman St,A03,N003,8th Av - Fulton St,A,028700,Washington Heights North,287
+145,190 St,A05,N006A,8th Av - Fulton St,A,028100,Washington Heights North,281
+146,181 St,A06,N007A,8th Av - Fulton St,A,027300,Washington Heights North,273
+146,181 St,A06,N009,8th Av - Fulton St,A,027300,Washington Heights North,273
+147,175 St,A07,N010,8th Av - Fulton St,A,026300,Washington Heights South,263
+147,175 St,A07,N011,8th Av - Fulton St,A,026300,Washington Heights South,263
+148,168 St,A09,N012,8th Av - Fulton St,A C,025100,Washington Heights South,251
+148,168 St,A09,N013,8th Av - Fulton St,A C,025100,Washington Heights South,251
+149,163 St - Amsterdam Av,A10,N016A,8th Av - Fulton St,C,024301,Washington Heights South,243.01
+150,155 St,A11,N017,8th Av - Fulton St,C,023501,Hamilton Heights,235.01
+151,145 St,A12,N019,8th Av - Fulton St,A C,023100,Hamilton Heights,231
+151,145 St,A12,N020,8th Av - Fulton St,A C,023100,Hamilton Heights,231
+151,145 St,D13,,Concourse,B D,023100,Hamilton Heights,231
+152,135 St,A14,N022,8th Av - Fulton St,B C,021703,Manhattanville,217.03
+152,135 St,A14,N023,8th Av - Fulton St,B C,021703,Manhattanville,217.03
+152,135 St,A14,N024,8th Av - Fulton St,B C,021703,Manhattanville,217.03
+153,125 St,A15,N025,8th Av - Fulton St,A B C D,020901,Morningside Heights,209.01
+153,125 St,A15,N026,8th Av - Fulton St,A B C D,020901,Morningside Heights,209.01
+154,116 St,A16,N029,8th Av - Fulton St,B C,021800,Central Harlem South,218
+154,116 St,A16,N030,8th Av - Fulton St,B C,021800,Central Harlem South,218
+155,Cathedral Pkwy (110 St),A17,N034,8th Av - Fulton St,B C,019702,Central Harlem South,197.02
+155,Cathedral Pkwy (110 St),A17,N035,8th Av - Fulton St,B C,019702,Central Harlem South,197.02
+156,103 St,A18,N037,8th Av - Fulton St,B C,014300,park-cemetery-etc-Manhattan,143
+157,96 St,A19,N039,8th Av - Fulton St,B C,014300,park-cemetery-etc-Manhattan,143
+157,96 St,A19,N040,8th Av - Fulton St,B C,014300,park-cemetery-etc-Manhattan,143
+158,86 St,A20,N043,8th Av - Fulton St,B C,014300,park-cemetery-etc-Manhattan,143
+159,81 St - Museum of Natural History,A21,N044,8th Av - Fulton St,B C,014300,park-cemetery-etc-Manhattan,143
+159,81 St - Museum of Natural History,A21,N045,8th Av - Fulton St,B C,014300,park-cemetery-etc-Manhattan,143
+160,72 St,A22,N046,8th Av - Fulton St,B C,014300,park-cemetery-etc-Manhattan,143
+161,59 St - Columbus Circle,A24,N049,8th Av - Fulton St,A B C D,014500,Lincoln Square,145
+161,59 St - Columbus Circle,A24,N051,8th Av - Fulton St,A B C D,014500,Lincoln Square,145
+162,50 St,A25,N056,8th Av - Fulton St,C E,013300,Clinton,133
+162,50 St,A25,N057,8th Av - Fulton St,C E,013300,Clinton,133
+163,42 St - Port Authority Bus Terminal,A27,N063,8th Av - Fulton St,A C E,011900,Midtown-Midtown South,119
+163,42 St - Port Authority Bus Terminal,A27,N063A,8th Av - Fulton St,A C E,011900,Midtown-Midtown South,119
+164,34 St - Penn Station,A28,N067,8th Av - Fulton St,A C E,010900,Midtown-Midtown South,109
+164,34 St - Penn Station,A28,N068,8th Av - Fulton St,A C E,010900,Midtown-Midtown South,109
+164,34 St - Penn Station,A28,N069,8th Av - Fulton St,A C E,010900,Midtown-Midtown South,109
+164,34 St - Penn Station,A28,N070,8th Av - Fulton St,A C E,010900,Midtown-Midtown South,109
+164,34 St - Penn Station,A28,N071,8th Av - Fulton St,A C E,010900,Midtown-Midtown South,109
+164,34 St - Penn Station,A28,N072,8th Av - Fulton St,A C E,010900,Midtown-Midtown South,109
+164,34 St - Penn Station,A28,N073,8th Av - Fulton St,A C E,010900,Midtown-Midtown South,109
+165,23 St,A30,N075,8th Av - Fulton St,C E,009100,Hudson Yards-Chelsea-Flatiron-Union Square,91
+165,23 St,A30,N076,8th Av - Fulton St,C E,009100,Hudson Yards-Chelsea-Flatiron-Union Square,91
+165,23 St,A30,N077,8th Av - Fulton St,C E,009100,Hudson Yards-Chelsea-Flatiron-Union Square,91
+166,14 St,A31,N078,8th Av - Fulton St,A C E,008100,Hudson Yards-Chelsea-Flatiron-Union Square,81
+167,W 4 St,A32,N080,8th Av - Fulton St,A C E,007100,West Village,71
+167,W 4 St,A32,N083,8th Av - Fulton St,A C E,007100,West Village,71
+167,W 4 St,D20,,6th Av - Culver,B D F M,007100,West Village,71
+168,Spring St,A33,N086,8th Av - Fulton St,C E,004900,SoHo-TriBeCa-Civic Center-Little Italy,49
+168,Spring St,A33,N087,8th Av - Fulton St,C E,004900,SoHo-TriBeCa-Civic Center-Little Italy,49
+169,Canal St,A34,N089,8th Av - Fulton St,A C E,003300,SoHo-TriBeCa-Civic Center-Little Italy,33
+169,Canal St,A34,N090,8th Av - Fulton St,A C E,003300,SoHo-TriBeCa-Civic Center-Little Italy,33
+170,Chambers St,A36,N091,8th Av - Fulton St,A C,002100,SoHo-TriBeCa-Civic Center-Little Italy,21
+170,Chambers St,A36,N092,8th Av - Fulton St,A C,002100,SoHo-TriBeCa-Civic Center-Little Italy,21
+171,World Trade Center,E01,N094,8th Av - Fulton St,E,002100,SoHo-TriBeCa-Civic Center-Little Italy,21
+172,Fulton St,A38,A077,8th Av - Fulton St,A C,001501,Battery Park City-Lower Manhattan,15.01
+172,Fulton St,A38,A081,8th Av - Fulton St,A C,001501,Battery Park City-Lower Manhattan,15.01
+172,Fulton St,A38,A082,8th Av - Fulton St,A C,001501,Battery Park City-Lower Manhattan,15.01
+172,Fulton St,A38,N095,8th Av - Fulton St,A C,001501,Battery Park City-Lower Manhattan,15.01
+172,Fulton St,A38,N095A,8th Av - Fulton St,A C,001501,Battery Park City-Lower Manhattan,15.01
+172,Fulton St,A38,N098,8th Av - Fulton St,A C,001501,Battery Park City-Lower Manhattan,15.01
+173,High St,A40,N100,8th Av - Fulton St,A C,001300,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,13
+173,High St,A40,N101,8th Av - Fulton St,A C,001300,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,13
+174,Jay St - MetroTech,A41,N102,8th Av - Fulton St,A C F,001100,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,11
+174,Jay St - MetroTech,A41,N103,8th Av - Fulton St,A C F,001100,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,11
+175,Hoyt - Schermerhorn Sts,A42,N108,8th Av - Fulton St,A C G,004100,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,41
+176,Lafayette Av,A43,N110,8th Av - Fulton St,C,018100,Fort Greene,181
+177,Clinton - Washington Avs,A44,N111,8th Av - Fulton St,C,019900,Clinton Hill,199
+177,Clinton - Washington Avs,A44,N112A,8th Av - Fulton St,C,019900,Clinton Hill,199
+178,Franklin Av,A45,N113,8th Av - Fulton St,C,022700,Clinton Hill,227
+178,Franklin Av,A45,N114,8th Av - Fulton St,C,022700,Clinton Hill,227
+179,Nostrand Av,A46,N116,8th Av - Fulton St,A C,024700,Crown Heights North,247
+179,Nostrand Av,A46,N117,8th Av - Fulton St,A C,024700,Crown Heights North,247
+180,Kingston - Throop Avs,A47,N118,8th Av - Fulton St,C,026900,Bedford,269
+180,Kingston - Throop Avs,A47,N119,8th Av - Fulton St,C,026900,Bedford,269
+181,Utica Av,A48,N120,8th Av - Fulton St,A C,029700,Crown Heights North,297
+181,Utica Av,A48,N120A,8th Av - Fulton St,A C,029700,Crown Heights North,297
+182,Ralph Av,A49,N121B,8th Av - Fulton St,C,030100,Ocean Hill,301
+183,Rockaway Av,A50,N122,8th Av - Fulton St,C,030100,Ocean Hill,301
+183,Rockaway Av,A50,N123B,8th Av - Fulton St,C,030100,Ocean Hill,301
+184,Broadway Jct,A51,N124,8th Av - Fulton St,A C,036700,Ocean Hill,367
+185,Liberty Av,A52,N125,8th Av - Fulton St,C,119800,East New York,1198
+186,Van Siclen Av,A53,N126,8th Av - Fulton St,C,115200,East New York,1152
+187,Shepherd Av,A54,N127,8th Av - Fulton St,C,116600,East New York,1166
+188,Euclid Av,A55,N128,8th Av - Fulton St,A C,119600,East New York,1196
+189,Grant Av,A57,N129,Liberty Av,A,120200,Cypress Hills-City Line,1202
+190,80 St,A59,N130,Liberty Av,A,004401,Ozone Park,44.01
+190,80 St,A59,N131,Liberty Av,A,004401,Ozone Park,44.01
+191,88 St,A60,N133,Liberty Av,A,005400,Ozone Park,54
+192,Rockaway Blvd,A61,N134,Liberty Av,A,008600,Ozone Park,86
+192,Rockaway Blvd,A61,N135,Liberty Av,A,008600,Ozone Park,86
+193,104 St,A63,N137,Liberty Av,A,009400,South Ozone Park,94
+194,111 St,A64,N138,Liberty Av,A,009600,South Ozone Park,96
+194,111 St,A64,N139,Liberty Av,A,009600,South Ozone Park,96
+195,Ozone Park - Lefferts Blvd,A65,N141,Liberty Av,A,010600,South Ozone Park,106
+196,Aqueduct Racetrack,H01,N181A,Rockaway,A,086400,South Ozone Park,864
+197,Aqueduct - N Conduit Av,H02,N181,Rockaway,A,008800,Ozone Park,88
+198,Howard Beach - JFK Airport,H03,JFK01,Rockaway,A,071600,Airport,716
+198,Howard Beach - JFK Airport,H03,JFK02,Rockaway,A,071600,Airport,716
+198,Howard Beach - JFK Airport,H03,N182,Rockaway,A,071600,Airport,716
+199,Broad Channel,H04,N183,Rockaway,A S,107201,Breezy Point-Belle Harbor-Rockaway Park-Broad Channel,1072.01
+200,Beach 90 St,H12,N184,Rockaway,A S,094202,Hammels-Arverne-Edgemere,942.02
+201,Beach 98 St,H13,N185,Rockaway,A S,094201,Breezy Point-Belle Harbor-Rockaway Park-Broad Channel,942.01
+202,Beach 105 St,H14,N186,Rockaway,A S,093800,Breezy Point-Belle Harbor-Rockaway Park-Broad Channel,938
+203,Rockaway Park - Beach 116 St,H15,N187,Rockaway,A S,093800,Breezy Point-Belle Harbor-Rockaway Park-Broad Channel,938
+204,Beach 67 St,H06,N191,Rockaway,A,095400,Hammels-Arverne-Edgemere,954
+205,Beach 60 St,H07,N192,Rockaway,A,097202,Hammels-Arverne-Edgemere,972.02
+206,Beach 44 St,H08,N193,Rockaway,A,097202,Hammels-Arverne-Edgemere,972.02
+207,Beach 36 St,H09,N194,Rockaway,A,099200,Hammels-Arverne-Edgemere,992
+208,Beach 25 St,H10,N195,Rockaway,A,099801,Far Rockaway-Bayswater,998.01
+209,Far Rockaway - Mott Av,H11,N196,Rockaway,A,100802,Far Rockaway-Bayswater,1008.02
+210,Norwood - 205 St,D01,N224,Concourse,D,042300,Norwood,423
+210,Norwood - 205 St,D01,N225,Concourse,D,042300,Norwood,423
+211,Bedford Park Blvd,D03,N222,Concourse,B D,041300,Bedford Park-Fordham North,413
+211,Bedford Park Blvd,D03,N223,Concourse,B D,041300,Bedford Park-Fordham North,413
+212,Kingsbridge Rd,D04,N220,Concourse,B D,040302,Bedford Park-Fordham North,403.02
+212,Kingsbridge Rd,D04,N221,Concourse,B D,040302,Bedford Park-Fordham North,403.02
+213,Fordham Rd,D05,N217,Concourse,B D,023702,Bedford Park-Fordham North,237.02
+213,Fordham Rd,D05,N218,Concourse,B D,023702,Bedford Park-Fordham North,237.02
+214,182-183 Sts,D06,N215,Concourse,B D,038301,Fordham South,383.01
+215,Tremont Av,D07,N213,Concourse,B D,023502,Mount Hope,235.02
+216,174-175 Sts,D08,N210,Concourse,B D,022701,Mount Hope,227.01
+216,174-175 Sts,D08,N212,Concourse,B D,022701,Mount Hope,227.01
+217,170 St,D09,N208,Concourse,B D,022500,East Concourse-Concourse Village,225
+217,170 St,D09,N209,Concourse,B D,022500,East Concourse-Concourse Village,225
+218,167 St,D10,N206,Concourse,B D,019700,West Concourse,197
+218,167 St,D10,N207,Concourse,B D,019700,West Concourse,197
+219,161 St - Yankee Stadium,D11,N203,Concourse,B D,019500,West Concourse,195
+219,161 St - Yankee Stadium,D11,N205,Concourse,B D,019500,West Concourse,195
+220,155 St,D12,N202,Concourse,B D,024302,Central Harlem North-Polo Grounds,243.02
+221,21 St - Queensbridge,B04,N603,63rd St,F,002500,Queensbridge-Ravenswood-Long Island City,25
+222,Roosevelt Island,B06,N602,63rd St,F,023801,Lenox Hill-Roosevelt Island,238.01
+223,Lexington Av/63 St,B08,N601,63rd St,F Q,012000,Upper East Side-Carnegie Hill,120
+223,Lexington Av/63 St,B08,N601A,63rd St,F Q,012000,Upper East Side-Carnegie Hill,120
+224,57 St,B10,N600,6th Av - Culver,F,011201,Midtown-Midtown South,112.01
+225,47-50 Sts - Rockefeller Ctr,D15,N500,6th Av - Culver,B D F M,012500,Midtown-Midtown South,125
+225,47-50 Sts - Rockefeller Ctr,D15,N501,6th Av - Culver,B D F M,012500,Midtown-Midtown South,125
+225,47-50 Sts - Rockefeller Ctr,D15,N501A,6th Av - Culver,B D F M,012500,Midtown-Midtown South,125
+226,42 St - Bryant Pk,D16,N502,6th Av - Culver,B D F M,011300,Midtown-Midtown South,113
+226,42 St - Bryant Pk,D16,N503,6th Av - Culver,B D F M,011300,Midtown-Midtown South,113
+226,42 St - Bryant Pk,D16,N504,6th Av - Culver,B D F M,011300,Midtown-Midtown South,113
+227,34 St - Herald Sq,D17,A022,6th Av - Culver,B D F M,010100,Midtown-Midtown South,101
+227,34 St - Herald Sq,D17,A025,6th Av - Culver,B D F M,010100,Midtown-Midtown South,101
+227,34 St - Herald Sq,D17,N505,6th Av - Culver,B D F M,010100,Midtown-Midtown South,101
+227,34 St - Herald Sq,D17,N506,6th Av - Culver,B D F M,010100,Midtown-Midtown South,101
+227,34 St - Herald Sq,D17,N507,6th Av - Culver,B D F M,010100,Midtown-Midtown South,101
+228,23 St,D18,N508,6th Av - Culver,F M,005800,Hudson Yards-Chelsea-Flatiron-Union Square,58
+228,23 St,D18,N509,6th Av - Culver,F M,005800,Hudson Yards-Chelsea-Flatiron-Union Square,58
+229,14 St,D19,N510,6th Av - Culver,F M,008100,Hudson Yards-Chelsea-Flatiron-Union Square,81
+229,14 St,D19,N511,6th Av - Culver,F M,008100,Hudson Yards-Chelsea-Flatiron-Union Square,81
+229,14 St,D19,N512,6th Av - Culver,F M,008100,Hudson Yards-Chelsea-Flatiron-Union Square,81
+229,14 St,D19,N513,6th Av - Culver,F M,008100,Hudson Yards-Chelsea-Flatiron-Union Square,81
+230,Broadway-Lafayette St,D21,N519,6th Av - Culver,B D F M,005502,West Village,55.02
+230,Broadway-Lafayette St,D21,N519A,6th Av - Culver,B D F M,005502,West Village,55.02
+231,Grand St,D22,N520,6th Av - Culver,B D,001800,Chinatown,18
+232,2 Av,F14,N521,6th Av - Culver,F,003602,East Village,36.02
+232,2 Av,F14,N523,6th Av - Culver,F,003602,East Village,36.02
+233,Delancey St,F15,A061,6th Av - Culver,F,001800,Chinatown,18
+233,Delancey St,F15,N525,6th Av - Culver,F,001800,Chinatown,18
+233,Delancey St,F15,N526,6th Av - Culver,F,001800,Chinatown,18
+234,East Broadway,F16,N528,6th Av - Culver,F,000600,Lower East Side,6
+234,East Broadway,F16,N529,6th Av - Culver,F,000600,Lower East Side,6
+235,York St,F18,N530,6th Av - Culver,F,002100,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,21
+236,Bergen St,F20,N531,6th Av - Culver,F G,006900,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,69
+236,Bergen St,F20,N532,6th Av - Culver,F G,006900,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,69
+236,Bergen St,F20,N533,6th Av - Culver,F G,006900,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,69
+237,Carroll St,F21,N534,6th Av - Culver,F G,007700,Carroll Gardens-Columbia Street-Red Hook,77
+237,Carroll St,F21,N535,6th Av - Culver,F G,007700,Carroll Gardens-Columbia Street-Red Hook,77
+238,Smith - 9 Sts,F22,N536,6th Av - Culver,F G,011900,Park Slope-Gowanus,119
+239,4 Av,F23,,6th Av - Culver,F G,012100,Park Slope-Gowanus,121
+240,7 Av,F24,N539A,6th Av - Culver,F G,015100,Park Slope-Gowanus,151
+241,15 St - Prospect Park,F25,N541,6th Av - Culver,F G,016900,Windsor Terrace,169
+241,15 St - Prospect Park,F25,N542,6th Av - Culver,F G,016900,Windsor Terrace,169
+242,Fort Hamilton Pkwy,F26,N543,6th Av - Culver,F G,050400,Windsor Terrace,504
+242,Fort Hamilton Pkwy,F26,N544,6th Av - Culver,F G,050400,Windsor Terrace,504
+243,Church Av,F27,N545,6th Av - Culver,F,049600,Kensington-Ocean Parkway,496
+243,Church Av,F27,N546,6th Av - Culver,F,049600,Kensington-Ocean Parkway,496
+244,Ditmas Av,F29,N547,6th Av - Culver,F,048600,Kensington-Ocean Parkway,486
+244,Ditmas Av,F29,N548,6th Av - Culver,F,048600,Kensington-Ocean Parkway,486
+245,18 Av,F30,N549,6th Av - Culver,F,048000,Flatbush,480
+245,18 Av,F30,N550,6th Av - Culver,F,048000,Flatbush,480
+246,Avenue I,F31,N551,6th Av - Culver,F,046202,Ocean Parkway South,462.02
+247,Bay Pkwy,F32,N553,6th Av - Culver,F,045000,Ocean Parkway South,450
+248,Avenue N,F33,N554,6th Av - Culver,F,044600,Borough Park,446
+248,Avenue N,F33,N555,6th Av - Culver,F,044600,Borough Park,446
+249,Avenue P,F34,N556,6th Av - Culver,F,043800,Ocean Parkway South,438
+250,Kings Hwy,F35,N557,6th Av - Culver,F,041401,Homecrest,414.01
+250,Kings Hwy,F35,N558,6th Av - Culver,F,041401,Homecrest,414.01
+251,Avenue U,F36,N559,6th Av - Culver,F,039800,Gravesend,398
+252,Avenue X,F38,N561,6th Av - Culver,F,030800,Gravesend,308
+253,Neptune Av,F39,N562,6th Av - Culver,F,034800,Seagate-Coney Island,348
+254,Jamaica - 179 St,F01,N342,Queens Blvd,F,046800,Jamaica,468
+254,Jamaica - 179 St,F01,N343,Queens Blvd,F,046800,Jamaica,468
+255,169 St,F02,N340,Queens Blvd,F,046000,Jamaica,460
+255,169 St,F02,N340A,Queens Blvd,F,046000,Jamaica,460
+256,Parsons Blvd,F03,N339,Queens Blvd,F,023600,Briarwood-Jamaica Hills,236
+256,Parsons Blvd,F03,N339A,Queens Blvd,F,023600,Briarwood-Jamaica Hills,236
+257,Sutphin Blvd,F04,N338,Queens Blvd,F,023800,Jamaica,238
+257,Sutphin Blvd,F04,N338B,Queens Blvd,F,023800,Jamaica,238
+258,Briarwood - Van Wyck Blvd,F05,N337,Queens Blvd,E F,021600,Kew Gardens,216
+259,Kew Gardens - Union Tpke,F06,N335,Queens Blvd,E F,038302,park-cemetery-etc-Queens,383.02
+259,Kew Gardens - Union Tpke,F06,N336,Queens Blvd,E F,038302,park-cemetery-etc-Queens,383.02
+260,75 Av,F07,N334B,Queens Blvd,E F,076901,Forest Hills,769.01
+261,Forest Hills - 71 Av,G08,N333,Queens Blvd,E F M R,073900,Forest Hills,739
+261,Forest Hills - 71 Av,G08,N333A,Queens Blvd,E F M R,073900,Forest Hills,739
+261,Forest Hills - 71 Av,G08,N333B,Queens Blvd,E F M R,073900,Forest Hills,739
+262,67 Av,G09,N331,Queens Blvd,M R,071306,Forest Hills,713.06
+262,67 Av,G09,N332,Queens Blvd,M R,071306,Forest Hills,713.06
+263,63 Dr - Rego Park,G10,N330,Queens Blvd,M R,069300,Rego Park,693
+263,63 Dr - Rego Park,G10,N330C,Queens Blvd,M R,069300,Rego Park,693
+264,Woodhaven Blvd,G11,N329,Queens Blvd,M R,068300,Elmhurst,683
+264,Woodhaven Blvd,G11,N329A,Queens Blvd,M R,068300,Elmhurst,683
+265,Grand Av - Newtown,G12,N327,Queens Blvd,M R,047300,Elmhurst,473
+266,Elmhurst Av,G13,N325A,Queens Blvd,M R,027100,Elmhurst,271
+267,Jackson Hts - Roosevelt Av,G14,N323,Queens Blvd,E F M R,026700,Elmhurst,267
+267,Jackson Hts - Roosevelt Av,G14,N324,Queens Blvd,E F M R,026700,Elmhurst,267
+268,65 St,G15,N322,Queens Blvd,M R,026100,Woodside,261
+269,Northern Blvd,G16,N318,Queens Blvd,M R,025500,Woodside,255
+269,Northern Blvd,G16,N319,Queens Blvd,M R,025500,Woodside,255
+270,46 St,G18,N316,Queens Blvd,M R,015300,Astoria,153
+270,46 St,G18,N316A,Queens Blvd,M R,015300,Astoria,153
+270,46 St,G18,N317,Queens Blvd,M R,015300,Astoria,153
+271,Steinway St,G19,N314,Queens Blvd,M R,015500,Astoria,155
+271,Steinway St,G19,N315,Queens Blvd,M R,015500,Astoria,155
+272,36 St,G20,N311,Queens Blvd,M R,017100,Hunters Point-Sunnyside-West Maspeth,171
+272,36 St,G20,N312,Queens Blvd,M R,017100,Hunters Point-Sunnyside-West Maspeth,171
+273,Queens Plaza,G21,N309A,Queens Blvd,E M R,003300,Queensbridge-Ravenswood-Long Island City,33
+273,Queens Plaza,G21,N310,Queens Blvd,E M R,003300,Queensbridge-Ravenswood-Long Island City,33
+274,Court Sq,F09,,Queens Blvd,E M,001900,Hunters Point-Sunnyside-West Maspeth,19
+275,Lexington Av/53 St,F11,N305,Queens Blvd,E M,009800,Turtle Bay-East Midtown,98
+275,Lexington Av/53 St,F11,N305A,Queens Blvd,E M,009800,Turtle Bay-East Midtown,98
+275,Lexington Av/53 St,F11,N306,Queens Blvd,E M,009800,Turtle Bay-East Midtown,98
+276,5 Av/53 St,F12,N303,Queens Blvd,E M,010200,Midtown-Midtown South,102
+276,5 Av/53 St,F12,N304,Queens Blvd,E M,010200,Midtown-Midtown South,102
+277,7 Av,D14,N300,Queens Blvd,B D E,013100,Midtown-Midtown South,131
+277,7 Av,D14,N301,Queens Blvd,B D E,013100,Midtown-Midtown South,131
+278,Jamaica Center - Parsons/Archer,G05,JFK03,Queens - Archer,E J Z,024600,Jamaica,246
+278,Jamaica Center - Parsons/Archer,G05,N606,Queens - Archer,E J Z,024600,Jamaica,246
+278,Jamaica Center - Parsons/Archer,G05,N607,Queens - Archer,E J Z,024600,Jamaica,246
+279,Sutphin Blvd - Archer Av - JFK Airport,G06,N605,Queens - Archer,E J Z,020800,Jamaica,208
+280,Jamaica - Van Wyck,G07,N604,Queens - Archer,E,021600,Kew Gardens,216
+281,Court Sq,G22,N307,Crosstown,G,001900,Hunters Point-Sunnyside-West Maspeth,19
+282,21 St,G24,N401,Crosstown,G,000700,Hunters Point-Sunnyside-West Maspeth,7
+283,Greenpoint Av,G26,N405,Crosstown,G,057500,Greenpoint,575
+284,Nassau Av,G28,N408A,Crosstown,G,056900,Greenpoint,569
+285,Metropolitan Av,G29,N409,Crosstown,G,051300,North Side-South Side,513
+286,Broadway,G30,N412,Crosstown,G,051100,East Williamsburg,511
+287,Flushing Av,G31,N414,Crosstown,G,050700,Bedford,507
+287,Flushing Av,G31,N414A,Crosstown,G,050700,Bedford,507
+288,Myrtle - Willoughby Avs,G32,N415,Crosstown,G,025901,Bedford,259.01
+288,Myrtle - Willoughby Avs,G32,N416,Crosstown,G,025901,Bedford,259.01
+289,Bedford - Nostrand Avs,G33,N417,Crosstown,G,024300,Bedford,243
+289,Bedford - Nostrand Avs,G33,N418,Crosstown,G,024300,Bedford,243
+290,Classon Av,G34,N419,Crosstown,G,023100,Clinton Hill,231
+291,Clinton - Washington Avs,G35,N420B,Crosstown,G,019700,Clinton Hill,197
+292,Fulton St,G36,N422,Crosstown,G,003300,Fort Greene,33
+293,Van Cortlandt Park - 242 St,101,R197,Broadway - 7Av,1,028500,Spuyten Duyvil-Kingsbridge,285
+294,238 St,103,R196,Broadway - 7Av,1,028300,Spuyten Duyvil-Kingsbridge,283
+295,231 St,104,R194,Broadway - 7Av,1,028300,Spuyten Duyvil-Kingsbridge,283
+296,Marble Hill - 225 St,106,R192,Broadway - 7Av,1,030900,Marble Hill-Inwood,309
+297,215 St,107,R190,Broadway - 7Av,1,029900,Marble Hill-Inwood,299
+298,207 St,108,R188,Broadway - 7Av,1,029300,Marble Hill-Inwood,293
+299,Dyckman St,109,R186,Broadway - 7Av,1,028300,Washington Heights North,283
+300,191 St,110,R185,Broadway - 7Av,1,027700,Washington Heights North,277
+301,181 St,111,R183,Broadway - 7Av,1,027100,Washington Heights North,271
+302,168 St - Washington Hts,112,R182,Broadway - 7Av,1,025100,Washington Heights South,251
+303,157 St,113,R179,Broadway - 7Av,1,024100,Washington Heights South,241
+303,157 St,113,R180,Broadway - 7Av,1,024100,Washington Heights South,241
+304,145 St,114,R177,Broadway - 7Av,1,022900,Hamilton Heights,229
+304,145 St,114,R178,Broadway - 7Av,1,022900,Hamilton Heights,229
+305,137 St - City College,115,R175,Broadway - 7Av,1,022301,Manhattanville,223.01
+305,137 St - City College,115,R176,Broadway - 7Av,1,022301,Manhattanville,223.01
+306,125 St,116,R174,Broadway - 7Av,1,021100,Morningside Heights,211
+307,116 St - Columbia University,117,R173,Broadway - 7Av,1,020500,Morningside Heights,205
+308,Cathedral Pkwy,118,R171,Broadway - 7Av,1,019500,Morningside Heights,195
+308,Cathedral Pkwy,118,R172,Broadway - 7Av,1,019500,Morningside Heights,195
+309,103 St,119,R170,Broadway - 7Av,1,019100,Upper West Side,191
+310,96 St,120,R168A,Broadway - 7Av,1 2 3,018300,Upper West Side,183
+310,96 St,120,R169,Broadway - 7Av,1 2 3,018300,Upper West Side,183
+311,86 St,121,R164,Broadway - 7Av,1,017500,Upper West Side,175
+311,86 St,121,R165,Broadway - 7Av,1,017500,Upper West Side,175
+311,86 St,121,R166,Broadway - 7Av,1,017500,Upper West Side,175
+312,79 St,122,R162,Broadway - 7Av,1,016700,Upper West Side,167
+312,79 St,122,R163,Broadway - 7Av,1,016700,Upper West Side,167
+313,72 St,123,R161A,Broadway - 7Av,1 2 3,015900,Lincoln Square,159
+313,72 St,123,R161B,Broadway - 7Av,1 2 3,015900,Lincoln Square,159
+314,66 St - Lincoln Center,124,R159,Broadway - 7Av,1,014900,Lincoln Square,149
+314,66 St - Lincoln Center,124,R160,Broadway - 7Av,1,014900,Lincoln Square,149
+314,66 St - Lincoln Center,124,R160A,Broadway - 7Av,1,014900,Lincoln Square,149
+315,59 St - Columbus Circle,125,R158,Broadway - 7Av,1,014500,Lincoln Square,145
+316,50 St,126,R154,Broadway - 7Av,1,013100,Midtown-Midtown South,131
+316,50 St,126,R155,Broadway - 7Av,1,013100,Midtown-Midtown South,131
+317,Times Sq - 42 St,127,R143,Broadway - 7Av,1 2 3,011300,Midtown-Midtown South,113
+317,Times Sq - 42 St,127,R145,Broadway - 7Av,1 2 3,011300,Midtown-Midtown South,113
+317,Times Sq - 42 St,127,R147,Broadway - 7Av,1 2 3,011300,Midtown-Midtown South,113
+318,34 St - Penn Station,128,R135,Broadway - 7Av,1 2 3,010100,Midtown-Midtown South,101
+318,34 St - Penn Station,128,R137,Broadway - 7Av,1 2 3,010100,Midtown-Midtown South,101
+318,34 St - Penn Station,128,R138,Broadway - 7Av,1 2 3,010100,Midtown-Midtown South,101
+318,34 St - Penn Station,128,R139,Broadway - 7Av,1 2 3,010100,Midtown-Midtown South,101
+318,34 St - Penn Station,128,R141,Broadway - 7Av,1 2 3,010100,Midtown-Midtown South,101
+318,34 St - Penn Station,128,R142,Broadway - 7Av,1 2 3,010100,Midtown-Midtown South,101
+319,28 St,129,R133,Broadway - 7Av,1,009500,Midtown-Midtown South,95
+319,28 St,129,R134,Broadway - 7Av,1,009500,Midtown-Midtown South,95
+320,23 St,130,R131,Broadway - 7Av,1,009100,Hudson Yards-Chelsea-Flatiron-Union Square,91
+320,23 St,130,R132,Broadway - 7Av,1,009100,Hudson Yards-Chelsea-Flatiron-Union Square,91
+321,18 St,131,R129,Broadway - 7Av,1,008100,Hudson Yards-Chelsea-Flatiron-Union Square,81
+321,18 St,131,R130,Broadway - 7Av,1,008100,Hudson Yards-Chelsea-Flatiron-Union Square,81
+322,14 St,132,R127,Broadway - 7Av,1 2 3,007100,West Village,71
+322,14 St,132,R128,Broadway - 7Av,1 2 3,007100,West Village,71
+323,Christopher St - Sheridan Sq,133,R125,Broadway - 7Av,1,007300,West Village,73
+323,Christopher St - Sheridan Sq,133,R126,Broadway - 7Av,1,007300,West Village,73
+324,Houston St,134,R121,Broadway - 7Av,1,003700,SoHo-TriBeCa-Civic Center-Little Italy,37
+324,Houston St,134,R122,Broadway - 7Av,1,003700,SoHo-TriBeCa-Civic Center-Little Italy,37
+324,Houston St,134,R123,Broadway - 7Av,1,003700,SoHo-TriBeCa-Civic Center-Little Italy,37
+324,Houston St,134,R124,Broadway - 7Av,1,003700,SoHo-TriBeCa-Civic Center-Little Italy,37
+325,Canal St,135,R119,Broadway - 7Av,1,003700,SoHo-TriBeCa-Civic Center-Little Italy,37
+325,Canal St,135,R120,Broadway - 7Av,1,003700,SoHo-TriBeCa-Civic Center-Little Italy,37
+326,Franklin St,136,R117,Broadway - 7Av,1,003300,SoHo-TriBeCa-Civic Center-Little Italy,33
+326,Franklin St,136,R118,Broadway - 7Av,1,003300,SoHo-TriBeCa-Civic Center-Little Italy,33
+327,Chambers St,137,R116,Broadway - 7Av,1 2 3,002100,SoHo-TriBeCa-Civic Center-Little Italy,21
+328,WTC Cortlandt,138,,Broadway - 7Av,1,001300,Battery Park City-Lower Manhattan,13
+329,Rector St,139,R102,Broadway - 7Av,1,001300,Battery Park City-Lower Manhattan,13
+329,Rector St,139,R103,Broadway - 7Av,1,001300,Battery Park City-Lower Manhattan,13
+330,South Ferry,142,R101,Broadway - 7Av,1,000900,Battery Park City-Lower Manhattan,9
+331,Park Pl,228,R115,Clark St,2 3,002100,SoHo-TriBeCa-Civic Center-Little Italy,21
+332,Fulton St,229,R113,Clark St,2 3,001502,Battery Park City-Lower Manhattan,15.02
+332,Fulton St,229,R114,Clark St,2 3,001502,Battery Park City-Lower Manhattan,15.02
+332,Fulton St,229,R205A,Clark St,2 3,001502,Battery Park City-Lower Manhattan,15.02
+332,Fulton St,229,R206,Clark St,2 3,001502,Battery Park City-Lower Manhattan,15.02
+332,Fulton St,229,R208,Clark St,2 3,001502,Battery Park City-Lower Manhattan,15.02
+333,Wall St,230,R110,Clark St,2 3,000700,Battery Park City-Lower Manhattan,7
+333,Wall St,230,R111,Clark St,2 3,000700,Battery Park City-Lower Manhattan,7
+333,Wall St,230,R112,Clark St,2 3,000700,Battery Park City-Lower Manhattan,7
+333,Wall St,230,R112A,Clark St,2 3,000700,Battery Park City-Lower Manhattan,7
+334,Clark St,231,R600,Clark St,2 3,000501,Brooklyn Heights-Cobble Hill,5.01
+335,Borough Hall,232,R601A,Clark St,2 3,001100,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,11
+335,Borough Hall,232,R602,Clark St,2 3,001100,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,11
+335,Borough Hall,232,R604,Clark St,2 3,001100,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,11
+336,Hoyt St,233,R605,Eastern Pky,2 3,003700,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,37
+336,Hoyt St,233,R606,Eastern Pky,2 3,003700,DUMBO-Vinegar Hill-Downtown Brooklyn-Boerum Hill,37
+337,Nevins St,234,R608,Eastern Pky,2 3 4 5,003300,Fort Greene,33
+337,Nevins St,234,R609,Eastern Pky,2 3 4 5,003300,Fort Greene,33
+338,Atlantic Av - Barclays Ctr,235,,Eastern Pky,2 3,003500,Fort Greene,35
+339,Bergen St,236,R617,Eastern Pky,2 3,012902,Park Slope-Gowanus,129.02
+339,Bergen St,236,R618,Eastern Pky,2 3,012902,Park Slope-Gowanus,129.02
+340,Grand Army Plaza,237,R619,Eastern Pky,2 3,015900,Park Slope-Gowanus,159
+341,Eastern Pkwy - Brooklyn Museum,238,R621,Eastern Pky,2 3,017700,park-cemetery-etc-Brooklyn,177
+342,Franklin Av,239,R622,Eastern Pky,2 3 4 5,021300,Crown Heights South,213
+343,Nostrand Av,248,R623,Eastern Pky,3,031900,Crown Heights South,319
+344,Kingston Av,249,R624,Eastern Pky,3,033700,Crown Heights North,337
+345,Crown Hts - Utica Av,250,R625,Eastern Pky,3 4,035100,Crown Heights North,351
+345,Crown Hts - Utica Av,250,R626,Eastern Pky,3 4,035100,Crown Heights North,351
+346,Sutter Av - Rutland Rd,251,R627,Eastern Pky,3,090000,Brownsville,900
+347,Saratoga Av,252,R628,Eastern Pky,3,089400,Brownsville,894
+348,Rockaway Av,253,R629,Eastern Pky,3,091600,Brownsville,916
+349,Junius St,254,R630,Eastern Pky,3,091000,Brownsville,910
+350,Pennsylvania Av,255,R632,Eastern Pky,3,112600,East New York (Pennsylvania Ave),1126
+351,Van Siclen Av,256,R633,Eastern Pky,3,112400,East New York,1124
+352,New Lots Av,257,R634,Eastern Pky,3,112400,East New York,1124
+353,President St,241,R635,Nostrand,2 5,031900,Crown Heights South,319
+354,Sterling St,242,R636,Nostrand,2 5,032900,Prospect Lefferts Gardens-Wingate,329
+355,Winthrop St,243,R637,Nostrand,2 5,080400,Prospect Lefferts Gardens-Wingate,804
+356,Church Av,244,R639,Nostrand,2 5,082000,Prospect Lefferts Gardens-Wingate,820
+357,Beverly Rd,245,R641,Nostrand,2 5,082600,Erasmus,826
+358,Newkirk Av,246,R643,Nostrand,2 5,083000,East Flatbush-Farragut,830
+358,Newkirk Av,246,R644,Nostrand,2 5,083000,East Flatbush-Farragut,830
+359,Flatbush Av - Brooklyn College,247,R645,Nostrand,2 5,078600,Flatbush,786
+359,Flatbush Av - Brooklyn College,247,R646,Nostrand,2 5,078600,Flatbush,786
+359,Flatbush Av - Brooklyn College,247,R647,Nostrand,2 5,078600,Flatbush,786
+360,Pelham Bay Park,601,R423,Pelham,6,030000,Pelham Bay-Country Club-City Island,300
+361,Buhre Av,602,R422,Pelham,6,026601,Pelham Bay-Country Club-City Island,266.01
+362,Middletown Rd,603,R421,Pelham,6,026601,Pelham Bay-Country Club-City Island,266.01
+363,Westchester Sq - E Tremont Av,604,R420,Pelham,6,020000,Van Nest-Morris Park-Westchester Square,200
+364,Zerega Av,606,R419,Pelham,6,009600,Westchester-Unionport,96
+365,Castle Hill Av,607,R418,Pelham,6,020601,Westchester-Unionport,206.01
+366,Parkchester,608,R417,Pelham,6,007200,Soundview-Bruckner,72
+367,St Lawrence Av,609,R416,Pelham,6,007000,Soundview-Bruckner,70
+368,Morrison Av- Sound View,610,R415,Pelham,6,004800,Soundview-Bruckner,48
+369,Elder Av,611,R414,Pelham,6,005400,West Farms-Bronx River,54
+370,Whitlock Av,612,R413,Pelham,6,012102,Hunts Point,121.02
+371,Hunts Point Av,613,R412,Pelham,6,011900,Hunts Point,119
+372,Longwood Av,614,R410,Pelham,6,008500,Longwood,85
+372,Longwood Av,614,R411,Pelham,6,008500,Longwood,85
+373,E 149 St,615,R408,Pelham,6,008300,Longwood,83
+373,E 149 St,615,R409,Pelham,6,008300,Longwood,83
+374,E 143 St - St Mary's St,616,R406,Pelham,6,003100,Mott Haven-Port Morris,31
+374,E 143 St - St Mary's St,616,R407,Pelham,6,003100,Mott Haven-Port Morris,31
+375,Cypress Av,617,R404,Pelham,6,002702,Mott Haven-Port Morris,27.02
+375,Cypress Av,617,R405,Pelham,6,002702,Mott Haven-Port Morris,27.02
+376,Brook Av,618,R402,Pelham,6,003900,Mott Haven-Port Morris,39
+376,Brook Av,618,R403,Pelham,6,003900,Mott Haven-Port Morris,39
+377,3 Av - 138 St,619,R401,Pelham,6,002300,Mott Haven-Port Morris,23
+378,Woodlawn,401,R294,Jerome Av,4,043100,Norwood,431
+379,Mosholu Pkwy,402,R293,Jerome Av,4,041900,Norwood,419
+380,Bedford Park Blvd - Lehman College,405,R291,Jerome Av,4,040900,Van Cortlandt Village,409
+381,Kingsbridge Rd,406,R290,Jerome Av,4,040304,Van Cortlandt Village,403.04
+382,Fordham Rd,407,R289,Jerome Av,4,040100,Bedford Park-Fordham North,401
+383,183 St,408,R288,Jerome Av,4,023900,Fordham South,239
+384,Burnside Av,409,R287,Jerome Av,4,024300,University Heights-Morris Heights,243
+385,176 St,410,R286,Jerome Av,4,021700,University Heights-Morris Heights,217
+386,Mt Eden Av,411,R285,Jerome Av,4,022702,Mount Hope,227.02
+387,170 St,412,R284,Jerome Av,4,022101,West Concourse,221.01
+388,167 St,413,R283,Jerome Av,4,019700,West Concourse,197
+389,161 St - Yankee Stadium,414,R262,Jerome Av,4,006300,West Concourse,63
+389,161 St - Yankee Stadium,414,R262A,Jerome Av,4,006300,West Concourse,63
+389,161 St - Yankee Stadium,414,R262B,Jerome Av,4,006300,West Concourse,63
+390,149 St - Grand Concourse,415,,Jerome Av,4,005100,Mott Haven-Port Morris,51
+391,138 St - Grand Concourse,416,R259,Jerome Av,4 5,005100,Mott Haven-Port Morris,51
+392,125 St,621,R258,Lexington Av,4 5 6,019600,East Harlem North,196
+393,116 St,622,R256,Lexington Av,6,018200,East Harlem North,182
+393,116 St,622,R257,Lexington Av,6,018200,East Harlem North,182
+394,110 St,623,R253,Lexington Av,6,017200,East Harlem South,172
+394,110 St,623,R254,Lexington Av,6,017200,East Harlem South,172
+395,103 St,624,R252,Lexington Av,6,016600,East Harlem South,166
+396,96 St,625,R251,Lexington Av,6,015801,Upper East Side-Carnegie Hill,158.01
+397,86 St,626,R249,Lexington Av,4 5 6,014801,Upper East Side-Carnegie Hill,148.01
+397,86 St,626,R250,Lexington Av,4 5 6,014801,Upper East Side-Carnegie Hill,148.01
+398,77 St,627,R247,Lexington Av,6,012800,Upper East Side-Carnegie Hill,128
+398,77 St,627,R248,Lexington Av,6,012800,Upper East Side-Carnegie Hill,128
+399,68 St - Hunter College,628,R246,Lexington Av,6,012000,Upper East Side-Carnegie Hill,120
+400,59 St,629,R244,Lexington Av,4 5 6,011402,Upper East Side-Carnegie Hill,114.02
+400,59 St,629,R244A,Lexington Av,4 5 6,011402,Upper East Side-Carnegie Hill,114.02
+400,59 St,629,R245,Lexington Av,4 5 6,011402,Upper East Side-Carnegie Hill,114.02
+400,59 St,629,R245A,Lexington Av,4 5 6,011402,Upper East Side-Carnegie Hill,114.02
+401,51 St,630,R242,Lexington Av,6,010000,Turtle Bay-East Midtown,100
+401,51 St,630,R242A,Lexington Av,6,010000,Turtle Bay-East Midtown,100
+401,51 St,630,R243,Lexington Av,6,010000,Turtle Bay-East Midtown,100
+402,Grand Central - 42 St,631,R236,Lexington Av,4 5 6,009200,Turtle Bay-East Midtown,92
+402,Grand Central - 42 St,631,R237,Lexington Av,4 5 6,009200,Turtle Bay-East Midtown,92
+402,Grand Central - 42 St,631,R237B,Lexington Av,4 5 6,009200,Turtle Bay-East Midtown,92
+402,Grand Central - 42 St,631,R238,Lexington Av,4 5 6,009200,Turtle Bay-East Midtown,92
+402,Grand Central - 42 St,631,R238A,Lexington Av,4 5 6,009200,Turtle Bay-East Midtown,92
+402,Grand Central - 42 St,631,R240,Lexington Av,4 5 6,009200,Turtle Bay-East Midtown,92
+402,Grand Central - 42 St,631,R241A,Lexington Av,4 5 6,009200,Turtle Bay-East Midtown,92
+403,33 St,632,R231,Lexington Av,6,007400,Midtown-Midtown South,74
+403,33 St,632,R231A,Lexington Av,6,007400,Midtown-Midtown South,74
+403,33 St,632,R232,Lexington Av,6,007400,Midtown-Midtown South,74
+403,33 St,632,R232A,Lexington Av,6,007400,Midtown-Midtown South,74
+404,28 St,633,R228,Lexington Av,6,005600,Hudson Yards-Chelsea-Flatiron-Union Square,56
+404,28 St,633,R229,Lexington Av,6,005600,Hudson Yards-Chelsea-Flatiron-Union Square,56
+404,28 St,633,R230,Lexington Av,6,005600,Hudson Yards-Chelsea-Flatiron-Union Square,56
+405,23 St,634,R226,Lexington Av,6,005600,Hudson Yards-Chelsea-Flatiron-Union Square,56
+405,23 St,634,R226A,Lexington Av,6,005600,Hudson Yards-Chelsea-Flatiron-Union Square,56
+405,23 St,634,R227,Lexington Av,6,005600,Hudson Yards-Chelsea-Flatiron-Union Square,56
+405,23 St,634,R227A,Lexington Av,6,005600,Hudson Yards-Chelsea-Flatiron-Union Square,56
+406,14 St - Union Sq,635,R221,Lexington Av,4 5 6,005200,Hudson Yards-Chelsea-Flatiron-Union Square,52
+407,Astor Pl,636,R219,Lexington Av,6,005700,West Village,57
+407,Astor Pl,636,R220,Lexington Av,6,005700,West Village,57
+408,Bleecker St,637,R217A,Lexington Av,6,005502,West Village,55.02
+409,Spring St,638,R215,Lexington Av,6,004500,SoHo-TriBeCa-Civic Center-Little Italy,45
+409,Spring St,638,R216,Lexington Av,6,004500,SoHo-TriBeCa-Civic Center-Little Italy,45
+410,Canal St,639,,Lexington Av,6,004500,SoHo-TriBeCa-Civic Center-Little Italy,45
+411,Brooklyn Bridge - City Hall,640,R210,Lexington Av,4 5 6,003100,SoHo-TriBeCa-Civic Center-Little Italy,31
+411,Brooklyn Bridge - City Hall,640,R210A,Lexington Av,4 5 6,003100,SoHo-TriBeCa-Civic Center-Little Italy,31
+412,Fulton St,418,,Lexington Av,4 5,001502,Battery Park City-Lower Manhattan,15.02
+413,Wall St,419,R203,Lexington Av,4 5,000700,Battery Park City-Lower Manhattan,7
+413,Wall St,419,R203A,Lexington Av,4 5,000700,Battery Park City-Lower Manhattan,7
+413,Wall St,419,R204,Lexington Av,4 5,000700,Battery Park City-Lower Manhattan,7
+413,Wall St,419,R204A,Lexington Av,4 5,000700,Battery Park City-Lower Manhattan,7
+414,Bowling Green,420,R200A,Lexington Av,4 5,001300,Battery Park City-Lower Manhattan,13
+414,Bowling Green,420,R201,Lexington Av,4 5,001300,Battery Park City-Lower Manhattan,13
+414,Bowling Green,420,R202,Lexington Av,4 5,001300,Battery Park City-Lower Manhattan,13
+415,Borough Hall,423,C001,Eastern Pky,4 5,000900,Brooklyn Heights-Cobble Hill,9
+416,Wakefield - 241 St,201,R336,Lenox - White Plains Rd,2,043400,Woodlawn-Wakefield,434
+417,Nereid Av,204,R335,Lenox - White Plains Rd,2 5,041800,Woodlawn-Wakefield,418
+418,233 St,205,R334,Lenox - White Plains Rd,2 5,042200,Williamsbridge-Olinville,422
+419,225 St,206,R333,Lenox - White Plains Rd,2 5,040800,Williamsbridge-Olinville,408
+420,219 St,207,R332,Lenox - White Plains Rd,2 5,039200,Williamsbridge-Olinville,392
+421,Gun Hill Rd,208,R331,Lenox - White Plains Rd,2 5,037800,Williamsbridge-Olinville,378
+422,Burke Av,209,R330,Lenox - White Plains Rd,2 5,033600,Bronxdale,336
+423,Allerton Av,210,R329,Lenox - White Plains Rd,2 5,033800,Bronxdale,338
+424,Pelham Pkwy,211,R327,Lenox - White Plains Rd,2 5,022401,Pelham Parkway,224.01
+424,Pelham Pkwy,211,R328,Lenox - White Plains Rd,2 5,022401,Pelham Parkway,224.01
+425,Bronx Park East,212,R326,Lenox - White Plains Rd,2 5,022000,East Tremont,220
+426,E 180 St,213,R325,Lenox - White Plains Rd,2 5,022000,East Tremont,220
+427,West Farms Sq - E Tremont Av,214,R323,Lenox - White Plains Rd,2 5,036100,East Tremont,361
+428,174 St,215,R321,Lenox - White Plains Rd,2 5,016100,Crotona Park East,161
+428,174 St,215,R322,Lenox - White Plains Rd,2 5,016100,Crotona Park East,161
+429,Freeman St,216,R319,Lenox - White Plains Rd,2 5,012500,Morrisania-Melrose,125
+429,Freeman St,216,R320,Lenox - White Plains Rd,2 5,012500,Morrisania-Melrose,125
+430,Simpson St,217,R317,Lenox - White Plains Rd,2 5,015900,Hunts Point,159
+430,Simpson St,217,R318,Lenox - White Plains Rd,2 5,015900,Hunts Point,159
+431,Intervale Av,218,R316,Lenox - White Plains Rd,2 5,008700,Longwood,87
+432,Prospect Av,219,R314,Lenox - White Plains Rd,2 5,007900,Melrose South-Mott Haven North,79
+432,Prospect Av,219,R315,Lenox - White Plains Rd,2 5,007900,Melrose South-Mott Haven North,79
+433,Jackson Av,220,R312,Lenox - White Plains Rd,2 5,007500,Melrose South-Mott Haven North,75
+434,3 Av - 149 St,221,R310,Lenox - White Plains Rd,2 5,006500,Melrose South-Mott Haven North,65
+434,3 Av - 149 St,221,R311,Lenox - White Plains Rd,2 5,006500,Melrose South-Mott Haven North,65
+435,149 St - Grand Concourse,222,R260,Lenox - White Plains Rd,2 5,005100,Mott Haven-Port Morris,51
+435,149 St - Grand Concourse,222,R261,Lenox - White Plains Rd,2 5,005100,Mott Haven-Port Morris,51
+436,Harlem - 148 St,301,R309,Lenox - White Plains Rd,3,023600,Central Harlem North-Polo Grounds,236
+437,145 St,302,R308,Lenox - White Plains Rd,3,023200,Central Harlem North-Polo Grounds,232
+438,135 St,224,R306,Lenox - White Plains Rd,2 3,022800,Central Harlem North-Polo Grounds,228
+438,135 St,224,R307,Lenox - White Plains Rd,2 3,022800,Central Harlem North-Polo Grounds,228
+439,125 St,225,R304,Lenox - White Plains Rd,2 3,020000,Central Harlem South,200
+439,125 St,225,R305,Lenox - White Plains Rd,2 3,020000,Central Harlem South,200
+440,116 St,226,R302,Lenox - White Plains Rd,2 3,019000,Central Harlem South,190
+440,116 St,226,R303,Lenox - White Plains Rd,2 3,019000,Central Harlem South,190
+441,Central Park North (110 St),227,R301,Lenox - White Plains Rd,2 3,018600,Central Harlem South,186
+442,Eastchester - Dyre Av,501,R730,Dyre Av,5,048400,Eastchester-Edenwald-Baychester,484
+443,Baychester Av,502,R729,Dyre Av,5,046202,Co-op City,462.02
+444,Gun Hill Rd,503,R728,Dyre Av,5,035000,Allerton-Pelham Gardens,350
+445,Pelham Pkwy,504,R727,Dyre Av,5,032600,Allerton-Pelham Gardens,326
+446,Morris Park,505,R726,Dyre Av,5,024800,Pelham Parkway,248
+447,Flushing - Main St,701,R533,Flushing,7,087100,Flushing,871
+447,Flushing - Main St,701,R534,Flushing,7,087100,Flushing,871
+448,Mets - Willets Point,702,R532,Flushing,7,038302,park-cemetery-etc-Queens,383.02
+448,Mets - Willets Point,702,R532H,Flushing,7,038302,park-cemetery-etc-Queens,383.02
+449,111 St,705,R530,Flushing,7,040100,North Corona,401
+450,103 St - Corona Plaza,706,R529,Flushing,7,040500,North Corona,405
+451,Junction Blvd,707,R528,Flushing,7,046500,Elmhurst,465
+452,90 St - Elmhurst Av,708,R527,Flushing,7,027700,Jackson Heights,277
+453,82 St - Jackson Hts,709,R526,Flushing,7,028300,Jackson Heights,283
+454,74 St - Broadway,710,R525,Flushing,7,026700,Elmhurst,267
+455,69 St,711,R524,Flushing,7,026300,Woodside,263
+456,Woodside - 61 St,712,R523,Flushing,7,026100,Woodside,261
+457,52 St,713,R521,Flushing,7,025302,Hunters Point-Sunnyside-West Maspeth,253.02
+458,46 St,714,R519,Flushing,7,025301,Hunters Point-Sunnyside-West Maspeth,253.01
+458,46 St,714,R520,Flushing,7,025301,Hunters Point-Sunnyside-West Maspeth,253.01
+459,40 St,715,R518,Flushing,7,018101,Hunters Point-Sunnyside-West Maspeth,181.01
+460,33 St,716,R516,Flushing,7,017900,Hunters Point-Sunnyside-West Maspeth,179
+460,33 St,716,R517,Flushing,7,017900,Hunters Point-Sunnyside-West Maspeth,179
+461,Queensboro Plaza,718,R509,Flushing,7,001900,Hunters Point-Sunnyside-West Maspeth,19
+461,Queensboro Plaza,R09,,Astoria,N W,001900,Hunters Point-Sunnyside-West Maspeth,19
+462,Court Sq,719,R508,Flushing,7,001900,Hunters Point-Sunnyside-West Maspeth,19
+463,Hunters Point Av,720,R507,Flushing,7,000100,Hunters Point-Sunnyside-West Maspeth,1
+464,Vernon Blvd - Jackson Av,721,R503,Flushing,7,000700,Hunters Point-Sunnyside-West Maspeth,7
+464,Vernon Blvd - Jackson Av,721,R504,Flushing,7,000700,Hunters Point-Sunnyside-West Maspeth,7
+464,Vernon Blvd - Jackson Av,721,R506,Flushing,7,000700,Hunters Point-Sunnyside-West Maspeth,7
+465,Grand Central - 42 St,723,,Flushing,7,008000,Murray Hill-Kips Bay,80
+466,5 Av,724,R501,Flushing,7,008400,Midtown-Midtown South,84
+467,Times Sq - 42 St,725,R148,Flushing,7,011300,Midtown-Midtown South,113
+467,Times Sq - 42 St,725,R151,Flushing,7,011300,Midtown-Midtown South,113
+468,Times Sq - 42 St,902,,Lexington - Shuttle,S,011900,Midtown-Midtown South,119
+469,Grand Central - 42 St,901,,Lexington - Shuttle,S,009400,Midtown-Midtown South,94
+471,34 St - 11 Av,726,R550,Flushing,7,009900,Hudson Yards-Chelsea-Flatiron-Union Square,99
+475,96 St,Q05,N702,Second Av,Q,015602,East Harlem South,156.02
+475,96 St,Q05,N702A,Second Av,Q,015602,East Harlem South,156.02
+476,86 St,Q04,N701,Second Av,Q,014601,Yorkville,146.01
+476,86 St,Q04,N701A,Second Av,Q,014601,Yorkville,146.01
+477,72 St,Q03,N700,Second Av,Q,012600,Lenox Hill-Roosevelt Island,126
+477,72 St,Q03,N700A,Second Av,Q,012600,Lenox Hill-Roosevelt Island,126
+501,St George,S31,S101,Staten Island,SIR,000300,West New Brighton-New Brighton-St. George,3
+501,St George,S31,S101A,Staten Island,SIR,000300,West New Brighton-New Brighton-St. George,3
+502,Tompkinsville,S30,S102,Staten Island,SIR,002100,Stapleton-Rosebank,21
+503,Stapleton,S29,,Staten Island,SIR,002100,Stapleton-Rosebank,21
+504,Clifton,S28,,Staten Island,SIR,000600,Stapleton-Rosebank,6
+505,Grasmere,S27,,Staten Island,SIR,005000,Grasmere-Arrochar-Ft. Wadsworth,50
+506,Old Town,S26,,Staten Island,SIR,009601,Old Town-Dongan Hills-South Beach,96.01
+507,Dongan Hills,S25,,Staten Island,SIR,009602,Old Town-Dongan Hills-South Beach,96.02
+508,Jefferson Av,S24,,Staten Island,SIR,011402,New Dorp-Midland Beach,114.02
+509,Grant City,S23,,Staten Island,SIR,012200,New Dorp-Midland Beach,122
+510,New Dorp,S22,,Staten Island,SIR,013400,New Dorp-Midland Beach,134
+511,Oakwood Heights,S21,,Staten Island,SIR,013201,Oakwood-Oakwood Beach,132.01
+512,Bay Terrace,S20,,Staten Island,SIR,013204,Oakwood-Oakwood Beach,132.04
+513,Great Kills,S19,,Staten Island,SIR,014604,Great Kills,146.04
+514,Eltingville,S18,,Staten Island,SIR,014604,Great Kills,146.04
+515,Annadale,S17,,Staten Island,SIR,017005,Annadale-Huguenot-Prince's Bay-Eltingville,170.05
+516,Huguenot,S16,,Staten Island,SIR,017005,Annadale-Huguenot-Prince's Bay-Eltingville,170.05
+517,Prince's Bay,S15,,Staten Island,SIR,019800,Annadale-Huguenot-Prince's Bay-Eltingville,198
+518,Pleasant Plains,S14,,Staten Island,SIR,022600,Charleston-Richmond Valley-Tottenville,226
+519,Richmond Valley,S13,,Staten Island,SIR,022600,Charleston-Richmond Valley-Tottenville,226
+522,Tottenville,S09,,Staten Island,SIR,024800,Charleston-Richmond Valley-Tottenville,248
+523,Arthur Kill,S11,,Staten Island,SIR,024800,Charleston-Richmond Valley-Tottenville,248
