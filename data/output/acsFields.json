@@ -1,0 +1,167 @@
+{
+  "GEO_ID": {
+    "key": "GEO_ID",
+    "display_label": "",
+    "full_label": "id"
+  },
+  "NAME": {
+    "key": "NAME",
+    "display_label": "",
+    "full_label": "Geographic Area Name"
+  },
+  "DP03_0001E": {
+    "key": "DP03_0001E",
+    "display_label": "Population 16+",
+    "full_label": "Estimate!!EMPLOYMENT STATUS!!Population 16 years and over"
+  },
+  "DP03_0002PE": {
+    "key": "DP03_0002PE",
+    "display_label": "Population 16+ In Labor Force (%)",
+    "full_label": "Percent Estimate!!EMPLOYMENT STATUS!!Population 16 years and over!!In labor force"
+  },
+  "DP03_0007PE": {
+    "key": "DP03_0007PE",
+    "display_label": "Population 16+ Not In Labor Force (%)",
+    "full_label": "Percent Estimate!!EMPLOYMENT STATUS!!Population 16 years and over!!Not in labor force"
+  },
+  "DP03_0013PE": {
+    "key": "DP03_0013PE",
+    "display_label": "Percent of Women Employed (%)",
+    "full_label": "Percent Estimate!!EMPLOYMENT STATUS!!Females 16 years and over!!In labor force!!Civilian labor force!!Employed"
+  },
+  "DP03_0015PE": {
+    "key": "DP03_0015PE",
+    "display_label": "Percent of Households with children under 6 where all Parents in Labor Force (%)",
+    "full_label": "Percent Estimate!!EMPLOYMENT STATUS!!Own children of the householder under 6 years!!All parents in family in labor force"
+  },
+  "DP03_0017PE": {
+    "key": "DP03_0017PE",
+    "display_label": "Percent of Households with children 6-17 where all Parents in Labor Force (%)",
+    "full_label": "Percent Estimate!!EMPLOYMENT STATUS!!Own children of the householder 6 to 17 years!!All parents in family in labor force"
+  },
+  "DP03_0021PE": {
+    "key": "DP03_0021PE",
+    "display_label": "Percent of Workers Commuting via Public Transportation (%)",
+    "full_label": "Percent Estimate!!COMMUTING TO WORK!!Workers 16 years and over!!Public transportation (excluding taxicab)"
+  },
+  "DP03_0025E": {
+    "key": "DP03_0025E",
+    "display_label": "Mean Travel Time to Work",
+    "full_label": "Estimate!!COMMUTING TO WORK!!Workers 16 years and over!!Mean travel time to work (minutes)"
+  },
+  "DP03_0027PE": {
+    "key": "DP03_0027PE",
+    "display_label": "Percent Employed in Management, Business, Science, and Arts occupations (%)",
+    "full_label": "Percent Estimate!!OCCUPATION!!Civilian employed population 16 years and over!!Management, business, science, and arts occupations"
+  },
+  "DP03_0028PE": {
+    "key": "DP03_0028PE",
+    "display_label": "Percent Employed in Service occupations (%)",
+    "full_label": "Percent Estimate!!OCCUPATION!!Civilian employed population 16 years and over!!Service occupations"
+  },
+  "DP03_0029PE": {
+    "key": "DP03_0029PE",
+    "display_label": "Percent Employed in Sales and Office occupations (%)",
+    "full_label": "Percent Estimate!!OCCUPATION!!Civilian employed population 16 years and over!!Sales and office occupations"
+  },
+  "DP03_0031PE": {
+    "key": "DP03_0031PE",
+    "display_label": "Percent Employed in Production, Transportation, and Material Moving occupations (%)",
+    "full_label": "Percent Estimate!!OCCUPATION!!Civilian employed population 16 years and over!!Production, transportation, and material moving occupations"
+  },
+  "DP03_0041PE": {
+    "key": "DP03_0041PE",
+    "display_label": "Percent Employed in Professional, Scientific, and Management, and Administrative and Waste Management Services occupations (%)",
+    "full_label": "Percent Estimate!!INDUSTRY!!Civilian employed population 16 years and over!!Professional, scientific, and management, and administrative and waste management services"
+  },
+  "DP03_0042PE": {
+    "key": "DP03_0042PE",
+    "display_label": "Percent Employed in Educational Services, and Health Care and Social Assistance (%)",
+    "full_label": "Percent Estimate!!INDUSTRY!!Civilian employed population 16 years and over!!Educational services, and health care and social assistance"
+  },
+  "DP03_0043PE": {
+    "key": "DP03_0043PE",
+    "display_label": "Percent Employed in Arts, Entertainment, and Recreation, and Accommodation and Food Services (%)",
+    "full_label": "Percent Estimate!!INDUSTRY!!Civilian employed population 16 years and over!!Arts, entertainment, and recreation, and accommodation and food services"
+  },
+  "DP03_0045PE": {
+    "key": "DP03_0045PE",
+    "display_label": "Percent Employed in Public Administration (%)",
+    "full_label": "Percent Estimate!!INDUSTRY!!Civilian employed population 16 years and over!!Public administration"
+  },
+  "DP03_0062E": {
+    "key": "DP03_0062E",
+    "display_label": "Median Household Income ($)",
+    "full_label": "Estimate!!INCOME AND BENEFITS (IN 2018 INFLATION-ADJUSTED DOLLARS)!!Total households!!Median household income (dollars)"
+  },
+  "DP03_0063E": {
+    "key": "DP03_0063E",
+    "display_label": "Mean Household Income ($)",
+    "full_label": "Estimate!!INCOME AND BENEFITS (IN 2018 INFLATION-ADJUSTED DOLLARS)!!Total households!!Mean household income (dollars)"
+  },
+  "DP03_0074PE": {
+    "key": "DP03_0074PE",
+    "display_label": "Percent With Food Stamp/SNAP benefits in the past 12 months (%)",
+    "full_label": "Percent Estimate!!INCOME AND BENEFITS (IN 2018 INFLATION-ADJUSTED DOLLARS)!!Total households!!With Food Stamp/SNAP benefits in the past 12 months"
+  },
+  "DP03_0088E": {
+    "key": "DP03_0088E",
+    "display_label": "Per Capita Income ($)",
+    "full_label": "Estimate!!INCOME AND BENEFITS (IN 2018 INFLATION-ADJUSTED DOLLARS)!!Per capita income (dollars)"
+  },
+  "DP03_0092E": {
+    "key": "DP03_0092E",
+    "display_label": "Median Earnings for Workers ($)",
+    "full_label": "Estimate!!INCOME AND BENEFITS (IN 2018 INFLATION-ADJUSTED DOLLARS)!!Median earnings for workers (dollars)"
+  },
+  "DP03_0093E": {
+    "key": "DP03_0093E",
+    "display_label": "Median Earnings for Male Workers ($)",
+    "full_label": "Estimate!!INCOME AND BENEFITS (IN 2018 INFLATION-ADJUSTED DOLLARS)!!Median earnings for male full-time, year-round workers (dollars)"
+  },
+  "DP03_0094E": {
+    "key": "DP03_0094E",
+    "display_label": "Median Earnings for Female Workers ($)",
+    "full_label": "Estimate!!INCOME AND BENEFITS (IN 2018 INFLATION-ADJUSTED DOLLARS)!!Median earnings for female full-time, year-round workers (dollars)"
+  },
+  "DP03_0096PE": {
+    "key": "DP03_0096PE",
+    "display_label": "Percent with Health Insurance Coverage (%)",
+    "full_label": "Percent Estimate!!HEALTH INSURANCE COVERAGE!!Civilian noninstitutionalized population!!With health insurance coverage"
+  },
+  "DP03_0097PE": {
+    "key": "DP03_0097PE",
+    "display_label": "Percent with Private Health Insurance Coverage (%)",
+    "full_label": "Percent Estimate!!HEALTH INSURANCE COVERAGE!!Civilian noninstitutionalized population!!With health insurance coverage!!With private health insurance"
+  },
+  "DP03_0098PE": {
+    "key": "DP03_0098PE",
+    "display_label": "Percent with Public Health Insurance Coverage (%)",
+    "full_label": "Percent Estimate!!HEALTH INSURANCE COVERAGE!!Civilian noninstitutionalized population!!With health insurance coverage!!With public coverage"
+  },
+  "DP03_0099E": {
+    "key": "DP03_0099E",
+    "display_label": "Population with No Health Insurance Coverage",
+    "full_label": "Percent Estimate!!HEALTH INSURANCE COVERAGE!!Civilian noninstitutionalized population!!No health insurance coverage"
+  },
+  "DP03_0099PE": {
+    "key": "DP03_0099PE",
+    "display_label": "Percent with No Health Insurance Coverage (%)",
+    "full_label": "Estimate!!HEALTH INSURANCE COVERAGE!!Civilian noninstitutionalized population!!No health insurance coverage"
+  },
+  "DP03_0108PE": {
+    "key": "DP03_0108PE",
+    "display_label": "Percent Employed with No Health Insurance (%)",
+    "full_label": "Percent Estimate!!HEALTH INSURANCE COVERAGE!!Civilian noninstitutionalized population!!Civilian noninstitutionalized population 19 to 64 years!!In labor force!!Employed!!No health insurance coverage"
+  },
+  "DP03_0113PE": {
+    "key": "DP03_0113PE",
+    "display_label": "Percent Unemployed with No Health Insurance Coverage (%)",
+    "full_label": "Percent Estimate!!HEALTH INSURANCE COVERAGE!!Civilian noninstitutionalized population!!Civilian noninstitutionalized population 19 to 64 years!!In labor force!!Unemployed!!No health insurance coverage"
+  },
+  "DP03_0118PE": {
+    "key": "DP03_0118PE",
+    "display_label": "Percent Not in Labor Force with No Health Insurance Coverage (%)",
+    "full_label": "Percent Estimate!!HEALTH INSURANCE COVERAGE!!Civilian noninstitutionalized population!!Civilian noninstitutionalized population 19 to 64 years!!Not in labor force!!No health insurance coverage"
+  }
+}
