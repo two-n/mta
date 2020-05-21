@@ -32,6 +32,10 @@ https://data.cityofnewyork.us/Transportation/Subway-Lines/3qz8-muuu
 
 Pulled from [nyc PLUTO](https://www1.nyc.gov/site/planning/data-maps/open-data/dwn-pluto-mappluto.page) dataset. Filtered out hospitals and clinics using building class code of `I*`, informed by the [data dictionary](https://www1.nyc.gov/assets/planning/download/pdf/data-maps/open-data/pluto_datadictionary.pdf?v=20v3).
 
+### MTA Schedule GTFS Data
+
+http://web.mta.info/developers/developer-data-terms.html#data --> 'GTFS'-->'New York City Transit Subway' (Updated April 29, 2020)
+
 ```sh
 # filter for hospitals and clinics based on building code
 # remember to re-project it to the standard projection

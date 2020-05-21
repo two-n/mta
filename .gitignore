@@ -9,3 +9,9 @@ data/Turnstiles/Turnstile_Usage_Data__2020.csv
 
 # QGIS Files
 *.qgz
+
+# Design
+*.xd
+
+# App
+node_modules/
