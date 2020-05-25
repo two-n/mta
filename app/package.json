@@ -1,0 +1,25 @@
+{
+  "name": "mta",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "author": "auchers <aucher@two-n.com>",
+  "license": "ISC",
+  "repository": "https://github.com/auchers/mta-census-data-vis.git",
+  "devDependencies": {
+    "node-sass": "^4.14.1",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-clean-dist": "^0.0.6",
+    "postcss-modules": "^2.0.0",
+    "sass": "^1.26.5",
+    "typescript": "^3.9.3"
+  },
+  "dependencies": {
+    "d3-selection": "^1.4.1"
+  }
+}

@@ -1,0 +1,39 @@
+/** TYPOGRPAHY */
+$fontRegular: "Helvetica Neue Regular";
+$fontBold: "Helvetica Neue Bold";
+$fontExtraBold: "Helvetica Neue Condensed Black";
+$fontLight: "Helvetica Neue Light";
+$fontThin: "Helvetica Neue Thin";
+$fontMedium: "Helvetica Neue Medium";
+
+$fontSizeBase: 16px;
+$fontSizeLarge: 1.618 * $fontSizeBase;
+$fontSizeXLarge: 1.618 * $fontSizeLarge;
+$fontSizeXXLarge: 1.618 * $fontSizeXLarge;
+$fontSizeSmall: $fontSizeBase / 1.618;
+$fontSizeXSmall: $fontSizeSmall / 1.618;
+
+/** COLORS */
+$colorBackground: #FFFCF6;
+$colorBlack: #000;
+$colorYellow: #E5A139;
+$colorDarkGrey: #707070;
+
+/** SPACING/MARGINS/PADDING */
+$maxTextWidth: 20rem;
+
+/** TRANSITIONS */
+
+/** DEFAULT ELEMENTS */
+
+h1{
+  font-family: $fontBold;
+  font-size: $fontSizeXXLarge;
+  max-width: $maxTextWidth;
+}
+
+h2{
+  font-family: $fontBold;
+  font-size: $fontSizeXLarge;
+  max-width: $maxTextWidth;
+}
