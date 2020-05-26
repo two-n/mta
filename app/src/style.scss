@@ -26,9 +26,6 @@ section#intro{
 
 .sticky{
   position: sticky;
-  // top and height need to be set in js to account for resizes
-  top: 0;
-  height: fit-content;
 
   .graphic{
     width: 100%;
