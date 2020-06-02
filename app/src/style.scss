@@ -1,0 +1,45 @@
+@import "./styling/variables";
+
+body{
+  font-family: $fontRegular;
+  background-color: $colorBackground;
+}
+
+#app{
+  padding: 1rem;
+}
+
+section#intro{
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.section {
+  position: relative;
+}
+
+.section-header{
+  max-width: 40rem;
+  background-color: $colorBackground;
+}
+
+.sticky{
+  position: sticky;
+
+  .graphic{
+    width: 100%;
+    height: 300px;// TODO: remove - temp!
+    background-color: $colorYellow;
+  }
+}
+
+.article{
+ max-width: $maxTextWidth;
+ margin: 0 auto;
+
+  .step{
+    position: relative;
+    min-height: 500px;
+  }
+}
