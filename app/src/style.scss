@@ -13,6 +13,10 @@ section#intro{
   height: 100vh;
   display: flex;
   align-items: center;
+
+  h1{
+    margin: 0;
+  }
 }
 
 .section {
@@ -30,7 +34,7 @@ section#intro{
   .graphic{
     width: 100%;
     height: 300px;// TODO: remove - temp!
-    background-color: $colorYellow;
+    // background-color: $colorYellow;
   }
 }
 
