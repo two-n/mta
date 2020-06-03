@@ -5,9 +5,10 @@ import { selectAll } from "d3-selection"
 import * as Stickyfill from "stickyfill";
 import { Section1 } from "./Section1";
 
-import { SECTIONS, CLASSES as C } from "../utils/constants";
 import { getSectionData } from "../redux/selectors";
+import A from "../redux/actions";
 import { State } from "../utils/types";
+import { SECTIONS, CLASSES as C } from "../utils/constants";
 
 export class App {
   section1: Section1;
@@ -18,6 +19,7 @@ export class App {
   }
 
   init() {
+    A.loadTurnstileData(this.store.dispatch)
     const sectionData = getSectionData(this.store)
     // SECTION 1
     this.section1 = new Section1({ data: sectionData[SECTIONS.S1], store: this.store })

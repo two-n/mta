@@ -85,7 +85,6 @@ export class Section1 {
 
   // generic window resize listener event
   handleResize() {
-    console.log('resizing in Section1')
     // 1. update height of step elements
     var stepH = Math.floor(window.innerHeight * 0.75);
     this.steps.style("height", stepH + "px");

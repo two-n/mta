@@ -12,6 +12,7 @@
   "license": "ISC",
   "repository": "https://github.com/auchers/mta-census-data-vis.git",
   "devDependencies": {
+    "@types/node": "^14.0.9",
     "node-sass": "^4.14.1",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-clean-dist": "^0.0.6",
@@ -20,6 +21,9 @@
     "typescript": "^3.9.3"
   },
   "dependencies": {
+    "@types/d3-dsv": "^1.0.36",
+    "@types/d3-fetch": "^1.1.5",
+    "d3-fetch": "^1.1.2",
     "d3-selection": "^1.4.1",
     "intersection-observer": "^0.10.0",
     "redux": "^4.0.5",
