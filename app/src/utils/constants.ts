@@ -2,7 +2,13 @@ import { format } from 'd3-format';
 import { timeFormat, timeParse } from 'd3-time-format';
 
 export enum SECTIONS {
-  S1 = 'section1'
+  S1 = 'section1',
+  S2 = 'section2',
+}
+
+export enum DIRECTIONS {
+  UP = 'up',
+  DOWN = 'down'
 }
 
 export enum CLASSES {
@@ -14,6 +20,17 @@ export enum CLASSES {
   STEP_TEXT = 'step-text',
   STICKY = 'sticky',
   GRAPHIC = 'graphic',
+  TIMELINE='timeline',
+  LINES = 'lines',
+  LINE = 'line',
+  AXIS = 'axis',
+  CHART = 'chart',
+  TITLE = 'title',
+  FEVERLINE = 'feverline',
+  FEVERGRID = 'fevergrid',
+  BENCHMARK = 'benchmark',
+  HIDDEN = 'hidden',
+  VISIBLE = 'visible'
 }
 
 export enum KEYS {
@@ -36,6 +53,8 @@ export enum KEYS {
 }
 
 export const FORMATTERS = {
+  fMonth: timeFormat('%B'),
+  fMonthYr: timeFormat('%b-%Y'),
   fDay: timeFormat('%a'),
   fDate: timeFormat('%d-%m-%Y'),
   pDate: timeParse('%d-%m-%Y'),
@@ -44,5 +63,6 @@ export const FORMATTERS = {
 };
 
 export const appConfig = {
-  thresholdDate: new Date('2020-03-15'),
+  thresholdDate: new Date('2020-03-15'), // date for pre/post comparisions
+  startDate: new Date('2020-03-01'), // date that we show data from for station timelines
 };
