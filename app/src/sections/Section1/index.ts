@@ -1,14 +1,20 @@
 import { select } from "d3-selection";
 import "intersection-observer";
 import scrollama from "scrollama";
-import { SectionDataType } from "../../utils/types";
+import { SectionDataType, State } from "../../utils/types";
 import "./style.scss";
 import { CLASSES as C, SECTIONS as S } from "../../utils/constants";
+import { Store } from "redux";
+
+interface Props { data: SectionDataType, store: Store }
 
 export class Section1 {
   [x: string]: any;
   data: SectionDataType;
-  constructor({ data }: { data: SectionDataType }) {
+  store: Store<State>
+
+  constructor({ data, store }: Props) {
+    this.store = store
     this.data = data
     this.scroller = scrollama();
   }
@@ -79,7 +85,6 @@ export class Section1 {
 
   // generic window resize listener event
   handleResize() {
-    console.log('resizing in Section1')
     // 1. update height of step elements
     var stepH = Math.floor(window.innerHeight * 0.75);
     this.steps.style("height", stepH + "px");

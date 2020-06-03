@@ -1,27 +1,28 @@
 // pulls in all sections and initializes them
 // handles resize for them all
+import { Store } from "redux";
 import { selectAll } from "d3-selection"
 import * as Stickyfill from "stickyfill";
 import { Section1 } from "./Section1";
 
-import data from '../content/data.json';
+import { getSectionData } from "../redux/selectors";
+import A from "../redux/actions";
+import { State } from "../utils/types";
 import { SECTIONS, CLASSES as C } from "../utils/constants";
 
 export class App {
   section1: Section1;
-  state: { [key: string]: any }
-  constructor() {
-    this.state = {
-      data
-    }
-    console.log('initializing App', this.state.data)
+  store: Store<State, any>
+
+  constructor(store: Store) {
+    this.store = store
   }
 
   init() {
-    const { data } = this.state
-
+    A.loadTurnstileData(this.store.dispatch)
+    const sectionData = getSectionData(this.store)
     // SECTION 1
-    this.section1 = new Section1({ data: data[SECTIONS.S1] })
+    this.section1 = new Section1({ data: sectionData[SECTIONS.S1], store: this.store })
     this.section1.init();
 
     // polyfil for sticky positioning
