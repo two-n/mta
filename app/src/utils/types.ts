@@ -1,5 +1,10 @@
 import { SECTIONS } from "./constants";
 
+export interface State {
+  sectionData: AppDataType
+
+}
+
 export type AppDataType = {
   [key in SECTIONS]: SectionDataType
 }

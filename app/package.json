@@ -22,6 +22,8 @@
   "dependencies": {
     "d3-selection": "^1.4.1",
     "intersection-observer": "^0.10.0",
+    "redux": "^4.0.5",
+    "reselect": "^4.0.0",
     "scrollama": "^2.2.1",
     "stickyfill": "^1.1.1-strict"
   }
