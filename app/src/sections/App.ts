@@ -6,7 +6,6 @@ import * as Stickyfill from 'stickyfill';
 import Section1 from './Section1';
 
 import * as S from '../redux/selectors';
-import A from '../redux/actions';
 import { State } from '../utils/types';
 import { SECTIONS, CLASSES as C } from '../utils/constants';
 
