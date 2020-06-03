@@ -25,6 +25,8 @@ module.exports = {
     "import/no-unresolved": [0],
     "camelcase": [0, {"properties": "always"}],
     "no-unused-vars": [1],
-    "@typescript-eslint/explicit-module-boundary-types": [0]
+    "@typescript-eslint/explicit-module-boundary-types": [0],
+    "class-methods-use-this": [0],
+    "@typescript-eslint/ban-ts-comment": [0]
   },
 };
