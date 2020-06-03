@@ -33,7 +33,7 @@ export interface TurnstileData {
   morning_entries_avg: number
 }
 
-export interface StationTimeline {
+export interface StationTimelineItem {
   date: string;
   entries: number;
   morning_entries: number;
@@ -55,6 +55,6 @@ export interface StationSummary {
 export interface ProcessedStation {
   station: string;
   benchmarks: Map<string, {[key:string]: number}>
-  timeline: StationTimeline[],
+  timeline: StationTimelineItem[],
   summary: StationSummary
 }

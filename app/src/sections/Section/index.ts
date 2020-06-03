@@ -39,7 +39,7 @@ export default class Section {
     // add elements to page
     this.setUpSection();
 
-    // will be different for each instance
+    // will be different/overwritten for each instance
     this.setUpGraphic();
 
     // force a resize on load to ensure proper dimensions are sent to scrollama

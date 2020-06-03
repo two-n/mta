@@ -1,0 +1,33 @@
+@import "../../styling/variables";
+
+.fevergrid{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+
+  .chart{
+    transition: opacity 500ms;
+    opacity: 1;
+
+    &.hidden{
+      opacity: 0;
+    }
+  }
+
+}
+
+.feverline{
+  font-family: $fontRegular;
+  font-size: $fontSizeSmall;
+  overflow: visible;
+  margin: .25em;
+
+  .lines{
+    fill: none;
+    stroke: $colorYellow;
+
+    .benchmark{
+      stroke: $colorDarkGrey;
+    }
+  }
+}
