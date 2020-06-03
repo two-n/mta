@@ -14,6 +14,10 @@ export enum CLASSES {
   STEP_TEXT = 'step-text',
   STICKY = 'sticky',
   GRAPHIC = 'graphic',
+  TIMELINE='timeline',
+  LINES = 'lines',
+  LINE = 'line',
+  AXIS = 'axis'
 }
 
 export enum KEYS {
@@ -36,6 +40,8 @@ export enum KEYS {
 }
 
 export const FORMATTERS = {
+  fMonth: timeFormat('%B'),
+  fMonthYr: timeFormat('%b-%Y'),
   fDay: timeFormat('%a'),
   fDate: timeFormat('%d-%m-%Y'),
   pDate: timeParse('%d-%m-%Y'),

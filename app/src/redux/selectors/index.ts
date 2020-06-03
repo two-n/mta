@@ -11,6 +11,10 @@ export const getSectionData = (state: Store<State>) => state.getState().sectionD
 export const getTurnstileData = (state: Store<State>) => state.getState().turnstileData;
 
 /** Turnstile Manipulations */
+export const getOverallTimeline = createSelector([
+  getTurnstileData,
+], (data) => data && processStations(data, true));
+
 export const getStationTimelines = createSelector([
   getTurnstileData,
 ], (data) => data && rollups(data, processStations, Helpers.getNameHash));

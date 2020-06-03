@@ -55,6 +55,6 @@ export interface StationSummary {
 export interface ProcessedStation {
   station: string;
   benchmarks: Map<string, {[key:string]: number}>
-  timeline: StationTimeline,
+  timeline: StationTimeline[],
   summary: StationSummary
 }
