@@ -79,7 +79,8 @@ export default class Section {
   setUpSection() {
     const { data } = this;
     // the same for each section
-    this.el = select(`#${this.section}`) /** unique to section */
+    this.el = select('#app').append('section')
+      .attr('id', `${this.section}`) /** unique to section */
       .attr('class', C.SECTION);
 
     // create graphic container

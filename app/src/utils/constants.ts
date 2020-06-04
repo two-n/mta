@@ -2,8 +2,9 @@ import { format } from 'd3-format';
 import { timeFormat, timeParse } from 'd3-time-format';
 
 export enum SECTIONS {
-  S1 = 'section1',
-  S2 = 'section2',
+  S_TIMELINE = 'section-timeline',
+  S_PCT_CHNG = 'section-pct-change',
+  S_MOVING_MAP = 'section-moving-map',
 }
 
 export enum DIRECTIONS {

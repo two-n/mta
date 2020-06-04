@@ -1,5 +1,4 @@
 import { Store } from 'redux';
-import { Selection } from 'd3-selection';
 import Section from '../Section';
 import { SectionDataType, State, Controller } from '../../utils/types';
 import { SECTIONS as S, DIRECTIONS as D } from '../../utils/constants';
@@ -8,7 +7,7 @@ import Timeline from '../../components/Timeline';
 
 interface Props { data: SectionDataType, store: Store }
 
-export default class Section1 extends Section {
+export default class SectionTimeline extends Section {
   [x: string]: any;
 
   timeline: Timeline;
@@ -20,7 +19,7 @@ export default class Section1 extends Section {
   controller: Controller;
 
   constructor({ data, store }: Props) {
-    super({ data, store, sectionName: S.S1 });
+    super({ data, store, sectionName: S.S_TIMELINE });
     this.onStepEnter = this.onStepEnter.bind(this);
     this.controller = {
       0: {

@@ -7,11 +7,11 @@ import FeverGrid from '../../components/FeverLines';
 
 interface Props { data: SectionDataType, store: Store }
 
-export default class Section2 extends Section {
+export default class SectionPctChange extends Section {
   [x: string]: any;
 
   constructor({ data, store }: Props) {
-    super({ data, store, sectionName: S.S2 });
+    super({ data, store, sectionName: S.S_PCT_CHNG });
     this.onStepEnter = this.onStepEnter.bind(this);
   }
 
