@@ -107,7 +107,7 @@ export default class Timeline {
       .duration(durationLong)
       .ease(easeLinear)
       .attr('stroke-dasharray', `${0},${this.lineLength}`)
-      .on('interrup end', () => { this.isVisible = false; });
+      .on('interrupt end', () => { this.isVisible = false; });
   }
 
   handleResize() {
