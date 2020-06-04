@@ -5,15 +5,14 @@ import { selectAll } from 'd3-selection';
 import * as Stickyfill from 'stickyfill';
 import SectionTimeline from './SectionTimeline';
 import SectionPctChange from './SectionPctChange';
+import SectionMovingMap from './SectionMovingMap';
 
 import * as S from '../redux/selectors';
 import { State } from '../utils/types';
 import { SECTIONS, CLASSES as C } from '../utils/constants';
 
 export default class App {
-  SectionTimeline: SectionTimeline;
-
-  SectionPctChange: SectionPctChange;
+  [x: string]: any;
 
   store: Store<State, any>
 
@@ -35,6 +34,12 @@ export default class App {
       store: this.store,
     });
     this.SectionPctChange.init();
+    // SECTION 3
+    this.SectionMovingMap = new SectionMovingMap({
+      data: sectionData[SECTIONS.S_MOVING_MAP],
+      store: this.store,
+    });
+    this.SectionMovingMap.init();
 
     // polyfil for sticky positioning
     this.setupStickyfill();
@@ -45,6 +50,7 @@ export default class App {
 
   handleResize() {
     this.SectionTimeline.handleResize();
+    this.SectionMovingMap.handleResize();
   }
 
   setupStickyfill() {

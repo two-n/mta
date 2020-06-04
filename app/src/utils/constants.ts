@@ -30,6 +30,7 @@ export enum CLASSES {
   FEVERLINE = 'feverline',
   FEVERGRID = 'fevergrid',
   MOVING_MAP = 'moving-map',
+  MAP = 'map',
   BENCHMARK = 'benchmark',
   HIDDEN = 'hidden',
   VISIBLE = 'visible',

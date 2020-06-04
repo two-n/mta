@@ -1,5 +1,6 @@
 import { Store } from 'redux';
 import { createSelector } from 'reselect';
+import * as topojson from 'topojson-client';
 import {
   // @ts-ignore - no def for rollups
   rollups,
@@ -46,3 +47,18 @@ export const getDataExtents = createSelector([
       .map((t) => t.map(({ morning_pct_chg }) => morning_pct_chg)).flat(), 0.99)],
   };
 });
+
+
+export const getGeoJSONData = createSelector([
+  getMapData,
+], (data) => topojson.feature(data, data.objects.nta));
+
+export const getGeoMeshInterior = createSelector([
+  getMapData,
+], (data) => topojson.mesh(data, data.objects.nta,
+  (a, b) => a !== b));
+
+export const getGeoMeshExterior = createSelector([
+  getMapData,
+], (data) => topojson.mesh(data, data.objects.nta,
+  (a, b) => a === b));

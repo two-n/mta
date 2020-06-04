@@ -123,7 +123,7 @@ export default class Section {
     const stepH = Math.floor(window.innerHeight * 0.75);
     this.steps.style('height', `${stepH}px`);
 
-    const figureHeight = window.innerHeight / 2;
+    const figureHeight = window.innerHeight * 0.75;
     const figureMarginTop = (window.innerHeight - figureHeight) / 2;
 
     this.sticky

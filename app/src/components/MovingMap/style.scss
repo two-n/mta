@@ -1,0 +1,11 @@
+@import "../../styling/variables";
+
+.moving-map{
+
+  .map{
+    path{
+      fill: $colorLightGrey;
+      stroke: $colorLightGrey;
+    }
+  }
+}
