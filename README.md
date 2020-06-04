@@ -42,6 +42,11 @@ http://web.mta.info/developers/developer-data-terms.html#data --> 'GTFS'-->'New 
 ogr2ogr -where "BldgClass LIKE 'I%'" -t_srs WGS84 ../output/hospitals.geojson  ./MapPLUTO.shp MapPLUTO
 ```
 
+### NYC NTA(Neighborhood Tabulation Areas)
+https://data.cityofnewyork.us/City-Government/Neighborhood-Tabulation-Areas-NTA-/cpf4-rkhq
+
+`geo2topo output/nta.json > output/nta_topo.json`
+
 ## Process
 
 ## Notes

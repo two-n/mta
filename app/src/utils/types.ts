@@ -2,7 +2,8 @@ import { SECTIONS } from './constants';
 
 export interface State {
   sectionData: AppDataType
-  turnstileData: null | TurnstileData[]
+  turnstileData: null | TurnstileData[],
+  mapData: any,
 }
 
 export type AppDataType = {

@@ -1,7 +1,13 @@
-import { TurnstileData } from "../../utils/types"
+import { TurnstileData } from '../../utils/types';
 
-export const SET_TURNSTILE_DATA = "SET_TURNSTILE_DATA"
+export const SET_TURNSTILE_DATA = 'SET_TURNSTILE_DATA';
 export const setTurnstileData = (data: TurnstileData[]) => ({
   type: SET_TURNSTILE_DATA,
-  data
-})
+  data,
+});
+
+export const SET_MAP_DATA = 'SET_MAP_DATA';
+export const setMapData = (data: any) => ({
+  type: SET_MAP_DATA,
+  data,
+});

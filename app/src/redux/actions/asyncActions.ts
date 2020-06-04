@@ -1,7 +1,8 @@
 import { csv } from 'd3-fetch';
 import { autoType } from 'd3-dsv';
 import { Dispatch } from 'redux';
-import { setTurnstileData } from './creators';
+import { setTurnstileData, setMapData } from './creators';
+import mapData from '../../content/nta_topo.json';
 
 
 export const loadTurnstileData = (dispatch: Dispatch) => {
@@ -11,5 +12,10 @@ export const loadTurnstileData = (dispatch: Dispatch) => {
     .then((data) => dispatch(setTurnstileData(data)))
     .catch((err) => console.error('err in loading turnstile data', err));
 };
+
+export const loadMapData = (dispatch: Dispatch) => new Promise((resolve) => {
+  resolve(mapData);
+}).then((data) => dispatch(setMapData(data)))
+  .catch((err) => console.error('err in loading map data', err));
 
 export default {};

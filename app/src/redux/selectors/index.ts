@@ -14,6 +14,7 @@ import { KEYS as K, FORMATTERS as F, appConfig } from '../../utils/constants';
 /** Basic Selectors */
 export const getSectionData = (state: Store<State>) => state.getState().sectionData;
 export const getTurnstileData = (state: Store<State>) => state.getState().turnstileData;
+export const getMapData = (state: Store<State>) => state.getState().mapData;
 
 /** Turnstile Manipulations */
 export const getOverallTimeline = createSelector([
