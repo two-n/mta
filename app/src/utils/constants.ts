@@ -35,6 +35,8 @@ export enum CLASSES {
   HIDDEN = 'hidden',
   VISIBLE = 'visible',
   ACTIVE = 'active',
+  STATIONS ='stations',
+  STATION ='station',
 }
 
 export enum KEYS {

@@ -4,6 +4,7 @@ export interface State {
   sectionData: AppDataType
   turnstileData: null | TurnstileData[],
   mapData: any,
+  stationData: null | StationData[]
 }
 
 export type AppDataType = {
@@ -64,4 +65,14 @@ export interface Controller {
   [key:number]: {
     [key:string]: ()=> void
   }
+}
+
+export interface StationData {
+  station_code: string;
+  station: string;
+  GTFS_stop_id: string;
+  line_name: string;
+  ct2010: string;
+  lat: number;
+  long: number;
 }

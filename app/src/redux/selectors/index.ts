@@ -2,8 +2,7 @@ import { Store } from 'redux';
 import { createSelector } from 'reselect';
 import * as topojson from 'topojson-client';
 import {
-  // @ts-ignore - no def for rollups
-  rollups,
+  rollup,
   extent,
   quantile,
 } from 'd3-array';
@@ -16,17 +15,22 @@ import { KEYS as K, FORMATTERS as F, appConfig } from '../../utils/constants';
 export const getSectionData = (state: Store<State>) => state.getState().sectionData;
 export const getTurnstileData = (state: Store<State>) => state.getState().turnstileData;
 export const getMapData = (state: Store<State>) => state.getState().mapData;
+export const getStationData = (state: Store<State>) => state.getState().stationData;
 
 /** Turnstile Manipulations */
 export const getOverallTimeline = createSelector([
   getTurnstileData,
 ], (data) => data && processStations(data, true));
 
-export const getStationTimelines = createSelector([
+export const getStationRollup = createSelector([
   getTurnstileData,
 ], (data) => data
-&& (rollups(data, processStations, Helpers.getNameHash))
-  .map(([, processStation]: [string, ProcessedStation]) => processStation)
+&& rollup(data, processStations, Helpers.getNameHash));
+
+export const getStationTimelines = createSelector([
+  getStationRollup,
+], (data) => data
+&& Array.from(data).map(([, processStation]: [string, ProcessedStation]) => processStation)
   .map((d:ProcessedStation) => ({
     ...d,
     timeline: d.timeline
@@ -36,7 +40,7 @@ export const getStationTimelines = createSelector([
 /** calculates extents for commonly used values */
 export const getDataExtents = createSelector([
   getStationTimelines,
-], (stationStats) => {
+], (stationStats): {[key:string]: [number|Date, number|Date]} => {
   const stationTimelines = stationStats.map(({ timeline }) => timeline);
   return {
     date: extent(stationTimelines
@@ -47,7 +51,6 @@ export const getDataExtents = createSelector([
       .map((t) => t.map(({ morning_pct_chg }) => morning_pct_chg)).flat(), 0.99)],
   };
 });
-
 
 export const getGeoJSONData = createSelector([
   getMapData,

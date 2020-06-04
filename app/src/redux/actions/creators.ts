@@ -11,3 +11,8 @@ export const setMapData = (data: any) => ({
   type: SET_MAP_DATA,
   data,
 });
+export const SET_STATION_DATA = 'SET_STATION_DATA';
+export const setStationData = (data: any) => ({
+  type: SET_STATION_DATA,
+  data,
+});

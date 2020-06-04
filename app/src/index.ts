@@ -9,5 +9,6 @@ const app = new App(store);
 // load in data and then initialize app
 Promise.all([
   A.loadTurnstileData(store.dispatch),
+  A.loadStationData(store.dispatch),
   A.loadMapData(store.dispatch),
 ]).then(() => app.init());
