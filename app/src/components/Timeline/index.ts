@@ -5,6 +5,7 @@ import 'd3-transition';
 import { max, extent } from 'd3-array';
 import { line } from 'd3-shape';
 import { axisLeft, axisBottom } from 'd3-axis';
+import { easeLinear } from 'd3-ease';
 import { State } from '../../utils/types';
 import { CLASSES as C, FORMATTERS as F } from '../../utils/constants';
 import './style.scss';
@@ -19,7 +20,8 @@ interface Props {
 const M = {
   top: 20, bottom: 30, left: 40, right: 20,
 };
-const duration = 500;
+const durationLong = 5000;
+const durationShort = 200;
 
 export default class Timeline {
   [x: string]: any;
@@ -33,6 +35,7 @@ export default class Timeline {
     this.parent = parent;
     this.el = parent.append('svg')
       .attr('class', C.TIMELINE);
+    this.isVisible = false;
   }
 
   init() {
@@ -70,21 +73,41 @@ export default class Timeline {
       .data([timeline])
       .join('path')
       .attr('class', C.LINE)
-      .transition()
-      .duration(duration)
-      .attr('d', this.line);
+      .attr('d', this.line)
+      .attr('stroke-dasharray', () => {
+        this.lineLength = this.el.select(`path.${C.LINE}`).node().getTotalLength();
+        return `${this.isVisible ? this.lineLength : 0},${this.lineLength}`;
+      });
 
     this.el.select(`.x.${C.AXIS}`)
       .transition()
-      .duration(duration)
+      .duration(durationShort)
       .attr('transform', `translate(${0}, ${height - M.bottom})`)
       .call(this.xAxis);
 
     this.el.select(`.y.${C.AXIS}`)
       .transition()
-      .duration(duration)
+      .duration(durationShort)
       .attr('transform', `translate(${M.left}, ${0})`)
       .call(this.yAxis);
+  }
+
+  animateInLine() {
+    this.el.select(`path.${C.LINE}`)
+      .transition()
+      .duration(durationLong)
+      .ease(easeLinear)
+      .attr('stroke-dasharray', `${this.lineLength},${this.lineLength}`)
+      .on('interrupt end', () => { this.isVisible = true; });
+  }
+
+  animateOutLine() {
+    this.el.select(`path.${C.LINE}`)
+      .transition()
+      .duration(durationLong)
+      .ease(easeLinear)
+      .attr('stroke-dasharray', `${0},${this.lineLength}`)
+      .on('interrup end', () => { this.isVisible = false; });
   }
 
   handleResize() {

@@ -58,3 +58,9 @@ export interface ProcessedStation {
   timeline: StationTimelineItem[],
   summary: StationSummary
 }
+
+export interface Controller {
+  [key:number]: {
+    [key:string]: ()=> void
+  }
+}
