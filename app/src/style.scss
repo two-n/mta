@@ -51,5 +51,11 @@ section#intro{
   .step{
     position: relative;
     min-height: 500px;
+    transition: opacity 500ms;
+    opacity: 0;
+
+    &.active{
+      opacity: 1;
+    }
   }
 }

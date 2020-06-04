@@ -10,6 +10,7 @@ interface Props { data: SectionDataType,
   store: Store,
   sectionName: string }
 
+const fadeOutThreshold = 0.7;
 /** Scaffolding for reusable section code */
 export default class Section {
   store: Store<State>
@@ -52,16 +53,27 @@ export default class Section {
   setUpScroller() {
     this.scroller.setup({
       step: `#${this.section} .${C.STEP}`,
+      progress: true,
+      offset: 0.8,
     })
       .onStepEnter(this.onStepEnter)
+      .onStepProgress(this.onStepProgress)
       .onStepExit(this.onStepExit);
   }
 
   onStepEnter({ element, index, direction }) {
+    // console.log('enter: element, index, direction', element, index, direction);
+    select(element).classed(C.ACTIVE, true);
+  }
+
+  onStepProgress({ element, index, progress }) {
+    // console.log('progress: element, index, progress', element, index, progress);
+    select(element).classed(C.ACTIVE, progress < fadeOutThreshold);
   }
 
   onStepExit({ element, index, direction }) {
-
+    select(element).classed(C.ACTIVE, false);
+    // console.log('exit: element, index, direction', element, index, direction);
   }
 
   setUpSection() {

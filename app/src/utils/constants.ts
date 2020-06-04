@@ -30,7 +30,8 @@ export enum CLASSES {
   FEVERGRID = 'fevergrid',
   BENCHMARK = 'benchmark',
   HIDDEN = 'hidden',
-  VISIBLE = 'visible'
+  VISIBLE = 'visible',
+  ACTIVE = 'active',
 }
 
 export enum KEYS {
