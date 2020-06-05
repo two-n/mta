@@ -16,6 +16,7 @@ export const getSectionData = (state: Store<State>) => state.getState().sectionD
 export const getTurnstileData = (state: Store<State>) => state.getState().turnstileData;
 export const getMapData = (state: Store<State>) => state.getState().mapData;
 export const getStationData = (state: Store<State>) => state.getState().stationData;
+export const getView = (state: Store<State>) => state.getState().view;
 
 /** Turnstile Manipulations */
 export const getOverallTimeline = createSelector([
@@ -40,7 +41,8 @@ export const getStationTimelines = createSelector([
 /** calculates extents for commonly used values */
 export const getDataExtents = createSelector([
   getStationTimelines,
-], (stationStats): {[key:string]: [number|Date, number|Date]} => {
+  getStationData,
+], (stationStats, stations): {[key:string]: [number|Date| string, number|Date| string]} => {
   const stationTimelines = stationStats.map(({ timeline }) => timeline);
   return {
     date: extent(stationTimelines
@@ -49,6 +51,7 @@ export const getDataExtents = createSelector([
       .map((t) => t.map(({ entries_pct_chg }) => entries_pct_chg)).flat(), 0.999)],
     [K.MORNING_PCT_CHG]: [-1, quantile(stationTimelines
       .map((t) => t.map(({ morning_pct_chg }) => morning_pct_chg)).flat(), 0.99)],
+    [K.BOROUGH]: Helpers.getUnique(stations, (d) => d[K.BOROUGH]),
   };
 });
 

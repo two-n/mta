@@ -8,4 +8,9 @@
       stroke: $colorLightGrey;
     }
   }
+  .stations{
+    .station{
+      transition: transform 1000ms;
+    }
+  }
 }
