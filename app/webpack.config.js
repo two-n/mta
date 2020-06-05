@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const devMode = process.env.NODE_ENV !== 'production';
@@ -14,12 +15,15 @@ module.exports = {
   },
   devtool: devMode ? 'inline-source-map' : 'none',
   devServer: {
-    // contentBase: 'public',
-    // watchContentBase: true,
+    contentBase: 'public',
+    watchContentBase: true,
     hot: true,
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new CopyPlugin({
+      patterns: [{ from: 'public' }],
+    }),
     // generates new HTML page based on template in public folder
     new HtmlWebpackPlugin({
       inject: true,

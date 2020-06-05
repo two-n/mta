@@ -1,8 +1,8 @@
 import { Store } from 'redux';
-import Section from '~sections/Section';
-import { SectionDataType } from '~utils/types';
-import { SECTIONS as S } from '~utils/constants';
-import MovingMap from '~components/MovingMap';
+import Section from '../Section/index';
+import { SectionDataType } from '../../utils/types';
+import { SECTIONS as S } from '../../utils/constants';
+import MovingMap from '../../components/MovingMap/index';
 
 interface Props { data: SectionDataType, store: Store }
 

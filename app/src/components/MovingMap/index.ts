@@ -2,7 +2,7 @@ import { Store } from 'redux';
 import {
   Selection, geoAlbersUsa, geoPath, scaleSequential, interpolateYlOrBr,
 } from 'd3';
-import * as S from '../../redux/selectors';
+import * as S from '../../redux/selectors/index';
 import { State, StationData } from '../../utils/types';
 import { CLASSES as C } from '../../utils/constants';
 import { getNameHash } from '../../utils/helpers';
