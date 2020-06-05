@@ -3,10 +3,10 @@ import { Selection } from 'd3-selection';
 import { geoAlbersUsa, geoPath } from 'd3-geo';
 import { scaleSequential } from 'd3-scale';
 import { interpolateYlOrBr } from 'd3-scale-chromatic';
-import * as S from '~redux/selectors';
-import { State, StationData } from '~utils/types';
-import { CLASSES as C } from '~utils/constants';
-import { getNameHash } from '~utils/helpers';
+import * as S from '../../redux/selectors';
+import { State, StationData } from '../../utils/types';
+import { CLASSES as C } from '../../utils/constants';
+import { getNameHash } from '../../utils/helpers';
 import './style.scss';
 
 interface Props{
