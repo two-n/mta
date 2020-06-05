@@ -6,7 +6,7 @@ import {
 import mapData from '../../../public/content/nta_topo.json';
 
 export const loadTurnstileData = (dispatch: Dispatch) => {
-  const path = '/content/mta_timeseries_daily.csv';
+  const path = './content/mta_timeseries_daily.csv';
   return csv(path, autoType)
     // @ts-ignore
     .then((data) => dispatch(setTurnstileData(data)))
@@ -14,7 +14,7 @@ export const loadTurnstileData = (dispatch: Dispatch) => {
 };
 
 export const loadStationData = (dispatch: Dispatch) => {
-  const path = '/content/stationsWithTracts.csv';
+  const path = './content/stationsWithTracts.csv';
   return csv(path, autoType)
     // @ts-ignore
     .then((data) => dispatch(setStationData(data)))
@@ -22,7 +22,7 @@ export const loadStationData = (dispatch: Dispatch) => {
 };
 
 export const loadACSData = (dispatch: Dispatch) => {
-  const path = '/content/acsCleaned.csv';
+  const path = './content/acsCleaned.csv';
   return csv(path, autoType)
     // @ts-ignore
     .then((data) => dispatch(setACSData(data)))
