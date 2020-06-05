@@ -54,7 +54,27 @@
       },
       {
         "step_id": 2,
-        "header": "Scatterplot View",
+        "header": "By Borough",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "step_id": 3,
+        "header": "Color By Borough - Back to line",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "step_id": 4,
+        "header": "Scatterplot View 1 — % income",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "step_id": 5,
+        "header": "Scatterplot View 2 — % medical/service",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "step_id": 6,
+        "header": "Scatterplot View 3 — % no health insurance",
         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
       }
     ]

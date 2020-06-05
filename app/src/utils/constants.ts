@@ -11,6 +11,16 @@ export enum DIRECTIONS {
   DOWN = 'down'
 }
 
+export enum VIEWS {
+  MAP,
+  PCT_CHANGE,
+  BOROUGH,
+  PCT_CHANGE_BOROUGH,
+  SCATTER_PCT_INCOME,
+  SCATTER_ED_HEALTH,
+  SCATTER_UNINSURED,
+}
+
 export enum CLASSES {
   SECTION = 'section',
   SECTION_HEADER = 'section-header',
@@ -55,6 +65,13 @@ export enum KEYS {
   EXITS_AVG_PRE = 'exits_avg_pre',
   EXITS_AVG_POST = 'exits_avg_post',
   EXITS_PCT_CHG = 'exits_pct_chg',
+
+  NA='-',
+  BOROUGH= 'boro_code',
+  INCOME_PC = 'DP03_0088E', // "Per Capita Income ($)"
+  SNAP_PCT = 'DP03_0074PE', // "Percent With Food Stamp/SNAP benefits in the past 12 months (%)"
+  ED_HEALTH_PCT = 'DP03_0042PE', // Percent Employed in Educational Services, and Health Care and Social Assistance (%)"
+  UNINSURED='DP03_0099PE', // "Percent with No Health Insurance Coverage (%)"
 }
 
 export const FORMATTERS = {
@@ -65,6 +82,9 @@ export const FORMATTERS = {
   pDate: timeParse('%d-%m-%Y'),
   fNumber: format('.0s'),
   fPct: format('.0%'),
+  sDollar: '$,.0s',
+  sNumber: '.0s',
+  sPct: '.0%',
 };
 
 export const appConfig = {
