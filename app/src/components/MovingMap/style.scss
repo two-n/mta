@@ -3,6 +3,11 @@
 .moving-map{
 
   .map{
+    opacity: 0;
+    transition: opacity 500ms;
+    &.visible{
+      opacity: 1;
+    }
     path{
       fill: $colorLightGrey;
       stroke: $colorLightGrey;
@@ -11,6 +16,14 @@
   .stations{
     .station{
       transition: transform 1000ms;
+    }
+  }
+
+  .axis{
+    opacity: 0;
+    transition: opacity 500ms;
+    &.visible{
+      opacity: 1;
     }
   }
 }

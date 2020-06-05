@@ -2,12 +2,14 @@ import { Store } from 'redux';
 import { Selection } from 'd3-selection';
 import { geoAlbersUsa, geoPath } from 'd3-geo';
 import { scaleSequential, scaleLinear, scaleBand } from 'd3-scale';
+import { axisBottom, axisRight } from 'd3-axis';
 import { interpolateYlOrBr } from 'd3-scale-chromatic';
 import * as S from '../../redux/selectors';
 import * as A from '~redux/actions/creators';
 import { State, StationData } from '../../utils/types';
 import {
-  CLASSES as C, VIEWS as V, VIEWS, KEYS as K,
+  CLASSES as C, VIEWS as V, VIEWS,
+  KEYS as K, FORMATTERS as F,
 } from '../../utils/constants';
 import { getNameHash } from '../../utils/helpers';
 import './style.scss';
@@ -21,6 +23,7 @@ const M = {
   top: 20, bottom: 30, left: 40, right: 20,
 };
 const R = 3;
+const duration = 200;
 
 export default class MovingMap {
   [x: string]: any;
@@ -32,30 +35,68 @@ export default class MovingMap {
     this.geoMeshExterior = S.getGeoMeshExterior(this.store);
     this.stationsGISData = S.getStationData(this.store);
     this.turnstileData = S.getStationRollup(this.store);
+    this.acsMap = S.getStationToACSMap(this.store);
   }
 
   init() {
-    const { entries_pct_chg, boro_code } = S.getDataExtents(this.store);
+    const E = S.getDataExtents(this.store);
+
+    // SCALES
     this.proj = geoAlbersUsa();
-    this.map = this.el.append('g').attr('class', C.MAP);
-    this.stationsG = this.el.append('g').attr('class', C.STATIONS);
+
     this.colorScale = scaleSequential((t) => interpolateYlOrBr(1 - t))
       .domain([-1, -0.5]); // TODO: check this
-    this.boroYScale = scaleBand().domain(boro_code as string[]);
 
-    this.xScale = scaleLinear().domain([-1, -0.5]); // TODO: check this
+    this.boroYScale = scaleBand().domain(E.boro_code as string[]);
+
+    this.incomeYScale = scaleLinear()
+      .domain(E[K.INCOME_PC] as number[]);
+    this.incomeYScale.tickFormat(null, F.sDollar);
+
+    this.edHealthYScale = scaleLinear()
+      .domain(E[K.ED_HEALTH_PCT] as number[]);
+    this.edHealthYScale.tickFormat(null, F.sPct);
+
+    this.uninsuredYScale = scaleLinear()
+      .domain(E[K.UNINSURED] as number[]);
+    this.uninsuredYScale.tickFormat(null, F.sPct);
+
+    this.xScale = scaleLinear()
+      .domain([-1, -0.5]);
+    this.xScale.tickFormat(null, F.sPct); // TODO: check this
+
+    this.scaleMap = {
+      [V.MAP]: null,
+      [V.PCT_CHANGE]: null,
+      [V.BOROUGH]: this.boroYScale,
+      [V.SCATTER_PCT_INCOME]: this.incomeYScale,
+      [V.SCATTER_ED_HEALTH]: this.edHealthYScale,
+      [V.SCATTER_UNINSURED]: this.uninsuredYScale,
+    };
+
+    // AXES
+    this.xAxis = axisBottom(this.xScale);
+
+    // ELEMENTS
+    this.map = this.el.append('g').attr('class', C.MAP);
+    this.stationsG = this.el.append('g').attr('class', C.STATIONS);
+    this.xAxisEl = this.el.append('g').attr('class', `${C.AXIS} x`);
+    this.yAxisEl = this.el.append('g').attr('class', `${C.AXIS} y`);
+
     this.handleResize();
   }
 
   draw() {
     const [, height] = this.dims;
     const view = S.getView(this.store);
+    const yScale = this.scaleMap[view];
     this.geoPath = geoPath().projection(this.proj);
-    this.map.selectAll('path')
+    this.map
+      .classed(C.VISIBLE, view === V.MAP)
+      .selectAll('path')
       .data([this.geoMeshExterior])
       .join('path')
-      .attr('d', this.geoPath)
-      .classed(C.VISIBLE, view === V.MAP);
+      .attr('d', this.geoPath);
 
     this.stations = this.stationsG.selectAll(`g.${C.STATION}`)
       .data(this.stationsGISData)
@@ -70,16 +111,22 @@ export default class MovingMap {
               ${this.xScale(this.getPctChange(d))}px,${height / 2}px)`;
           case (V.BOROUGH):
             return `translate(
-              ${this.xScale(this.getPctChange(d))}px,${this.boroYScale(d[K.BOROUGH])}px)`;
+              ${this.xScale(this.getPctChange(d))}px,${yScale(d[K.BOROUGH])}px)`;
           case (V.PCT_CHANGE_BOROUGH):
             return `translate(
               ${this.xScale(this.getPctChange(d))}px,${height / 2}px)`;
-          case (V.SCATTER1):
+          case (V.SCATTER_PCT_INCOME):
             return `translate(
-              ${this.xScale(this.getPctChange(d))}px,${height / 2}px)`; // TODO
-          case (V.SCATTER2):
+              ${this.xScale(this.getPctChange(d))}px,
+              ${yScale(this.getACS(d, K.INCOME_PC))}px)`;
+          case (V.SCATTER_ED_HEALTH):
             return `translate(
-              ${this.xScale(this.getPctChange(d))}px,${height / 2}px)`; // TODO
+              ${this.xScale(this.getPctChange(d))}px,
+              ${yScale(this.getACS(d, K.ED_HEALTH_PCT))}px)`;
+          case (V.SCATTER_UNINSURED):
+            return `translate(
+              ${this.xScale(this.getPctChange(d))}px,
+              ${yScale(this.getACS(d, K.UNINSURED))}px)`;
           default: {
             const [x, y] = this.proj([d.long, d.lat]);
             return `translate(${x}px, ${y}px)`;
@@ -91,6 +138,25 @@ export default class MovingMap {
       .join('circle')
       .attr('r', R)
       .attr('fill', (d) => this.colorScale(this.getPctChange(d)));
+
+    this.xAxisEl
+      .classed(C.VISIBLE, view !== V.MAP)
+      .transition()
+      .duration(duration)
+      .attr('transform', `translate(${0}, ${height - M.bottom})`)
+      .call(this.xAxis);
+
+    this.yAxisEl
+      .classed(C.VISIBLE, !!yScale);
+
+    if (yScale) {
+      this.yAxis = axisRight(yScale);
+      this.yAxisEl
+        .transition()
+        .duration(duration)
+        .attr('transform', `translate(${M.left}, ${0})`)
+        .call(this.yAxis);
+    }
   }
 
   setView(view: VIEWS) {
@@ -98,9 +164,15 @@ export default class MovingMap {
     this.draw();
   }
 
-  getPctChange(station) {
+  getPctChange(station: StationData) {
     return this.turnstileData.get(getNameHash(station))
      && this.turnstileData.get(getNameHash(station)).summary.entries_pct_chg;
+  }
+
+  getACS(station:StationData, field: string) {
+    return this.acsMap.get(station.ct2010)
+     && this.acsMap.get(station.ct2010)[field] !== K.NA
+     && this.acsMap.get(station.ct2010)[field];
   }
 
   handleResize() {
@@ -111,9 +183,12 @@ export default class MovingMap {
       .attr('width', width).attr('height', height);
 
     // update scales
-    this.proj.fitSize([width, height * 1.4], this.geoMeshExterior);
+    this.proj.fitSize([width, height * 1.4], this.geoMeshExterior); // 1.4 to scale up for SI
     this.xScale.range([M.left, width - M.right]);
     this.boroYScale.range([height - M.bottom, M.top]);
+    this.incomeYScale.range([height - M.bottom, M.top]);
+    this.edHealthYScale.range([height - M.bottom, M.top]);
+    this.uninsuredYScale.range([height - M.bottom, M.top]);
     this.draw();
   }
 }

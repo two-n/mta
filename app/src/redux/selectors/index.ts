@@ -6,7 +6,7 @@ import {
   extent,
   quantile,
 } from 'd3-array';
-import { State, ProcessedStation } from '../../utils/types';
+import { State, ProcessedStation, ACSData } from '../../utils/types';
 import * as Helpers from '../../utils/helpers';
 import { processStations } from '../../utils/dataProcessing';
 import { KEYS as K, FORMATTERS as F, appConfig } from '../../utils/constants';
@@ -16,6 +16,7 @@ export const getSectionData = (state: Store<State>) => state.getState().sectionD
 export const getTurnstileData = (state: Store<State>) => state.getState().turnstileData;
 export const getMapData = (state: Store<State>) => state.getState().mapData;
 export const getStationData = (state: Store<State>) => state.getState().stationData;
+export const getACSData = (state: Store<State>) => state.getState().acsData;
 export const getView = (state: Store<State>) => state.getState().view;
 
 /** Turnstile Manipulations */
@@ -42,7 +43,8 @@ export const getStationTimelines = createSelector([
 export const getDataExtents = createSelector([
   getStationTimelines,
   getStationData,
-], (stationStats, stations): {[key:string]: [number|Date| string, number|Date| string]} => {
+  getACSData,
+], (stationStats, stations, acs): {[key:string]: (number|Date| string)[]} => {
   const stationTimelines = stationStats.map(({ timeline }) => timeline);
   return {
     date: extent(stationTimelines
@@ -52,6 +54,10 @@ export const getDataExtents = createSelector([
     [K.MORNING_PCT_CHG]: [-1, quantile(stationTimelines
       .map((t) => t.map(({ morning_pct_chg }) => morning_pct_chg)).flat(), 0.99)],
     [K.BOROUGH]: Helpers.getUnique(stations, (d) => d[K.BOROUGH]),
+    [K.ED_HEALTH_PCT]: extent(acs.filter((d) => d[K.ED_HEALTH_PCT] !== K.NA), (d) => d[K.ED_HEALTH_PCT]),
+    [K.INCOME_PC]: extent(acs.filter((d) => d[K.INCOME_PC] !== K.NA), (d) => d[K.INCOME_PC]),
+    [K.UNINSURED]: extent(acs.filter((d) => d[K.UNINSURED] !== K.NA), (d) => d[K.UNINSURED]),
+
   };
 });
 
@@ -68,3 +74,9 @@ export const getGeoMeshExterior = createSelector([
   getMapData,
 ], (data) => topojson.mesh(data, data.objects.nta,
   (a, b) => a === b));
+
+/** creates a map from tractId => ACS summary data */
+export const getStationToACSMap = createSelector([
+  getACSData,
+], (data) => data
+&& new Map(data.map((d:ACSData) => ([d.tract_id, d]))));

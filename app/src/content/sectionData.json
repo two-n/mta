@@ -71,7 +71,12 @@
         "step_id": 5,
         "header": "Scatterplot View 2 — % medical/service",
         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "step_id": 6,
+        "header": "Scatterplot View 3 — % no health insurance",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
       }
     ]
-  },
+  }
 }

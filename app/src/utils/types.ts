@@ -5,6 +5,7 @@ export interface State {
   turnstileData: null | TurnstileData[],
   mapData: any,
   stationData: null | StationData[],
+  acsData: null | ACSData[],
   view: VIEWS,
 }
 
@@ -77,4 +78,9 @@ export interface StationData {
   ct2010: string;
   lat: number;
   long: number;
+}
+
+export interface ACSData{
+  [key:string]: number | string;
+  tract_id: number;
 }

@@ -17,6 +17,11 @@ export const setStationData = (data: any) => ({
   type: SET_STATION_DATA,
   data,
 });
+export const SET_ACS_DATA = 'SET_ACS_DATA';
+export const setACSData = (data: any) => ({
+  type: SET_ACS_DATA,
+  data,
+});
 export const SET_VIEW = 'SET_VIEW';
 export const setView = (view: VIEWS) => ({
   type: SET_VIEW,

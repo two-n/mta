@@ -29,12 +29,16 @@ export default class SectionMovingMap extends Section {
         [D.UP]: () => this.movingMap.setView(V.PCT_CHANGE_BOROUGH),
       },
       4: {
-        [D.DOWN]: () => this.movingMap.setView(V.SCATTER1),
-        [D.UP]: () => this.movingMap.setView(V.SCATTER1),
+        [D.DOWN]: () => this.movingMap.setView(V.SCATTER_PCT_INCOME),
+        [D.UP]: () => this.movingMap.setView(V.SCATTER_PCT_INCOME),
       },
       5: {
-        [D.DOWN]: () => this.movingMap.setView(V.SCATTER2),
-        [D.UP]: () => this.movingMap.setView(V.SCATTER2),
+        [D.DOWN]: () => this.movingMap.setView(V.SCATTER_ED_HEALTH),
+        [D.UP]: () => this.movingMap.setView(V.SCATTER_ED_HEALTH),
+      },
+      6: {
+        [D.DOWN]: () => this.movingMap.setView(V.SCATTER_UNINSURED),
+        [D.UP]: () => this.movingMap.setView(V.SCATTER_UNINSURED),
       },
     };
   }
