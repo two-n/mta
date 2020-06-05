@@ -1,5 +1,4 @@
-import { csv } from 'd3-fetch';
-import { autoType } from 'd3-dsv';
+import { csv, autoType } from 'd3';
 import { Dispatch } from 'redux';
 import { setTurnstileData, setMapData, setStationData } from './creators';
 import mapData from '../../content/nta_topo.json';

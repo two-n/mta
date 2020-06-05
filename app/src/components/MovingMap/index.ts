@@ -1,8 +1,7 @@
 import { Store } from 'redux';
-import { Selection } from 'd3-selection';
-import { geoAlbersUsa, geoPath } from 'd3-geo';
-import { scaleSequential } from 'd3-scale';
-import { interpolateYlOrBr } from 'd3-scale-chromatic';
+import {
+  Selection, geoAlbersUsa, geoPath, scaleSequential, interpolateYlOrBr,
+} from 'd3';
 import * as S from '../../redux/selectors';
 import { State, StationData } from '../../utils/types';
 import { CLASSES as C } from '../../utils/constants';

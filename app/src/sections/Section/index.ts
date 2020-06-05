@@ -1,5 +1,5 @@
 import { Store } from 'redux';
-import { select, Selection } from 'd3-selection';
+import { select, Selection } from 'd3';
 import 'intersection-observer';
 import scrollama from 'scrollama';
 import { SectionDataType, State } from '../../utils/types';
