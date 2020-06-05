@@ -36,11 +36,12 @@ section#intro{
 
 .sticky{
   position: sticky;
+  display: flex;
+  flex-direction: column;
 
   .graphic{
     width: 100%;
-    height: 300px;// TODO: remove - temp!
-    // background-color: $colorYellow;
+    height: 100%;
   }
 }
 

@@ -1,5 +1,5 @@
 {
-  "section1": {
+  "section-timeline": {
     "title": "How has ridership changed?",
     "steps": [
       {
@@ -19,8 +19,8 @@
       }
     ]
   },
-  "section2": {
-    "title": "Where has ridership changed?",
+  "section-pct-change": {
+    "title": "How has ridership changed?",
     "steps": [
       {
         "step_id": 0,
@@ -35,6 +35,46 @@
       {
         "step_id": 2,
         "header": "header-2",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      }
+    ]
+  },
+  "section-moving-map": {
+    "title": "Where has ridership changed?",
+    "steps": [
+      {
+        "step_id": 0,
+        "header": "Map View",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "step_id": 1,
+        "header": "Percent Change View",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "step_id": 2,
+        "header": "By Borough",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "step_id": 3,
+        "header": "Color By Borough - Back to line",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "step_id": 4,
+        "header": "Scatterplot View 1 — % income",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "step_id": 5,
+        "header": "Scatterplot View 2 — % medical/service",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "step_id": 6,
+        "header": "Scatterplot View 3 — % no health insurance",
         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
       }
     ]

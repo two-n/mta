@@ -79,7 +79,8 @@ export default class Section {
   setUpSection() {
     const { data } = this;
     // the same for each section
-    this.el = select(`#${this.section}`) /** unique to section */
+    this.el = select('#app').append('section')
+      .attr('id', `${this.section}`) /** unique to section */
       .attr('class', C.SECTION);
 
     // create graphic container
@@ -122,7 +123,7 @@ export default class Section {
     const stepH = Math.floor(window.innerHeight * 0.75);
     this.steps.style('height', `${stepH}px`);
 
-    const figureHeight = window.innerHeight / 2;
+    const figureHeight = window.innerHeight * 0.75;
     const figureMarginTop = (window.innerHeight - figureHeight) / 2;
 
     this.sticky

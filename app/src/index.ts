@@ -7,5 +7,9 @@ import './styling/_fonts.scss';
 const store = configureStore();
 const app = new App(store);
 // load in data and then initialize app
-A.loadTurnstileData(store.dispatch)
-  .then(() => app.init());
+Promise.all([
+  A.loadTurnstileData(store.dispatch),
+  A.loadStationData(store.dispatch),
+  A.loadMapData(store.dispatch),
+  A.loadACSData(store.dispatch),
+]).then(() => app.init());
