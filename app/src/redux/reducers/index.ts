@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import sectionData from 'public/content/sectionData.json';
+import sectionData from '../../../public/content/sectionData.json';
 import { State } from '../../utils/types';
 import A from '../actions';
 

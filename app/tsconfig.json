@@ -9,6 +9,7 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
+    "resolveJsonModule": true,
     "baseUrl": "."
   },
   "include": [
