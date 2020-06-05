@@ -1,5 +1,5 @@
 import { TurnstileData } from '../../utils/types';
-import { VIEWS } from '~utils/constants';
+import { VIEWS } from '../../utils/constants';
 
 export const SET_TURNSTILE_DATA = 'SET_TURNSTILE_DATA';
 export const setTurnstileData = (data: TurnstileData[]) => ({

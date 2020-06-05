@@ -10,14 +10,6 @@ interface Props { data: SectionDataType, store: Store }
 export default class SectionTimeline extends Section {
   [x: string]: any;
 
-  timeline: Timeline;
-
-  store: Store<State>
-
-  data: SectionDataType;
-
-  controller: Controller;
-
   constructor({ data, store }: Props) {
     super({ data, store, sectionName: S.S_TIMELINE });
     this.onStepEnter = this.onStepEnter.bind(this);

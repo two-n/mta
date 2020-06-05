@@ -1,11 +1,7 @@
 import { Store } from 'redux';
-import { Selection } from 'd3-selection';
-import { scaleLinear, scaleTime } from 'd3-scale';
-import 'd3-transition';
-import { max, extent } from 'd3-array';
-import { line } from 'd3-shape';
-import { axisLeft, axisBottom } from 'd3-axis';
-import { easeLinear } from 'd3-ease';
+import {
+  Selection, scaleLinear, scaleTime, max, extent, line, axisLeft, axisBottom, easeLinear,
+} from 'd3';
 import { State } from '../../utils/types';
 import { CLASSES as C, FORMATTERS as F } from '../../utils/constants';
 import './style.scss';

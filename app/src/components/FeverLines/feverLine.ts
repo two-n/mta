@@ -1,6 +1,7 @@
-import { Selection } from 'd3-selection';
-import { ScaleTime, ScaleLinear } from 'd3-scale';
-import { line } from 'd3-shape';
+import {
+  Selection,
+  ScaleTime, ScaleLinear, line,
+} from 'd3';
 import { CLASSES as C, FORMATTERS as F } from '../../utils/constants';
 import { ProcessedStation, StationTimelineItem } from '../../utils/types';
 import './style.scss';

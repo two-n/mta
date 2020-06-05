@@ -1,8 +1,8 @@
 import { Action } from 'redux';
+import sectionData from '../../../public/content/sectionData.json';
 import { State } from '../../utils/types';
-import sectionData from '../../content/sectionData.json';
 import A from '../actions';
-import { VIEWS } from '~utils/constants';
+import { VIEWS } from '../../utils/constants';
 
 const initialState: State = {
   sectionData,

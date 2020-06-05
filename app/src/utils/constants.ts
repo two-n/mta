@@ -1,5 +1,4 @@
-import { format } from 'd3-format';
-import { timeFormat, timeParse } from 'd3-time-format';
+import { format, timeFormat, timeParse } from 'd3';
 
 export enum SECTIONS {
   S_TIMELINE = 'section-timeline',

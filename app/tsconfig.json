@@ -4,17 +4,14 @@
     "lib": [
       "es2019"
     ],
+    "moduleResolution": "node",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "downlevelIteration": true,
     "sourceMap": true,
-    "baseUrl": ".",
-    "paths": {
-      "~*": [
-        "./src/*"
-      ]
-    }
+    "resolveJsonModule": true,
+    "baseUrl": "."
   },
   "include": [
     "src/**/*"

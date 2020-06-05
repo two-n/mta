@@ -1,14 +1,14 @@
 import { Store } from 'redux';
-import { Selection } from 'd3-selection';
-import { geoAlbersUsa, geoPath } from 'd3-geo';
-import { scaleSequential, scaleLinear, scaleBand } from 'd3-scale';
-import { axisBottom, axisRight } from 'd3-axis';
-import { interpolateYlOrBr } from 'd3-scale-chromatic';
-import * as S from '../../redux/selectors';
-import * as A from '~redux/actions/creators';
+import {
+  Selection, geoAlbersUsa, geoPath, scaleSequential,
+  scaleLinear, scaleBand, interpolateYlOrBr,
+  axisBottom, axisRight,
+} from 'd3';
+import * as S from '../../redux/selectors/index';
+import * as A from '../../redux/actions/creators';
 import { State, StationData } from '../../utils/types';
 import {
-  CLASSES as C, VIEWS as V, VIEWS,
+  CLASSES as C, VIEWS as V,
   KEYS as K, FORMATTERS as F,
 } from '../../utils/constants';
 import { getNameHash } from '../../utils/helpers';

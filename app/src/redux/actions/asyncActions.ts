@@ -1,14 +1,12 @@
-import { csv } from 'd3-fetch';
-import { autoType } from 'd3-dsv';
+import { autoType, csv } from 'd3';
 import { Dispatch } from 'redux';
 import {
   setTurnstileData, setMapData, setStationData, setACSData,
 } from './creators';
-import mapData from '../../content/nta_topo.json';
-
+import mapData from '../../../public/content/nta_topo.json';
 
 export const loadTurnstileData = (dispatch: Dispatch) => {
-  const path = require('../../content/mta_timeseries_daily.csv');
+  const path = './content/mta_timeseries_daily.csv';
   return csv(path, autoType)
     // @ts-ignore
     .then((data) => dispatch(setTurnstileData(data)))
@@ -16,7 +14,7 @@ export const loadTurnstileData = (dispatch: Dispatch) => {
 };
 
 export const loadStationData = (dispatch: Dispatch) => {
-  const path = require('../../content/stationsWithTracts.csv');
+  const path = './content/stationsWithTracts.csv';
   return csv(path, autoType)
     // @ts-ignore
     .then((data) => dispatch(setStationData(data)))
@@ -24,7 +22,7 @@ export const loadStationData = (dispatch: Dispatch) => {
 };
 
 export const loadACSData = (dispatch: Dispatch) => {
-  const path = require('../../content/acsCleaned.csv');
+  const path = './content/acsCleaned.csv';
   return csv(path, autoType)
     // @ts-ignore
     .then((data) => dispatch(setACSData(data)))

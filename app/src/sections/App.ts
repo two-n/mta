@@ -1,7 +1,7 @@
 // pulls in all sections and initializes them
 // handles resize for them all
 import { Store } from 'redux';
-import { selectAll } from 'd3-selection';
+import { selectAll } from 'd3';
 import * as Stickyfill from 'stickyfill';
 import SectionTimeline from './SectionTimeline';
 import SectionPctChange from './SectionPctChange';

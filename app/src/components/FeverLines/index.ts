@@ -1,7 +1,6 @@
 import { Store } from 'redux';
-import { Selection } from 'd3-selection';
+import { Selection, scaleTime, scaleLinear } from 'd3';
 import { descending } from 'd3-array';
-import { scaleTime, scaleLinear } from 'd3-scale';
 import FeverLine from './feverLine';
 import { State } from '../../utils/types';
 import * as S from '../../redux/selectors';
