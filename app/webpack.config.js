@@ -12,7 +12,7 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist/'),
-    publicPath: '/public/',
+    publicPath: devMode ? '/' : process.env.PUBLIC_URL,
   },
   devtool: devMode ? 'inline-source-map' : 'none',
   devServer: {
