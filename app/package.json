@@ -7,7 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "env NODE_ENV=production PUBLIC_URL=http://prototypes.two-n.com/mta/ webpack",
     "start": "webpack-dev-server --hot",
-    "prototypes-build": "parcel build src/index.html --log-level 4 --public-url http://prototypes.two-n.com/mta/ ",
     "deploy": "rsync -avz --delete ./dist/ twoninc@two-n.com:/home/twoninc/prototypes.two-n.com/mta/"
   },
   "author": "auchers <aucher@two-n.com>",
