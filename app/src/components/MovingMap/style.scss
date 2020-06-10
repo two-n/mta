@@ -16,6 +16,23 @@
   .stations{
     .station{
       transition: transform 1000ms;
+      cursor: pointer;
+
+      text{
+        visibility: hidden;
+        text-anchor: middle;
+        pointer-events: none;
+      }
+
+      &:hover{
+        text{
+          visibility: visible;
+        }
+
+        circle{
+         stroke: $colorBlack;
+        }
+      }
     }
   }
 

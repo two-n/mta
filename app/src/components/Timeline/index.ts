@@ -130,7 +130,7 @@ export default class Timeline {
       .data(['Daily Metrocard Entry Swipes'])
       .join('text')
       .attr('class', C.LABEL)
-      .attr('writing-mode', 'vertical-rl')
+      .attr('writing-mode', 'vertical-lr')
       .attr('dx', '-3.5em')
       .attr('transform', `translate(${0}, ${height / 2})`)
       .text((d) => d);

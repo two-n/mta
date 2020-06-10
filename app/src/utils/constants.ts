@@ -81,6 +81,22 @@ export enum KEYS {
   UNINSURED='DP03_0099PE', // "Percent with No Health Insurance Coverage (%)"
 }
 
+export const boroughMap: {[key:number]: string} = {
+  1: 'Manhattan',
+  2: 'Bronx',
+  3: 'Brooklyn',
+  4: 'Queens',
+  5: 'Staten Island',
+};
+
+export const MTA_Colors = [
+  '#0039A6', // dark blue
+  '#FF6319', // orange
+  '#00933C', // green
+  '#B933AD', // purple
+  '#EE352E', // red
+];
+
 export const FORMATTERS = {
   fMonth: utcFormat('%B'),
   fMonthYr: utcFormat('%b-%Y'),
@@ -89,7 +105,9 @@ export const FORMATTERS = {
   pDate: utcParse('%d-%m-%Y'),
   fNumber: format('.0s'),
   fPct: format('.0%'),
-  sDollar: '$,.0s',
+  fPctNoMult: (d:number) => `${format('.0s')(d)}%`,
+  fBorough: (d:number) => boroughMap[d],
+  sDollar: format('$,.0s'),
   sNumber: '.0s',
   sPct: '.0%',
 };
