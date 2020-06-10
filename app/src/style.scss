@@ -57,6 +57,7 @@ section#intro{
     min-height: 500px;
     transition: opacity 500ms;
     opacity: 0;
+    pointer-events: none;
 
     &.active{
       opacity: 1;

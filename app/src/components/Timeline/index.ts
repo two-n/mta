@@ -51,7 +51,7 @@ const M = {
   top: 20, bottom: 30, left: 50, right: 20,
 };
 const durationShort = 200;
-const radius = 7;
+const radius = 15;
 
 export default class Timeline {
   [x: string]: any;
@@ -156,7 +156,7 @@ export default class Timeline {
     this.annotations.selectAll('text')
       .data((d) => [d])
       .join('text')
-      .attr('dy', '-1em')
+      .attr('dy', '-1.5em')
       .attr('y', ({ timeline }) => this.y(timeline[timeline.length - 1].entries))
       .text(({ label }) => label);
   }
