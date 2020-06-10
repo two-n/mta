@@ -45,6 +45,7 @@ export enum CLASSES {
   BENCHMARK = 'benchmark',
   HIDDEN = 'hidden',
   VISIBLE = 'visible',
+  FADED = 'faded',
   ACTIVE = 'active',
   STATIONS ='stations',
   STATION ='station',

@@ -51,6 +51,7 @@ const M = {
   top: 20, bottom: 30, left: 50, right: 20,
 };
 const durationShort = 200;
+const radius = 7;
 
 export default class Timeline {
   [x: string]: any;
@@ -135,21 +136,28 @@ export default class Timeline {
       .text((d) => d);
 
     this.annotations = this.el.select(`g.${C.ANNOTATIONS}`).selectAll(`g.${C.ANNOTATION}`)
-      .data(annotations)
+      .data(bisectedTimeline)
       .join('g')
       .attr('class', C.ANNOTATION)
       .attr(C.DATA_STEP, ({ step_id }) => step_id)
-      .attr('transform', ({ date }: TimelineAnnotation) => `translate(${this.x(date)}, ${M.top})`);
+      .attr('transform', ({ date }: TimelineAnnotation) => `translate(${this.x(date)}, ${0})`)
+      .classed(C.FADED, ({ step_id }) => step_id < currentIndex);
 
+    // // path currently not visible -- keep for now, remove if not in use later
+    // this.annotations.selectAll('path').data((d) => [d])
+    //   .join('path')
+    //   .attr('d', `M ${0} ${0} V ${height - M.bottom - M.top}`);
 
-    this.annotations.selectAll('path').data((d) => [d])
-      .join('path')
-      .attr('d', `M ${0} ${0} V ${height - M.bottom - M.top}`);
+    this.annotations.selectAll('circle').data((d) => [d])
+      .join('circle')
+      .attr('cy', ({ timeline }) => this.y(timeline[timeline.length - 1].entries))
+      .attr('r', radius);
 
     this.annotations.selectAll('text')
       .data((d) => [d])
       .join('text')
       .attr('dy', '-1em')
+      .attr('y', ({ timeline }) => this.y(timeline[timeline.length - 1].entries))
       .text(({ label }) => label);
   }
 
@@ -162,7 +170,9 @@ export default class Timeline {
   toggleAnnotationVisibility(index) {
     const { currentIndex } = this;
     if (index === currentIndex) {
-      this.annotations.classed(C.VISIBLE, ({ step_id }) => step_id === currentIndex);
+      this.annotations
+        .classed(C.VISIBLE, ({ step_id }) => step_id === currentIndex)
+        .classed(C.FADED, ({ step_id }) => step_id < currentIndex);
     }
   }
 
