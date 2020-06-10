@@ -84,3 +84,10 @@ export interface ACSData{
   [key:string]: number | string;
   tract_id: number;
 }
+
+export interface TimelineAnnotation{
+  date: Date,
+  step_id: number,
+  label: string,
+  duration: number,
+}

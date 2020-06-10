@@ -46,10 +46,13 @@ section#intro{
 }
 
 .article{
- max-width: $maxTextWidth;
- margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  //  margin: 0 auto; // uncomment to center
 
   .step{
+    max-width: $maxTextWidth;
     position: relative;
     min-height: 500px;
     transition: opacity 500ms;

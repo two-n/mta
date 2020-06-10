@@ -4,17 +4,27 @@
     "steps": [
       {
         "step_id": 0,
-        "header": "header-0",
-        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        "header": "Normal Week",
+        "text": "This is a normal week of MTA ridership as measured by MetroCard swipes. You can notice here the normal cyclical trends of more commuters during weekdays and then dips in ridership each weekend."
       },
       {
         "step_id": 1,
-        "header": "header-1",
-        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        "header": "First COVID Case in New York",
+        "text": "March 1st was the day the first COVID-19 case was identified in New York State. "
       },
       {
         "step_id": 2,
-        "header": "header-2",
+        "header": "NYC on Pause",
+        "text": "On March 20th, Governor Cuomo announces statewide stay-at-home order, known as the NYS on Pause Program,  beginning March 22nd."
+      },
+      {
+        "step_id": 3,
+        "header": "Peak number of deaths",
+        "text": "Number of deaths peak for New York State at 1,055 in a single day. This data comes from the NYTimes compiled dataset."
+      },
+      {
+        "step_id": 4,
+        "header": "Where we are now",
         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
       }
     ]

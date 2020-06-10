@@ -5,4 +5,26 @@
     fill: none;
     stroke: $colorBlack;
   }
+
+  .annotation{
+    opacity: 0;
+    transition: opacity 500ms;
+
+    path{
+      stroke: $colorYellow;
+      stroke-width: 2px;
+    }
+
+    text{
+      text-anchor: middle;
+      text-transform: uppercase;
+      font-size: $fontSizeSmall;
+      font-family: $fontBold;
+      fill: $colorDarkGrey;
+    }
+
+    &.visible{
+      opacity: 1;
+    }
+  }
 }

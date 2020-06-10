@@ -1,4 +1,6 @@
-import { format, timeFormat, timeParse } from 'd3';
+import {
+  format, utcFormat, utcParse,
+} from 'd3';
 
 export enum SECTIONS {
   S_TIMELINE = 'section-timeline',
@@ -46,6 +48,10 @@ export enum CLASSES {
   ACTIVE = 'active',
   STATIONS ='stations',
   STATION ='station',
+  ANNOTATIONS = 'annotations',
+  ANNOTATION = 'annotation',
+  DATA_STEP = 'data-step',
+  LABEL = 'label'
 }
 
 export enum KEYS {
@@ -75,11 +81,11 @@ export enum KEYS {
 }
 
 export const FORMATTERS = {
-  fMonth: timeFormat('%B'),
-  fMonthYr: timeFormat('%b-%Y'),
-  fDay: timeFormat('%a'),
-  fDate: timeFormat('%d-%m-%Y'),
-  pDate: timeParse('%d-%m-%Y'),
+  fMonth: utcFormat('%B'),
+  fMonthYr: utcFormat('%b-%Y'),
+  fDay: utcFormat('%a'),
+  fDate: utcFormat('%d-%m-%Y'),
+  pDate: utcParse('%d-%m-%Y'),
   fNumber: format('.0s'),
   fPct: format('.0%'),
   sDollar: '$,.0s',

@@ -13,14 +13,6 @@ export default class SectionTimeline extends Section {
   constructor({ data, store }: Props) {
     super({ data, store, sectionName: S.S_TIMELINE });
     this.onStepEnter = this.onStepEnter.bind(this);
-    this.controller = {
-      0: {
-        [D.DOWN]: () => this.timeline.animateInLine(),
-      },
-      2: {
-        [D.UP]: () => this.timeline.animateOutLine(),
-      },
-    };
   }
 
   setUpGraphic() {
@@ -29,10 +21,7 @@ export default class SectionTimeline extends Section {
   }
 
   onStepEnter({ element, index, direction }) {
-    if (this.controller[index]
-      && this.controller[index][direction]) {
-      this.controller[index][direction]();
-    }
+    this.timeline.handleTransition(index, direction);
   }
 
   handleResize() {
