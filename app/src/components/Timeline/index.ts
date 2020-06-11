@@ -48,7 +48,7 @@ interface Props {
 }
 
 const M = {
-  top: 20, bottom: 30, left: 70, right: 20,
+  top: 20, bottom: 30, left: 100, right: 20,
 };
 const durationShort = 200;
 const radius = 15;
