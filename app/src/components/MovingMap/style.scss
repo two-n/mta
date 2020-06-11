@@ -22,6 +22,10 @@
         visibility: hidden;
         text-anchor: middle;
         pointer-events: none;
+        text-transform: uppercase;
+        font-size: $fontSizeSmall;
+        font-family: $fontRegular;
+        fill: $colorDarkGrey;
       }
 
       &:hover{
