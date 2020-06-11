@@ -1,6 +1,6 @@
 import { Store } from 'redux';
 import {
-  Selection, scaleLinear, scaleTime, max, extent, line, axisLeft, axisBottom, easeLinear, select, scaleUtc, window,
+  Selection, scaleLinear, min, max, line, axisLeft, axisBottom, easeLinear, select, scaleUtc,
 } from 'd3';
 import { bisector } from 'd3-array';
 import { State, TimelineAnnotation, StationTimelineItem } from '../../utils/types';
@@ -37,7 +37,7 @@ const annotations: TimelineAnnotation[] = [
   {
     date: F.pDate('08-06-2020'),
     step_id: 4,
-    label: 'retail begins to re-open', // think about how to handle this
+    label: 'Re-Opening Begins', // think about how to handle this
     duration: 1000,
   },
 ];
@@ -48,7 +48,7 @@ interface Props {
 }
 
 const M = {
-  top: 20, bottom: 30, left: 100, right: 20,
+  top: 20, bottom: 30, left: 100, right: 50,
 };
 const durationShort = 200;
 const radius = 15;
@@ -76,7 +76,7 @@ export default class Timeline {
       .domain([0, max(timeline, ({ entries }) => entries)]);
 
     this.x = scaleUtc()
-      .domain(extent(timeline, ({ date }) => F.pDate(date)));
+      .domain([min(timeline, ({ date }) => F.pDate(date)), F.pDate('08-06-2020')]); // TODO: make clearer
 
     // axes
     this.yAxis = axisLeft(this.y).tickFormat(F.fNumber);
