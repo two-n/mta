@@ -30,8 +30,8 @@ export default class MovingMap {
 
   constructor({ store, parent }:Props) {
     this.store = store;
-    this.parent = parent;
-    this.el = parent.append('svg').attr('class', C.MOVING_MAP);
+    this.parent = parent.classed(C.MOVING_MAP, true);
+    this.el = parent.append('svg');
     this.geoMeshExterior = S.getGeoMeshExterior(this.store);
     this.stationsGISData = S.getStationData(this.store);
     this.turnstileData = S.getStationRollup(this.store);
@@ -45,7 +45,7 @@ export default class MovingMap {
     this.proj = geoAlbersUsa();
 
     this.colorScale = scaleSequential((t) => interpolateYlOrBr(1 - t))
-      .domain(E.summary_pct_chg as [number, number]);
+      .domain(E.summary_morning_pct_chg as [number, number]);
 
     this.colorBoroughScale = scaleOrdinal().domain(E.boro_code as string[]).range(MTA_Colors);
 
@@ -64,13 +64,13 @@ export default class MovingMap {
     this.uninsuredYScale.tickFormat(null, F.sPct);
 
     this.xScale = scaleLinear()
-      .domain(E.summary_pct_chg as [number, number]);
+      .domain(E.summary_morning_pct_chg as [number, number]);
     this.xScale.tickFormat(null, F.sPct);
 
     this.scaleMap = {
       [V.MAP]: { label: null, scale: null },
       [V.PCT_CHANGE]: { label: null, scale: null },
-      [V.BOROUGH]: { label: 'Borough', scale: this.boroYScale, format: F.fBorough },
+      [V.BOROUGH]: { label: null, scale: this.boroYScale, format: F.fBorough },
       [V.PCT_CHANGE_BOROUGH]: { label: null, scale: null },
       [V.SCATTER_PCT_INCOME]: { label: 'Per Capita Income ($)', scale: this.incomeYScale, format: F.sDollar },
       [V.SCATTER_ED_HEALTH]: { label: 'Percent Employed in Educational Services, and Health Care and Social Assistance (%)', scale: this.edHealthYScale, format: F.fPctNoMult },
@@ -85,6 +85,7 @@ export default class MovingMap {
     this.stationsG = this.el.append('g').attr('class', C.STATIONS);
     this.xAxisEl = this.el.append('g').attr('class', `${C.AXIS} x`);
     this.yAxisEl = this.el.append('g').attr('class', `${C.AXIS} y`);
+    this.overlay = this.parent.append('div').attr('class', C.OVERLAY);
 
     this.handleResize();
   }
@@ -152,23 +153,21 @@ export default class MovingMap {
       .attr('y', -R - 3)
       .text((d) => getNameHash(d));
 
+    // AXES
     this.xAxisEl
-      .classed(C.VISIBLE, view !== V.MAP)
       .transition()
       .duration(duration)
       .attr('transform', `translate(${0}, ${height - M.bottom})`)
       .call(this.xAxis);
 
-    this.xAxisEl.selectAll(`text.${C.LABEL}`)
-      .data(['Percent Decline in Ridership'])
-      .join('text')
-      .attr('class', C.LABEL)
-      .attr('transform', `translate(${width / 2}, ${0})`)
-      .attr('dy', '3.5em')
-      .text((d) => d);
-
-    this.yAxisEl
-      .classed(C.VISIBLE, !!yScale);
+    this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.x`)
+      .data(['← Higher decrease in ridership', 'Lower decrease in ridership→'])
+      .join('div')
+      .attr('class', `${C.AXIS}-${C.LABEL} ${C.NO_WRAP} x`)
+      .style('left', (d, i) => i === 0 && `${M.left}px`)
+      .style('right', (d, i) => i === 1 && `${M.right}px`)
+      .style('transform', `translateY(${height - M.bottom}px)`)
+      .html((d) => d);
 
     if (yScale) {
       this.yAxis = axisLeft(yScale).tickFormat(format);
@@ -178,15 +177,21 @@ export default class MovingMap {
         .attr('transform', `translate(${M.left}, ${0})`)
         .call(this.yAxis);
 
-      this.yAxisEl.selectAll(`text.${C.LABEL}`)
+      this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.y`)
         .data([label])
-        .join('text')
-        .attr('class', C.LABEL)
-        .attr('transform', `translate(${0}, ${height / 2})`)
-        .attr('writing-mode', 'vertical-lr')
-        .attr('dx', '-4.5em')
-        .text((d) => d);
+        .join('div')
+        .attr('class', `${C.AXIS}-${C.LABEL} y`)
+        .style('top', `${height / 2}px`)
+        .style('transform', 'translateY(-50%)')
+        .style('width', `${M.left - 20}px`)
+        .html((d) => d);
     }
+
+    // VISIBILITY
+    this.parent.selectAll('.x')
+      .classed(C.VISIBLE, view !== V.MAP);
+    this.parent.selectAll('.y')
+      .classed(C.VISIBLE, !!yScale);
   }
 
   setView(view: VIEWS) {
@@ -196,7 +201,7 @@ export default class MovingMap {
 
   getPctChange(station: StationData) {
     return this.turnstileData.get(getNameHash(station))
-     && this.turnstileData.get(getNameHash(station)).summary.entries_pct_chg;
+     && this.turnstileData.get(getNameHash(station)).summary.morning_pct_chg;
   }
 
   getACS(station:StationData, field: string) {
@@ -211,6 +216,8 @@ export default class MovingMap {
     this.el
       .attr('viewBox', [0, 0, width, height])
       .attr('width', width).attr('height', height);
+
+    this.overlay.style('width', `${width}px`).style('height', `${height}px`);
 
     // update scales
     this.proj.fitSize([width, height * 1.4], this.geoMeshExterior); // 1.4 to scale up for SI

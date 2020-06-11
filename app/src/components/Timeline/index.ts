@@ -31,7 +31,7 @@ const annotations: TimelineAnnotation[] = [
   {
     date: F.pDate('07-04-2020'),
     step_id: 3,
-    label: '1,055 deaths in one day',
+    label: 'Peak number of deaths',
     duration: 1000,
   },
   {

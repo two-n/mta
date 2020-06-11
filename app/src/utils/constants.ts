@@ -52,7 +52,9 @@ export enum CLASSES {
   ANNOTATIONS = 'annotations',
   ANNOTATION = 'annotation',
   DATA_STEP = 'data-step',
-  LABEL = 'label'
+  LABEL = 'label',
+  OVERLAY = 'overlay',
+  NO_WRAP = 'no-wrap',
 }
 
 export enum KEYS {
@@ -103,9 +105,9 @@ export const FORMATTERS = {
   fDay: utcFormat('%a'),
   fDate: utcFormat('%d-%m-%Y'),
   pDate: utcParse('%d-%m-%Y'),
-  fNumber: format('.0s'),
+  fNumber: format('.2s'),
   fPct: format('.0%'),
-  fPctNoMult: (d:number) => `${format('.0s')(d)}%`,
+  fPctNoMult: (d:number) => `${format('.0f')(d)}%`,
   fBorough: (d:number) => boroughMap[d],
   sDollar: format('$,.0s'),
   sNumber: '.0s',

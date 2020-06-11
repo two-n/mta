@@ -25,24 +25,3 @@ $maxTextWidth: 20rem;
 
 /** TRANSITIONS */
 
-/** DEFAULT ELEMENTS */
-
-h1{
-  font-family: $fontBold;
-  font-size: $fontSizeXXLarge;
-  max-width: $maxTextWidth;
-}
-
-h2{
-  font-family: $fontBold;
-  font-size: $fontSizeXLarge;
-  max-width: $maxTextWidth;
-}
-
-.axis{
-  text.label{
-    text-anchor: middle;
-    fill: $colorBlack;
-    text-transform: uppercase;
-  }
-}

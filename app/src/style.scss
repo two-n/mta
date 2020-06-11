@@ -42,6 +42,13 @@ section#intro{
   .graphic{
     width: 100%;
     height: 100%;
+    position:relative;
+
+    .overlay{
+      position: absolute;
+      top:0;
+      left:0;
+    }
   }
 }
 
@@ -61,6 +68,46 @@ section#intro{
 
     &.active{
       opacity: 1;
+    }
+  }
+}
+
+/** DEFAULT ELEMENTS */
+
+h1{
+  font-family: $fontBold;
+  font-size: $fontSizeXXLarge;
+  max-width: $maxTextWidth;
+}
+
+h2{
+  font-family: $fontBold;
+  font-size: $fontSizeXLarge;
+  max-width: $maxTextWidth;
+}
+
+.axis{
+  text.label{
+    text-anchor: middle;
+    fill: $colorBlack;
+    text-transform: uppercase;
+  }
+}
+// for annotations and axes labels
+// use divs for these for better text formatting options
+.overlay{
+  width: 100%;
+  div.axis-label{
+    font-size: $fontSizeSmall;
+    position: absolute;
+    top: 0;
+    transform-origin: center;
+    width: max-content;
+    padding: 2em 0;
+    box-sizing: border-box;
+
+    &.no-wrap{
+      white-space: nowrap;
     }
   }
 }
