@@ -48,7 +48,7 @@ interface Props {
 }
 
 const M = {
-  top: 20, bottom: 30, left: 50, right: 20,
+  top: 20, bottom: 30, left: 70, right: 20,
 };
 const durationShort = 200;
 const radius = 15;
@@ -62,9 +62,9 @@ export default class Timeline {
 
   constructor({ parent, store }: Props) {
     this.store = store;
-    this.parent = parent;
-    this.el = parent.append('svg')
-      .attr('class', C.TIMELINE);
+    this.parent = parent.classed(C.TIMELINE, true);
+    this.el = this.parent.append('svg');
+    this.overlay = this.parent.append('div').attr('class', C.OVERLAY);
     this.currentIndex = -1;
   }
 
@@ -126,14 +126,15 @@ export default class Timeline {
       .duration(durationShort)
       .attr('transform', `translate(${M.left}, ${0})`)
       .call(this.yAxis);
-    this.el.select(`.y.${C.AXIS}`).selectAll(`text.${C.LABEL}`)
-      .data(['Daily Metrocard Entry Swipes'])
-      .join('text')
-      .attr('class', C.LABEL)
-      .attr('writing-mode', 'vertical-lr')
-      .attr('dx', '-3.5em')
-      .attr('transform', `translate(${0}, ${height / 2})`)
-      .text((d) => d);
+
+    this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.y`)
+      .data(['Daily Metrocard Swipes'])
+      .join('div')
+      .attr('class', `${C.AXIS}-${C.LABEL} y`)
+      .style('top', `${height / 2}px`)
+      .style('transform', 'translateY(-50%)')
+      .style('width', `${M.left - 20}px`)
+      .html((d) => d);
 
     this.annotations = this.el.select(`g.${C.ANNOTATIONS}`).selectAll(`g.${C.ANNOTATION}`)
       .data(bisectedTimeline)
@@ -143,22 +144,19 @@ export default class Timeline {
       .attr('transform', ({ date }: TimelineAnnotation) => `translate(${this.x(date)}, ${0})`)
       .classed(C.FADED, ({ step_id }) => step_id < currentIndex);
 
-    // // path currently not visible -- keep for now, remove if not in use later
-    // this.annotations.selectAll('path').data((d) => [d])
-    //   .join('path')
-    //   .attr('d', `M ${0} ${0} V ${height - M.bottom - M.top}`);
-
     this.annotations.selectAll('circle').data((d) => [d])
       .join('circle')
       .attr('cy', ({ timeline }) => this.y(timeline[timeline.length - 1].entries))
       .attr('r', radius);
 
-    this.annotations.selectAll('text')
-      .data((d) => [d])
-      .join('text')
-      .attr('dy', '-1.5em')
-      .attr('y', ({ timeline }) => this.y(timeline[timeline.length - 1].entries))
-      .text(({ label }) => label);
+    this.overlay.selectAll(`div.${C.ANNOTATION}-${C.LABEL}`)
+      .data(bisectedTimeline)
+      .join('div')
+      .attr('class', `${C.ANNOTATION}-${C.LABEL}`)
+      .attr(C.DATA_STEP, ({ step_id }) => step_id)
+      .style('top', ({ timeline }) => `${this.y(timeline[timeline.length - 1].entries)}px`)
+      .style('left', ({ date }) => `${this.x(date) - radius}px`)
+      .html(({ label }) => label);
   }
 
   handleTransition(index:number, direction: DIRECTIONS) {
@@ -171,6 +169,10 @@ export default class Timeline {
     const { currentIndex } = this;
     if (index === currentIndex) {
       this.annotations
+        .classed(C.VISIBLE, ({ step_id }) => step_id === currentIndex)
+        .classed(C.FADED, ({ step_id }) => step_id < currentIndex);
+
+      this.overlay.selectAll(`div.${C.ANNOTATION}-${C.LABEL}`)
         .classed(C.VISIBLE, ({ step_id }) => step_id === currentIndex)
         .classed(C.FADED, ({ step_id }) => step_id < currentIndex);
     }
@@ -195,7 +197,7 @@ export default class Timeline {
     const { width, height } = this.parent.node().getBoundingClientRect();
     this.dims = [width, height];
     this.el.attr('width', width).attr('height', height);
-
+    this.overlay.style('width', `${width}px`).style('height', `${height}px`);
     // update scales
     this.y.range([height - M.bottom, M.top]);
     this.x.range([M.left, width - M.right]);

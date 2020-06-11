@@ -222,10 +222,10 @@ export default class MovingMap {
     // update scales
     this.proj.fitSize([width, height * 1.4], this.geoMeshExterior); // 1.4 to scale up for SI
     this.xScale.range([M.left, width - M.right]);
-    this.boroYScale.range([height - M.bottom, M.top]);
-    this.incomeYScale.range([height - M.bottom, M.top]);
-    this.edHealthYScale.range([height - M.bottom, M.top]);
-    this.uninsuredYScale.range([height - M.bottom, M.top]);
+    this.boroYScale.range([height - M.bottom - R, M.top]);
+    this.incomeYScale.range([height - M.bottom - R, M.top]);
+    this.edHealthYScale.range([height - M.bottom - R, M.top]);
+    this.uninsuredYScale.range([height - M.bottom - R, M.top]);
     this.draw();
   }
 }

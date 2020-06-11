@@ -1,43 +1,47 @@
 @import "../../styling/variables";
-.Timeline{
-
-  .line{
+.Timeline {
+  .line {
     fill: none;
     stroke: $colorBlack;
   }
 
-  .annotation{
+  .annotation,
+  .annotation-label {
     opacity: 0;
     transition: opacity 500ms;
 
-    circle{
+    circle {
       fill: $colorYellow;
       opacity: 0.8;
+      cursor: pointer;
     }
 
-    text{
-      text-anchor: middle;
-      text-transform: uppercase;
-      font-size: $fontSizeSmall;
-      font-family: $fontBold;
-      fill: $colorDarkGrey;
-      pointer-events: none;
-    }
-
-    &.visible{
+    &.visible {
       opacity: 1;
     }
-    &.faded{
+    &.faded {
       opacity: 0.6;
+    }
+  }
+  .annotation-label {
+    position: absolute;
+    transform-origin: center;
+    transform: translate(0%, -3em);
+    text-transform: uppercase;
+    font-size: $fontSizeSmall;
+    font-family: $fontLight;
+    fill: $colorDarkGrey;
+    cursor: pointer;
+    max-width: 120px;
+    // margins attempt to increase hover field of text
+    // TODO: revisit
+    margin-bottom: 2em;
+    margin-left: 2em;
 
-      text{
-        visibility: hidden;
-      }
-
+    &.faded{
+      opacity: 0;
       &:hover{
-        text{
-          visibility: visible;
-        }
+        opacity: 1;
       }
     }
   }

@@ -97,6 +97,7 @@ h2{
 // use divs for these for better text formatting options
 .overlay{
   width: 100%;
+  pointer-events: none;
   div.axis-label{
     font-size: $fontSizeSmall;
     position: absolute;
