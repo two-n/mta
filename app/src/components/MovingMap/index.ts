@@ -2,14 +2,14 @@ import { Store } from 'redux';
 import {
   Selection, geoAlbersUsa, geoPath, scaleSequential,
   scaleLinear, scaleBand, interpolateYlOrBr,
-  axisBottom, axisRight,
+  axisBottom, axisRight, axisLeft, scaleOrdinal, select,
 } from 'd3';
 import * as S from '../../redux/selectors/index';
 import * as A from '../../redux/actions/creators';
 import { State, StationData } from '../../utils/types';
 import {
   CLASSES as C, VIEWS as V,
-  KEYS as K, FORMATTERS as F,
+  KEYS as K, FORMATTERS as F, MTA_Colors,
 } from '../../utils/constants';
 import { getNameHash } from '../../utils/helpers';
 import './style.scss';
@@ -20,7 +20,7 @@ interface Props{
 }
 
 const M = {
-  top: 20, bottom: 30, left: 40, right: 20,
+  top: 20, bottom: 50, left: 90, right: 20,
 };
 const R = 3;
 const duration = 200;
@@ -30,8 +30,8 @@ export default class MovingMap {
 
   constructor({ store, parent }:Props) {
     this.store = store;
-    this.parent = parent;
-    this.el = parent.append('svg').attr('class', C.MOVING_MAP);
+    this.parent = parent.classed(C.MOVING_MAP, true);
+    this.el = parent.append('svg');
     this.geoMeshExterior = S.getGeoMeshExterior(this.store);
     this.stationsGISData = S.getStationData(this.store);
     this.turnstileData = S.getStationRollup(this.store);
@@ -45,7 +45,9 @@ export default class MovingMap {
     this.proj = geoAlbersUsa();
 
     this.colorScale = scaleSequential((t) => interpolateYlOrBr(1 - t))
-      .domain([-1, -0.5]); // TODO: check this
+      .domain(E.summary_morning_pct_chg as [number, number]);
+
+    this.colorBoroughScale = scaleOrdinal().domain(E.boro_code as string[]).range(MTA_Colors);
 
     this.boroYScale = scaleBand().domain(E.boro_code as string[]);
 
@@ -62,34 +64,36 @@ export default class MovingMap {
     this.uninsuredYScale.tickFormat(null, F.sPct);
 
     this.xScale = scaleLinear()
-      .domain([-1, -0.5]);
-    this.xScale.tickFormat(null, F.sPct); // TODO: check this
+      .domain(E.summary_morning_pct_chg as [number, number]);
+    this.xScale.tickFormat(null, F.sPct);
 
     this.scaleMap = {
-      [V.MAP]: null,
-      [V.PCT_CHANGE]: null,
-      [V.BOROUGH]: this.boroYScale,
-      [V.SCATTER_PCT_INCOME]: this.incomeYScale,
-      [V.SCATTER_ED_HEALTH]: this.edHealthYScale,
-      [V.SCATTER_UNINSURED]: this.uninsuredYScale,
+      [V.MAP]: { label: null, scale: null },
+      [V.PCT_CHANGE]: { label: null, scale: null },
+      [V.BOROUGH]: { label: null, scale: this.boroYScale, format: F.fBorough },
+      [V.PCT_CHANGE_BOROUGH]: { label: null, scale: null },
+      [V.SCATTER_PCT_INCOME]: { label: 'Per Capita Income ($)', scale: this.incomeYScale, format: F.sDollar },
+      [V.SCATTER_ED_HEALTH]: { label: 'Percent Employed in Educational Services, and Health Care and Social Assistance (%)', scale: this.edHealthYScale, format: F.fPctNoMult },
+      [V.SCATTER_UNINSURED]: { label: 'Percent with No Health Insurance Coverage (%)', scale: this.uninsuredYScale, format: F.fPctNoMult },
     };
 
     // AXES
-    this.xAxis = axisBottom(this.xScale);
+    this.xAxis = axisBottom(this.xScale).tickFormat(F.fPct);
 
     // ELEMENTS
     this.map = this.el.append('g').attr('class', C.MAP);
     this.stationsG = this.el.append('g').attr('class', C.STATIONS);
     this.xAxisEl = this.el.append('g').attr('class', `${C.AXIS} x`);
     this.yAxisEl = this.el.append('g').attr('class', `${C.AXIS} y`);
+    this.overlay = this.parent.append('div').attr('class', C.OVERLAY);
 
     this.handleResize();
   }
 
   draw() {
-    const [, height] = this.dims;
+    const [width, height] = this.dims;
     const view = S.getView(this.store);
-    const yScale = this.scaleMap[view];
+    const { scale: yScale, label, format } = this.scaleMap[view];
     this.geoPath = geoPath().projection(this.proj);
     this.map
       .classed(C.VISIBLE, view === V.MAP)
@@ -101,7 +105,8 @@ export default class MovingMap {
     this.stations = this.stationsG.selectAll(`g.${C.STATION}`)
       .data(this.stationsGISData)
       .join('g')
-      .attr('class', C.STATION);
+      .attr('class', C.STATION)
+      .on('mouseover', function () { select(this).raise(); });
 
     this.stations
       .style('transform', (d:StationData) => {
@@ -111,7 +116,7 @@ export default class MovingMap {
               ${this.xScale(this.getPctChange(d))}px,${height / 2}px)`;
           case (V.BOROUGH):
             return `translate(
-              ${this.xScale(this.getPctChange(d))}px,${yScale(d[K.BOROUGH])}px)`;
+              ${this.xScale(this.getPctChange(d))}px,${yScale(d[K.BOROUGH]) + yScale.bandwidth() / 2}px)`;
           case (V.PCT_CHANGE_BOROUGH):
             return `translate(
               ${this.xScale(this.getPctChange(d))}px,${height / 2}px)`;
@@ -134,29 +139,59 @@ export default class MovingMap {
         }
       });
 
+    // views that should be colored by borough
+    const boroughFills = [V.PCT_CHANGE_BOROUGH, V.SCATTER_ED_HEALTH, V.SCATTER_PCT_INCOME, V.SCATTER_UNINSURED];
     this.stations.selectAll('circle').data((d) => [d])
       .join('circle')
       .attr('r', R)
-      .attr('fill', (d) => this.colorScale(this.getPctChange(d)));
+      .attr('fill', (d) => (boroughFills.includes(view)
+        ? this.colorBoroughScale(d[K.BOROUGH])
+        : this.colorScale(this.getPctChange(d))));
 
+    this.stations.selectAll('text').data((d) => [d])
+      .join('text')
+      .attr('y', -R - 3)
+      .text((d) => getNameHash(d));
+
+    // AXES
     this.xAxisEl
-      .classed(C.VISIBLE, view !== V.MAP)
       .transition()
       .duration(duration)
       .attr('transform', `translate(${0}, ${height - M.bottom})`)
       .call(this.xAxis);
 
-    this.yAxisEl
-      .classed(C.VISIBLE, !!yScale);
+    this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.x`)
+      .data(['← Higher decrease in ridership', 'Lower decrease in ridership→'])
+      .join('div')
+      .attr('class', `${C.AXIS}-${C.LABEL} ${C.NO_WRAP} x`)
+      .style('left', (d, i) => i === 0 && `${M.left}px`)
+      .style('right', (d, i) => i === 1 && `${M.right}px`)
+      .style('transform', `translateY(${height - M.bottom}px)`)
+      .html((d) => d);
 
     if (yScale) {
-      this.yAxis = axisRight(yScale);
+      this.yAxis = axisLeft(yScale).tickFormat(format);
       this.yAxisEl
         .transition()
         .duration(duration)
         .attr('transform', `translate(${M.left}, ${0})`)
         .call(this.yAxis);
+
+      this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.y`)
+        .data([label])
+        .join('div')
+        .attr('class', `${C.AXIS}-${C.LABEL} y`)
+        .style('top', `${height / 2}px`)
+        .style('transform', 'translateY(-50%)')
+        .style('width', `${M.left - 20}px`)
+        .html((d) => d);
     }
+
+    // VISIBILITY
+    this.parent.selectAll('.x')
+      .classed(C.VISIBLE, view !== V.MAP);
+    this.parent.selectAll('.y')
+      .classed(C.VISIBLE, !!yScale);
   }
 
   setView(view: VIEWS) {
@@ -166,7 +201,7 @@ export default class MovingMap {
 
   getPctChange(station: StationData) {
     return this.turnstileData.get(getNameHash(station))
-     && this.turnstileData.get(getNameHash(station)).summary.entries_pct_chg;
+     && this.turnstileData.get(getNameHash(station)).summary.morning_pct_chg;
   }
 
   getACS(station:StationData, field: string) {
@@ -182,13 +217,15 @@ export default class MovingMap {
       .attr('viewBox', [0, 0, width, height])
       .attr('width', width).attr('height', height);
 
+    this.overlay.style('width', `${width}px`).style('height', `${height}px`);
+
     // update scales
     this.proj.fitSize([width, height * 1.4], this.geoMeshExterior); // 1.4 to scale up for SI
     this.xScale.range([M.left, width - M.right]);
-    this.boroYScale.range([height - M.bottom, M.top]);
-    this.incomeYScale.range([height - M.bottom, M.top]);
-    this.edHealthYScale.range([height - M.bottom, M.top]);
-    this.uninsuredYScale.range([height - M.bottom, M.top]);
+    this.boroYScale.range([height - M.bottom - R, M.top]);
+    this.incomeYScale.range([height - M.bottom - R, M.top]);
+    this.edHealthYScale.range([height - M.bottom - R, M.top]);
+    this.uninsuredYScale.range([height - M.bottom - R, M.top]);
     this.draw();
   }
 }

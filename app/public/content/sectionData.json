@@ -69,22 +69,22 @@
       },
       {
         "step_id": 3,
-        "header": "Color By Borough - Back to line",
-        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        "header": "Now a turn to look at demographics",
+        "text": "We mapped each station back to the census tract that it is located within to get a better sense of how different communities were being affected by COVID-19."
       },
       {
         "step_id": 4,
-        "header": "Scatterplot View 1 — % income",
+        "header": "Per Capita Income ($)",
         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
       },
       {
         "step_id": 5,
-        "header": "Scatterplot View 2 — % medical/service",
+        "header": "Percent Employed in Educational Services, and Health Care and Social Assistance",
         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
       },
       {
         "step_id": 6,
-        "header": "Scatterplot View 3 — % no health insurance",
+        "header": "Percent with No Health Insurance Coverage",
         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
       }
     ]

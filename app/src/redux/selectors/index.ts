@@ -5,6 +5,7 @@ import {
   rollup,
   extent,
   quantile,
+  max, min,
 } from 'd3-array';
 import { State, ProcessedStation, ACSData } from '../../utils/types';
 import * as Helpers from '../../utils/helpers';
@@ -53,9 +54,19 @@ export const getDataExtents = createSelector([
       .map((t) => t.map(({ entries_pct_chg }) => entries_pct_chg)).flat(), 0.999)],
     [K.MORNING_PCT_CHG]: [-1, quantile(stationTimelines
       .map((t) => t.map(({ morning_pct_chg }) => morning_pct_chg)).flat(), 0.99)],
+
+    summary_pct_chg: extent(stationStats.map(({ summary }) => summary),
+      ({ entries_pct_chg }) => entries_pct_chg),
+
+    summary_morning_pct_chg: [
+      min(stationStats.map(({ summary }) => summary)
+        .map(({ morning_pct_chg }) => morning_pct_chg)),
+      quantile(stationStats.map(({ summary }) => summary).map(({ morning_pct_chg }) => morning_pct_chg), 0.99)],
+
     [K.BOROUGH]: Helpers.getUnique(stations, (d) => d[K.BOROUGH]),
-    [K.ED_HEALTH_PCT]: extent(acs.filter((d) => d[K.ED_HEALTH_PCT] !== K.NA), (d) => d[K.ED_HEALTH_PCT]),
-    [K.INCOME_PC]: extent(acs.filter((d) => d[K.INCOME_PC] !== K.NA), (d) => d[K.INCOME_PC]),
+    [K.ED_HEALTH_PCT]: extent(acs.filter((d) => d[K.ED_HEALTH_PCT] !== K.NA),
+      (d) => d[K.ED_HEALTH_PCT]),
+    [K.INCOME_PC]: [0, max(acs.filter((d) => d[K.INCOME_PC] !== K.NA), (d) => d[K.INCOME_PC])],
     [K.UNINSURED]: extent(acs.filter((d) => d[K.UNINSURED] !== K.NA), (d) => d[K.UNINSURED]),
 
   };

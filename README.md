@@ -47,6 +47,9 @@ https://data.cityofnewyork.us/City-Government/Neighborhood-Tabulation-Areas-NTA-
 
 `geo2topo output/nta.json > output/nta_topo.json`
 
+### MTA Fare Data - MetroSwipes Data
+http://web.mta.info/developers/fare.html
+
 ## Process
 
 ## Notes

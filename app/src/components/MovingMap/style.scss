@@ -16,10 +16,31 @@
   .stations{
     .station{
       transition: transform 1000ms;
+      cursor: pointer;
+
+      text{
+        visibility: hidden;
+        text-anchor: middle;
+        pointer-events: none;
+        text-transform: uppercase;
+        font-size: $fontSizeSmall;
+        font-family: $fontRegular;
+        fill: $colorDarkGrey;
+      }
+
+      &:hover{
+        text{
+          visibility: visible;
+        }
+
+        circle{
+         stroke: $colorBlack;
+        }
+      }
     }
   }
 
-  .axis{
+  .x, .y{
     opacity: 0;
     transition: opacity 500ms;
     &.visible{
