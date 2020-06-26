@@ -37,7 +37,7 @@ def pullAndParseWeeklyData(weekArray):
 
   return df[["WEEK","STATION", "REMOTE", "TOTAL"]]
 
-def createWeeklyDataset():
+def main():
   """
   pull all weekly links and reduce into single dataset
   """
@@ -56,4 +56,6 @@ def createWeeklyDataset():
   reduced = pd.concat(mapped) # combine all into a single datasource
   reduced.to_csv('data/output/mta_swipes_weekly.csv', index=False)
 
-createWeeklyDataset()
+
+if __name__ == "__main__":
+  main()
