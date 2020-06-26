@@ -38,3 +38,11 @@ h2{
   font-size: $fontSizeXLarge;
   max-width: $maxTextWidth;
 }
+
+.axis{
+  text.label{
+    text-anchor: middle;
+    fill: $colorBlack;
+    text-transform: uppercase;
+  }
+}

@@ -1,12 +1,46 @@
 import { Store } from 'redux';
 import {
-  Selection, scaleLinear, scaleTime, max, extent, line, axisLeft, axisBottom, easeLinear,
+  Selection, scaleLinear, scaleTime, max, extent, line, axisLeft, axisBottom, easeLinear, select, scaleUtc, window,
 } from 'd3';
-import { State } from '../../utils/types';
-import { CLASSES as C, FORMATTERS as F } from '../../utils/constants';
+import { bisector } from 'd3-array';
+import { State, TimelineAnnotation, StationTimelineItem } from '../../utils/types';
+import { CLASSES as C, FORMATTERS as F, DIRECTIONS } from '../../utils/constants';
 import './style.scss';
 import * as S from '../../redux/selectors';
 
+
+const annotations: TimelineAnnotation[] = [
+  {
+    date: F.pDate('14-02-2020'),
+    step_id: 0,
+    label: '"Normal" Friday (also Valentines Day)',
+    duration: 3000,
+  },
+  {
+    date: F.pDate('01-03-2020'),
+    step_id: 1,
+    label: 'First COVID-19 Case in NY State',
+    duration: 1000,
+  },
+  {
+    date: F.pDate('22-03-2020'),
+    step_id: 2,
+    label: 'NYS on Pause goes into effect',
+    duration: 1000,
+  },
+  {
+    date: F.pDate('07-04-2020'),
+    step_id: 3,
+    label: '1,055 deaths in one day',
+    duration: 1000,
+  },
+  {
+    date: F.pDate('08-06-2020'),
+    step_id: 4,
+    label: 'retail begins to re-open', // think about how to handle this
+    duration: 1000,
+  },
+];
 
 interface Props {
   parent: Selection;
@@ -14,10 +48,10 @@ interface Props {
 }
 
 const M = {
-  top: 20, bottom: 30, left: 40, right: 20,
+  top: 20, bottom: 30, left: 50, right: 20,
 };
-const durationLong = 5000;
 const durationShort = 200;
+const radius = 15;
 
 export default class Timeline {
   [x: string]: any;
@@ -31,7 +65,7 @@ export default class Timeline {
     this.parent = parent;
     this.el = parent.append('svg')
       .attr('class', C.TIMELINE);
-    this.isVisible = false;
+    this.currentIndex = -1;
   }
 
   init() {
@@ -41,7 +75,7 @@ export default class Timeline {
     this.y = scaleLinear()
       .domain([0, max(timeline, ({ entries }) => entries)]);
 
-    this.x = scaleTime()
+    this.x = scaleUtc()
       .domain(extent(timeline, ({ date }) => F.pDate(date)));
 
     // axes
@@ -57,23 +91,29 @@ export default class Timeline {
     this.el.append('g').attr('class', C.LINES);
     this.el.append('g').attr('class', `${C.AXIS} x`);
     this.el.append('g').attr('class', `${C.AXIS} y`);
+    this.el.append('g').attr('class', C.ANNOTATIONS);
     this.handleResize();
   }
 
   draw() {
-    const { timeline } = S.getOverallTimeline(this.store);
-    const [, height] = this.dims;
+    const { bisectedTimeline, currentIndex } = this; // line segment for each transition
+    const [width, height] = this.dims;
 
-    this.el.select(`.${C.LINES}`)
+    this.lines = this.el.select(`.${C.LINES}`)
       .selectAll(`path.${C.LINE}`)
-      .data([timeline])
+      .data(bisectedTimeline)
       .join('path')
       .attr('class', C.LINE)
-      .attr('d', this.line)
-      .attr('stroke-dasharray', () => {
-        this.lineLength = this.el.select(`path.${C.LINE}`).node().getTotalLength();
-        return `${this.isVisible ? this.lineLength : 0},${this.lineLength}`;
-      });
+      .attr('d', ({ timeline }) => this.line(timeline))
+      .attr(C.DATA_STEP, ({ step_id }) => step_id)
+      .transition()
+      .duration((d) => (d.step_id === currentIndex ? d.duration : 0))
+      .ease(easeLinear)
+      .attr('stroke-dasharray', function (d) {
+        const lineLength = select(this).node().getTotalLength();
+        return `${currentIndex >= d.step_id ? lineLength : 0},${lineLength}`;
+      })
+      .on('interrupt end', (d) => this.toggleAnnotationVisibility(d.step_id));
 
     this.el.select(`.x.${C.AXIS}`)
       .transition()
@@ -86,24 +126,69 @@ export default class Timeline {
       .duration(durationShort)
       .attr('transform', `translate(${M.left}, ${0})`)
       .call(this.yAxis);
+    this.el.select(`.y.${C.AXIS}`).selectAll(`text.${C.LABEL}`)
+      .data(['Daily Metrocard Entry Swipes'])
+      .join('text')
+      .attr('class', C.LABEL)
+      .attr('writing-mode', 'vertical-rl')
+      .attr('dx', '-3.5em')
+      .attr('transform', `translate(${0}, ${height / 2})`)
+      .text((d) => d);
+
+    this.annotations = this.el.select(`g.${C.ANNOTATIONS}`).selectAll(`g.${C.ANNOTATION}`)
+      .data(bisectedTimeline)
+      .join('g')
+      .attr('class', C.ANNOTATION)
+      .attr(C.DATA_STEP, ({ step_id }) => step_id)
+      .attr('transform', ({ date }: TimelineAnnotation) => `translate(${this.x(date)}, ${0})`)
+      .classed(C.FADED, ({ step_id }) => step_id < currentIndex);
+
+    // // path currently not visible -- keep for now, remove if not in use later
+    // this.annotations.selectAll('path').data((d) => [d])
+    //   .join('path')
+    //   .attr('d', `M ${0} ${0} V ${height - M.bottom - M.top}`);
+
+    this.annotations.selectAll('circle').data((d) => [d])
+      .join('circle')
+      .attr('cy', ({ timeline }) => this.y(timeline[timeline.length - 1].entries))
+      .attr('r', radius);
+
+    this.annotations.selectAll('text')
+      .data((d) => [d])
+      .join('text')
+      .attr('dy', '-1.5em')
+      .attr('y', ({ timeline }) => this.y(timeline[timeline.length - 1].entries))
+      .text(({ label }) => label);
   }
 
-  animateInLine() {
-    this.el.select(`path.${C.LINE}`)
-      .transition()
-      .duration(durationLong)
-      .ease(easeLinear)
-      .attr('stroke-dasharray', `${this.lineLength},${this.lineLength}`)
-      .on('interrupt end', () => { this.isVisible = true; });
+  handleTransition(index:number, direction: DIRECTIONS) {
+    this.currentIndex = index;
+    if (index === 0 && direction === DIRECTIONS.UP) this.currentIndex = index - 1;
+    this.draw();
   }
 
-  animateOutLine() {
-    this.el.select(`path.${C.LINE}`)
-      .transition()
-      .duration(durationLong)
-      .ease(easeLinear)
-      .attr('stroke-dasharray', `${0},${this.lineLength}`)
-      .on('interrupt end', () => { this.isVisible = false; });
+  toggleAnnotationVisibility(index) {
+    const { currentIndex } = this;
+    if (index === currentIndex) {
+      this.annotations
+        .classed(C.VISIBLE, ({ step_id }) => step_id === currentIndex)
+        .classed(C.FADED, ({ step_id }) => step_id < currentIndex);
+    }
+  }
+
+  get bisectedTimeline() {
+    const { timeline } = S.getOverallTimeline(this.store);
+    let startIndex = 0;
+    const bisect = bisector((d: StationTimelineItem) => F.pDate(d.date));
+
+    return annotations.map((d) => {
+      const nextIndex = bisect.left(timeline, d.date);
+      const obj = {
+        ...d, timeline: timeline.slice(startIndex, nextIndex + 1),
+      };
+      startIndex = nextIndex;
+      return obj;
+    });
   }
 
   handleResize() {

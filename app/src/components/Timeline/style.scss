@@ -5,4 +5,40 @@
     fill: none;
     stroke: $colorBlack;
   }
+
+  .annotation{
+    opacity: 0;
+    transition: opacity 500ms;
+
+    circle{
+      fill: $colorYellow;
+      opacity: 0.8;
+    }
+
+    text{
+      text-anchor: middle;
+      text-transform: uppercase;
+      font-size: $fontSizeSmall;
+      font-family: $fontBold;
+      fill: $colorDarkGrey;
+      pointer-events: none;
+    }
+
+    &.visible{
+      opacity: 1;
+    }
+    &.faded{
+      opacity: 0.6;
+
+      text{
+        visibility: hidden;
+      }
+
+      &:hover{
+        text{
+          visibility: visible;
+        }
+      }
+    }
+  }
 }
