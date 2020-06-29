@@ -1,5 +1,6 @@
 # system
 .DS_Store
+.vscode
 
 # Juptiter notebook checkpoints
 *_checkpoints
