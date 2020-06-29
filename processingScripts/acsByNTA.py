@@ -74,7 +74,7 @@ def handleSpatialJoin(ntas, stations):
   """
   stationsWithNTA = geopandas.sjoin(stations, ntas, how="left", op="intersects")
   stationColsToKeep = ['station_code', 'station',"GTFS_stop_id", "C/A","line_name",
-  'BoroCode', 'BoroName', 'NTACode', 'NTAName', "geometry", "lat", "long"]
+  'BoroCode', 'BoroName', 'NTACode', 'NTAName', "geometry", "lat", "long", "unit"]
 
   return stationsWithNTA[stationColsToKeep]
 
