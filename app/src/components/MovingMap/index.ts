@@ -45,11 +45,11 @@ export default class MovingMap {
     this.proj = geoAlbersUsa();
 
     this.colorScale = scaleSequential((t) => interpolateYlOrBr(1 - t))
-      .domain(E.summary_morning_pct_chg as [number, number]);
+      .domain(E[K.SUMMARY_SWIPES_PCT_CHG] as [number, number]);
 
-    this.colorBoroughScale = scaleOrdinal().domain(E.boro_code as string[]).range(MTA_Colors);
+    this.colorBoroughScale = scaleOrdinal().domain(E[K.BOROUGH] as string[]).range(MTA_Colors);
 
-    this.boroYScale = scaleBand().domain(E.boro_code as string[]);
+    this.boroYScale = scaleBand().domain(E[K.BOROUGH] as string[]);
 
     this.incomeYScale = scaleLinear()
       .domain(E[K.INCOME_PC] as number[]);
@@ -64,7 +64,7 @@ export default class MovingMap {
     this.uninsuredYScale.tickFormat(null, F.sPct);
 
     this.xScale = scaleLinear()
-      .domain(E.summary_morning_pct_chg as [number, number]);
+      .domain(E[K.SUMMARY_SWIPES_PCT_CHG] as [number, number]);
     this.xScale.tickFormat(null, F.sPct);
 
     this.scaleMap = {
@@ -200,14 +200,14 @@ export default class MovingMap {
   }
 
   getPctChange(station: StationData) {
-    return this.turnstileData.get(getNameHash(station))
-     && this.turnstileData.get(getNameHash(station)).summary.morning_pct_chg;
+    return this.turnstileData.get(station.unit)
+     && this.turnstileData.get(station.unit).summary.swipes_pct_chg;
   }
 
   getACS(station:StationData, field: string) {
-    return this.acsMap.get(station.ct2010)
-     && this.acsMap.get(station.ct2010)[field] !== K.NA
-     && this.acsMap.get(station.ct2010)[field];
+    return this.acsMap.get(station.NTACode)
+     && this.acsMap.get(station.NTACode)[field] !== K.NA
+     && this.acsMap.get(station.NTACode)[field];
   }
 
   handleResize() {

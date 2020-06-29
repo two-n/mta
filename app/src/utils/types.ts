@@ -58,6 +58,7 @@ export interface Controller {
 
 export interface StationData {
   station_code: string;
+  unit: string; // Field to match stationss on
   station: string;
   BoroCode: number;
   BoroName: number;

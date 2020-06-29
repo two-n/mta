@@ -58,22 +58,9 @@ export enum CLASSES {
 }
 
 export enum KEYS {
-  ENTRIES_AVG = 'entries_avg',
-  ENTRIES_AVG_PRE = 'entries_avg_pre',
-  ENTRIES_AVG_POST = 'entries_avg_post',
-  ENTRIES_PCT_CHG = 'entries_pct_chg',
-  ENTRIES_TOTAL = 'entries_total',
-
-  MORNING_AVG = 'morning_avg',
-  MORNING_AVG_PRE = 'morning_avg_pre',
-  MORNING_AVG_POST = 'morning_avg_post',
-  MORNING_PCT_CHG = 'morning_pct_chg',
-  MORNING_TOTAL = 'morning_total',
-
-  EXITS_AVG = 'exits_avg',
-  EXITS_AVG_PRE = 'exits_avg_pre',
-  EXITS_AVG_POST = 'exits_avg_post',
-  EXITS_PCT_CHG = 'exits_pct_chg',
+  SWIPES = 'swipes',
+  SWIPES_PCT_CHG="swipes_pct_chg",
+  SUMMARY_SWIPES_PCT_CHG="summary_swipes_pct_chg",
 
   NA='-',
   BOROUGH= 'BoroCode',
