@@ -15,18 +15,21 @@ import { KEYS as K, FORMATTERS as F, appConfig } from '../../utils/constants';
 /** Basic Selectors */
 export const getSectionData = (state: Store<State>) => state.getState().sectionData;
 export const getTurnstileData = (state: Store<State>) => state.getState().turnstileData;
-export const getMapData = (state: Store<State>) => state.getState().mapData;
 export const getStationData = (state: Store<State>) => state.getState().stationData;
 export const getACSData = (state: Store<State>) => state.getState().acsData;
 export const getView = (state: Store<State>) => state.getState().view;
 
 /** Turnstile Manipulations */
+export const getFilteredTurnstileData = createSelector([
+  getTurnstileData
+], data=> data.filter(({WEEK})=> WEEK >= appConfig.startDate))
+
 export const getOverallTimeline = createSelector([
-  getTurnstileData,
+  getFilteredTurnstileData,
 ], (data) => data && processStations(data, true));
 
 export const getStationRollup = createSelector([
-  getTurnstileData,
+  getFilteredTurnstileData,
 ], (data) => data
 && rollup(data, processStations, Helpers.getNameHash));
 
@@ -73,21 +76,21 @@ export const getDataExtents = createSelector([
 });
 
 export const getGeoJSONData = createSelector([
-  getMapData,
-], (data) => topojson.feature(data, data.objects.nta));
+  getACSData,
+], (data) => topojson.feature(data, data.objects.acs_nta));
 
 export const getGeoMeshInterior = createSelector([
-  getMapData,
-], (data) => topojson.mesh(data, data.objects.nta,
+  getACSData,
+], (data) => topojson.mesh(data, data.objects.acs_nta,
   (a, b) => a !== b));
 
 export const getGeoMeshExterior = createSelector([
-  getMapData,
-], (data) => topojson.mesh(data, data.objects.nta,
+  getACSData,
+], (data) => topojson.mesh(data, data.objects.acs_nta,
   (a, b) => a === b));
 
 /** creates a map from tractId => ACS summary data */
 export const getStationToACSMap = createSelector([
   getACSData,
 ], (data) => data
-&& new Map(data.map((d:ACSData) => ([d.tract_id, d]))));
+&& new Map(data.objects.acs_nta.geometries.map(({properties}) => ([properties.NTACode, properties]))));

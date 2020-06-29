@@ -11,6 +11,5 @@ const app = new App(store);
 Promise.all([
   A.loadTurnstileData(store.dispatch),
   A.loadStationData(store.dispatch),
-  A.loadMapData(store.dispatch),
   A.loadACSData(store.dispatch),
 ]).then(() => app.init());

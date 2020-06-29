@@ -54,6 +54,8 @@ http://web.mta.info/developers/fare.html
 American Communities Survey rolled up to the Neighborhood Tabulation Areas
 https://www1.nyc.gov/site/planning/data-maps/open-data/dwn-acs-nta.page
 
+ran `processingScripts/acsByNTA.py` to create a cleaned up geojson and then `geo2topo data/output/acs_nta.geojson > data/output/acs_nta_top.json` to create a topojson.
+
 ## Process
 
 ## Notes

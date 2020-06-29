@@ -7,6 +7,12 @@ from bs4 import BeautifulSoup
 from progress.bar import IncrementalBar
 import datetime
 
+# Keys
+WEEK="WEEK"
+TOTAL="TOTAL"
+REMOTE="REMOTE"
+STATION="STATION"
+
 def fetchWeeklyLinks():
   """
   Parses http://web.mta.info/developers/fare.html and pulls out all the data links.
@@ -38,10 +44,10 @@ def pullAndParseWeeklyData(weekArray):
   date, link = weekArray
 
   df = pd.read_csv(link, header=2, skipinitialspace=True) # start reading on third line
-  df["WEEK"] = date
-  df['TOTAL'] = df.drop(['REMOTE','STATION'], axis=1).sum(axis=1)
+  df[WEEK] = date
+  df[TOTAL] = df.drop([REMOTE,STATION], axis=1).sum(axis=1)
 
-  return df[["WEEK","STATION", "REMOTE", "TOTAL"]]
+  return df[[WEEK, STATION, REMOTE, TOTAL]]
 
 def main():
   """
