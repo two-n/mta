@@ -9,7 +9,6 @@ import { FORMATTERS as F, appConfig} from './constants';
 
 export const processStations = (data: TurnstileData[],
   isOverall = false):ProcessedStation => {
-    console.log('data', data)
 
   // rollup total swipes by week
   type weeklySum = {WEEK: Date, TOTAL: number}
