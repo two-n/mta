@@ -3,7 +3,8 @@ import numpy as np
 import geopandas
 
 # ref: https://www1.nyc.gov/assets/planning/download/pdf/data-maps/open-data/nta_acs_2014_2018_datadictionary.pdf?r=1
-columnsToKeep= [
+# Economic variables
+columnsToKeepEcon= [
     "BoroCode",
     "BoroName",
     "NTACode",
@@ -48,14 +49,29 @@ columnsToKeep= [
     "geometry"
 ]
 
+# Demographic variables
+columnsToKeepDemo = [
+    "NTACode",
+    # Demographics
+    "blnhP", # % Black or African American Alone
+    "wtnhP", # % White Alone
+    "hsp1P", # % Hispanic/Latino (of any race) Alone
+    ]
+
 def pullInACSGeoJson():
   """
   Pulls in ACS data by Neighborhood Tabulation Area (NTA).
   Selects subset of columns.
   """
-  path = "data/Neighborhood Tabulation Areas (NTA)/ACS/nta_with_acs_economics.geojson"
-  df = geopandas.read_file(path)
-  return  df[columnsToKeep]
+  econPath = "data/Neighborhood Tabulation Areas (NTA)/ACS/nta_with_acs_economics.geojson"
+  econDf = geopandas.read_file(econPath)
+  econDf = econDf[columnsToKeepEcon]
+
+  demoPath = "data/Neighborhood Tabulation Areas (NTA)/ACS/nta_with_acs.geojson"
+  demoDf = geopandas.read_file(demoPath)
+  demoDf = demoDf[columnsToKeepDemo]
+
+  return  econDf.set_index("NTACode").join(demoDf.set_index("NTACode")).reset_index()
 
 def pullInStationCSV():
   """
