@@ -8,8 +8,8 @@ from progress.bar import IncrementalBar
 
 def fetchWeeklyLinks():
   """
-  Parses http://web.mta.info/developers/fare.html and pulls out all the data links
-  Returns array of the form [Date string, csvLink]
+  Parses http://web.mta.info/developers/fare.html and pulls out all the data links.
+  Returns array of the form [Date string, csvLink].
   """
   baseUrl = "http://web.mta.info/developers/"
   htmlPath = "fare.html" # path for site to scrape
@@ -26,8 +26,8 @@ def fetchWeeklyLinks():
 
 def pullAndParseWeeklyData(weekArray):
   """
-  Recieves parameter `weekArray` of the form [date, link]
-  Fetches data from `link` and returns a dataframe
+  Recieves parameter `weekArray` of the form [date, link].
+  Fetches data from `link` and returns a dataframe.
   """
   date, link = weekArray
 
@@ -39,7 +39,7 @@ def pullAndParseWeeklyData(weekArray):
 
 def main():
   """
-  pull all weekly links and reduce into single dataset
+  Pull all weekly links and reduce into single dataset.
   """
   weeklyLinks = fetchWeeklyLinks()
 
