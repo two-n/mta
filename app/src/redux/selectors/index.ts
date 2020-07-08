@@ -62,10 +62,12 @@ export const getDataExtents = createSelector([
       .map((t) => t
       .map(({ swipes_pct_chg }) => swipes_pct_chg))
       .flat(), 0.999)],
-
     [K.SUMMARY_SWIPES_PCT_CHG]: [-1, quantile(stationStats
       .map(({ summary }) => summary)
       .map(({ swipes_pct_chg }) => swipes_pct_chg),0.99)],
+    [K.SUMMARY_SWIPES_AVG_POST]: [-1, quantile(stationStats
+      .map(({ summary }) => summary)
+      .map(({ swipes_avg_post }) => swipes_avg_post),0.99)],
     [K.BOROUGH]: Helpers.getUnique(stations, (d) => d[K.BOROUGH]),
     [K.ED_HEALTH_PCT]: extent(acs,({properties}) => +properties[K.ED_HEALTH_PCT]),
     [K.INCOME_PC]: [0, max(acs, ({properties}) => +properties[K.INCOME_PC])],

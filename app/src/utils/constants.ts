@@ -61,6 +61,7 @@ export enum KEYS {
   SWIPES = 'swipes',
   SWIPES_PCT_CHG="swipes_pct_chg",
   SUMMARY_SWIPES_PCT_CHG="summary_swipes_pct_chg",
+  SUMMARY_SWIPES_AVG_POST="summary_swipes_avg_post",
 
   NA='-',
   BOROUGH= 'BoroCode',

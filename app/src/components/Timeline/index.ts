@@ -127,7 +127,7 @@ export default class Timeline {
       .call(this.yAxis);
 
     this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.y`)
-      .data(['Daily Metrocard Swipes'])
+      .data(['Weekly Metrocard Swipes'])
       .join('div')
       .attr('class', `${C.AXIS}-${C.LABEL} y`)
       .style('top', `${height / 2}px`)

@@ -2,7 +2,7 @@ import { Store } from 'redux';
 import {
   Selection, geoAlbersUsa, geoPath, scaleSequential,
   scaleLinear, scaleBand, interpolateYlOrBr,
-  axisBottom, axisRight, axisLeft, scaleOrdinal, select,
+  axisBottom, axisLeft, scaleOrdinal, select, scaleSqrt,
 } from 'd3';
 import * as S from '../../redux/selectors/index';
 import * as A from '../../redux/actions/creators';
@@ -66,6 +66,10 @@ export default class MovingMap {
     this.xScale = scaleLinear()
       .domain(E[K.SUMMARY_SWIPES_PCT_CHG] as [number, number]);
     this.xScale.tickFormat(null, F.sPct);
+
+    this.rScale = scaleSqrt()
+      .domain(E[K.SUMMARY_SWIPES_AVG_POST] as [number, number])
+      .range([2, 10]);
 
     this.scaleMap = {
       [V.MAP]: { label: null, scale: null },
@@ -143,7 +147,7 @@ export default class MovingMap {
     const boroughFills = [V.PCT_CHANGE_BOROUGH, V.SCATTER_ED_HEALTH, V.SCATTER_PCT_INCOME, V.SCATTER_UNINSURED];
     this.stations.selectAll('circle').data((d) => [d])
       .join('circle')
-      .attr('r', R)
+      .attr('r', (d) => this.rScale(this.turnstileData.get(d.unit).summary.swipes_avg_post))
       .attr('fill', (d) => (boroughFills.includes(view)
         ? this.colorBoroughScale(d[K.BOROUGH])
         : this.colorScale(this.getPctChange(d))));

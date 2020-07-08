@@ -28,18 +28,22 @@ export default class App {
       store: this.store,
     });
     this.SectionTimeline.init();
+
+
     // SECTION 2
     this.SectionMovingMap = new SectionMovingMap({
       data: sectionData[SECTIONS.S_MOVING_MAP],
       store: this.store,
     });
     this.SectionMovingMap.init();
-    // SECTION 3
-    this.SectionPctChange = new SectionPctChange({
-      data: sectionData[SECTIONS.S_PCT_CHNG],
-      store: this.store,
-    });
-    this.SectionPctChange.init();
+
+
+    // // SECTION 3
+    // this.SectionPctChange = new SectionPctChange({
+    //   data: sectionData[SECTIONS.S_PCT_CHNG],
+    //   store: this.store,
+    // });
+    // this.SectionPctChange.init();
 
     // polyfil for sticky positioning
     this.setupStickyfill();
