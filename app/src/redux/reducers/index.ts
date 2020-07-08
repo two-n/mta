@@ -17,8 +17,6 @@ export default function reducer(state = initialState, action: Action): State {
   switch (action.type) {
     case A.SET_TURNSTILE_DATA:
       return { ...state, turnstileData: action.data };
-    case A.SET_MAP_DATA:
-      return { ...state, mapData: action.data };
     case A.SET_STATION_DATA:
       return { ...state, stationData: action.data };
     case A.SET_ACS_DATA:

@@ -2,7 +2,7 @@ import { Store } from 'redux';
 import {
   Selection, geoAlbersUsa, geoPath, scaleSequential,
   scaleLinear, scaleBand, interpolateYlOrBr,
-  axisBottom, axisRight, axisLeft, scaleOrdinal, select,
+  axisBottom, axisLeft, scaleOrdinal, select, scaleSqrt,
 } from 'd3';
 import * as S from '../../redux/selectors/index';
 import * as A from '../../redux/actions/creators';
@@ -45,11 +45,11 @@ export default class MovingMap {
     this.proj = geoAlbersUsa();
 
     this.colorScale = scaleSequential((t) => interpolateYlOrBr(1 - t))
-      .domain(E.summary_morning_pct_chg as [number, number]);
+      .domain(E[K.SUMMARY_SWIPES_PCT_CHG] as [number, number]);
 
-    this.colorBoroughScale = scaleOrdinal().domain(E.boro_code as string[]).range(MTA_Colors);
+    this.colorBoroughScale = scaleOrdinal().domain(E[K.BOROUGH] as string[]).range(MTA_Colors);
 
-    this.boroYScale = scaleBand().domain(E.boro_code as string[]);
+    this.boroYScale = scaleBand().domain(E[K.BOROUGH] as string[]);
 
     this.incomeYScale = scaleLinear()
       .domain(E[K.INCOME_PC] as number[]);
@@ -64,8 +64,12 @@ export default class MovingMap {
     this.uninsuredYScale.tickFormat(null, F.sPct);
 
     this.xScale = scaleLinear()
-      .domain(E.summary_morning_pct_chg as [number, number]);
+      .domain(E[K.SUMMARY_SWIPES_PCT_CHG] as [number, number]);
     this.xScale.tickFormat(null, F.sPct);
+
+    this.rScale = scaleSqrt()
+      .domain(E[K.SUMMARY_SWIPES_AVG_POST] as [number, number])
+      .range([2, 10]);
 
     this.scaleMap = {
       [V.MAP]: { label: null, scale: null },
@@ -143,7 +147,7 @@ export default class MovingMap {
     const boroughFills = [V.PCT_CHANGE_BOROUGH, V.SCATTER_ED_HEALTH, V.SCATTER_PCT_INCOME, V.SCATTER_UNINSURED];
     this.stations.selectAll('circle').data((d) => [d])
       .join('circle')
-      .attr('r', R)
+      .attr('r', (d) => this.rScale(this.turnstileData.get(d.unit).summary.swipes_avg_post))
       .attr('fill', (d) => (boroughFills.includes(view)
         ? this.colorBoroughScale(d[K.BOROUGH])
         : this.colorScale(this.getPctChange(d))));
@@ -200,14 +204,14 @@ export default class MovingMap {
   }
 
   getPctChange(station: StationData) {
-    return this.turnstileData.get(getNameHash(station))
-     && this.turnstileData.get(getNameHash(station)).summary.morning_pct_chg;
+    return this.turnstileData.get(station.unit)
+     && this.turnstileData.get(station.unit).summary.swipes_pct_chg;
   }
 
   getACS(station:StationData, field: string) {
-    return this.acsMap.get(station.ct2010)
-     && this.acsMap.get(station.ct2010)[field] !== K.NA
-     && this.acsMap.get(station.ct2010)[field];
+    return this.acsMap.get(station.NTACode)
+     && this.acsMap.get(station.NTACode)[field] !== K.NA
+     && this.acsMap.get(station.NTACode)[field];
   }
 
   handleResize() {

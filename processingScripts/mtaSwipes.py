@@ -5,6 +5,13 @@ import pandas as pd
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from progress.bar import IncrementalBar
+import datetime
+
+# Keys
+WEEK="WEEK"
+TOTAL="TOTAL"
+REMOTE="REMOTE"
+STATION="STATION"
 
 def fetchWeeklyLinks():
   """
@@ -22,7 +29,12 @@ def fetchWeeklyLinks():
   .find(class_="last")
   .find_all("a"))
 
-  return list(map((lambda x: [x.text, baseUrl+x["href"]]), aTags))
+  startDate = datetime.datetime(2019,1,1) # 01/01/2019
+  def parseDate(str):
+    return datetime.datetime.strptime(str, "%A, %B %d, %Y") # ex: Saturday, June 06, 2020
+
+  allLinks = list(map((lambda x: [parseDate(x.text), baseUrl+x["href"]]), aTags))
+  return list(filter(lambda linkRow: linkRow[0]>= startDate, allLinks))
 
 def pullAndParseWeeklyData(weekArray):
   """
@@ -32,10 +44,10 @@ def pullAndParseWeeklyData(weekArray):
   date, link = weekArray
 
   df = pd.read_csv(link, header=2, skipinitialspace=True) # start reading on third line
-  df["WEEK"] = date
-  df['TOTAL'] = df.drop(['REMOTE','STATION'], axis=1).sum(axis=1)
+  df[WEEK] = date
+  df[TOTAL] = df.drop([REMOTE,STATION], axis=1).sum(axis=1)
 
-  return df[["WEEK","STATION", "REMOTE", "TOTAL"]]
+  return df[[WEEK, STATION, REMOTE, TOTAL]]
 
 def main():
   """

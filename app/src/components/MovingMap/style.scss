@@ -28,6 +28,10 @@
         fill: $colorDarkGrey;
       }
 
+      circle{
+        opacity: .5;
+      }
+
       &:hover{
         text{
           visibility: visible;

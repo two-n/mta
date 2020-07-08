@@ -13,32 +13,32 @@ const annotations: TimelineAnnotation[] = [
   {
     date: F.pDate('14-02-2020'),
     step_id: 0,
-    label: '"Normal" Friday (also Valentines Day)',
-    duration: 3000,
+    label: '"Normal" Week (also includes Valentines Day)',
+    duration: 700,
   },
   {
     date: F.pDate('01-03-2020'),
     step_id: 1,
     label: 'First COVID-19 Case in NY State',
-    duration: 1000,
+    duration: 700,
   },
   {
     date: F.pDate('22-03-2020'),
     step_id: 2,
     label: 'NYS on Pause goes into effect',
-    duration: 1000,
+    duration: 700,
   },
   {
     date: F.pDate('07-04-2020'),
     step_id: 3,
     label: 'Peak number of deaths',
-    duration: 1000,
+    duration: 700,
   },
   {
     date: F.pDate('08-06-2020'),
     step_id: 4,
     label: 'Re-Opening Begins', // think about how to handle this
-    duration: 1000,
+    duration: 700,
   },
 ];
 
@@ -70,10 +70,9 @@ export default class Timeline {
 
   init() {
     const { timeline } = S.getOverallTimeline(this.store);
-
     // scales - range set in resize handler
     this.y = scaleLinear()
-      .domain([0, max(timeline, ({ entries }) => entries)]);
+      .domain([0, max(timeline, ({ swipes }) => swipes)]);
 
     this.x = scaleUtc()
       .domain([min(timeline, ({ date }) => F.pDate(date)), F.pDate('08-06-2020')]); // TODO: make clearer
@@ -86,7 +85,7 @@ export default class Timeline {
       // @ts-ignore
       .x(({ date }) => this.x(F.pDate(date)))
       // @ts-ignore
-      .y(({ entries }) => this.y(entries));
+      .y(({ swipes }) => this.y(swipes));
 
     this.el.append('g').attr('class', C.LINES);
     this.el.append('g').attr('class', `${C.AXIS} x`);
@@ -128,7 +127,7 @@ export default class Timeline {
       .call(this.yAxis);
 
     this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.y`)
-      .data(['Daily Metrocard Swipes'])
+      .data(['Weekly Metrocard Swipes'])
       .join('div')
       .attr('class', `${C.AXIS}-${C.LABEL} y`)
       .style('top', `${height / 2}px`)
@@ -141,12 +140,12 @@ export default class Timeline {
       .join('g')
       .attr('class', C.ANNOTATION)
       .attr(C.DATA_STEP, ({ step_id }) => step_id)
-      .attr('transform', ({ date }: TimelineAnnotation) => `translate(${this.x(date)}, ${0})`)
+      .attr('transform', ({ timeline }: TimelineAnnotation) => `translate(${this.x(F.pDate(timeline[timeline.length - 1].date))}, ${0})`)
       .classed(C.FADED, ({ step_id }) => step_id < currentIndex);
 
     this.annotations.selectAll('circle').data((d) => [d])
       .join('circle')
-      .attr('cy', ({ timeline }) => this.y(timeline[timeline.length - 1].entries))
+      .attr('cy', ({ timeline }) => this.y(timeline[timeline.length - 1].swipes))
       .attr('r', radius);
 
     this.overlay.selectAll(`div.${C.ANNOTATION}-${C.LABEL}`)
@@ -154,7 +153,7 @@ export default class Timeline {
       .join('div')
       .attr('class', `${C.ANNOTATION}-${C.LABEL}`)
       .attr(C.DATA_STEP, ({ step_id }) => step_id)
-      .style('top', ({ timeline }) => `${this.y(timeline[timeline.length - 1].entries)}px`)
+      .style('top', ({ timeline }) => `${this.y(timeline[timeline.length - 1].swipes)}px`)
       .style('left', ({ date }) => `${this.x(date) - radius}px`)
       .html(({ label }) => label);
   }
