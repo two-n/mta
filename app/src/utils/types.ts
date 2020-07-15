@@ -16,6 +16,7 @@ export type AppDataType = {
 export type SectionDataType = {
   steps: StepDataType[],
   title: string
+  subtitle?: string;
 }
 
 export type StepDataType = {

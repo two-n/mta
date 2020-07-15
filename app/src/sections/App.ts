@@ -9,6 +9,7 @@ import SectionMovingMap from './SectionMovingMap';
 import * as S from '../redux/selectors';
 import { State } from '../utils/types';
 import { SECTIONS, CLASSES as C } from '../utils/constants';
+import Title from './Title';
 
 export default class App {
   [x: string]: any;
@@ -21,19 +22,21 @@ export default class App {
 
   init() {
     const sectionData = S.getSectionData(this.store);
+
+    // TITLE
+    this.Title = new Title({ data: sectionData[SECTIONS.S_TITLE] });
+
     // SECTION 1
     this.SectionTimeline = new SectionTimeline({
       data: sectionData[SECTIONS.S_TIMELINE],
       store: this.store,
     });
-    this.SectionTimeline.init();
 
     // SECTION 2
     this.SectionMovingMap = new SectionMovingMap({
       data: sectionData[SECTIONS.S_MOVING_MAP],
       store: this.store,
     });
-    this.SectionMovingMap.init();
 
 
     // polyfil for sticky positioning

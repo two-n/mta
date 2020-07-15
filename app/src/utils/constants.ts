@@ -3,6 +3,8 @@ import {
 } from 'd3';
 
 export enum SECTIONS {
+  S_TITLE='section-title',
+  S_INTRO='section-intro',
   S_TIMELINE = 'section-timeline',
   S_PCT_CHNG = 'section-pct-change',
   S_MOVING_MAP = 'section-map',
@@ -38,6 +40,7 @@ export enum CLASSES {
   AXIS = 'axis',
   CHART = 'chart',
   TITLE = 'title',
+  SUBTITLE = 'subtitle',
   FEVERLINE = 'feverline',
   FEVERGRID = 'fevergrid',
   MOVING_MAP = 'moving-map',
@@ -55,6 +58,8 @@ export enum CLASSES {
   LABEL = 'label',
   OVERLAY = 'overlay',
   NO_WRAP = 'no-wrap',
+  FADE_IN = 'fade-in',
+  FADE_OUT = 'fade-out'
 }
 
 export enum KEYS {
