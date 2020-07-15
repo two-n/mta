@@ -56,6 +56,15 @@ https://www1.nyc.gov/site/planning/data-maps/open-data/dwn-acs-nta.page
 
 ran `processingScripts/acsByNTA.py` to create a cleaned up geojson and then `geo2topo data/output/acs_nta.geojson > data/output/acs_nta_topo.json` to create a topojson.
 
+### App Content
+Using (ArchieML)[http://archieml.org/#resources] via Quartz's (aml-gdoc-server)[https://github.com/Quartz/aml-gdoc-server] to pull unstructured data from [this google doc](https://docs.google.com/document/d/1Dc9L6cVkBEpUPbp2vSby0Mpx40MzCeKqe_4cX5I11oE/edit) into a json format.
+To pull a new version of the data, run:
+
+`aml-gdoc-server` (it may prompt you for your google API credentials — see (documentation)[https://github.com/Quartz/aml-gdoc-server]).
+
+That will open a server at `http://127.0.0.1:6006/`. To get a JSON formatted dataset, just go to `http://127.0.0.1:6006/GOOGLE_DOC_ID` and save the resulting file.
+
+
 ## Process
 
 ## Notes
