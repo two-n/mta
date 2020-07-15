@@ -5,35 +5,34 @@ import {
   rollup,
   extent,
   quantile,
-  max, min,
+  max,
 } from 'd3-array';
-import { State, ProcessedStation, ACSData } from '../../utils/types';
+import { State, ProcessedStation } from '../../utils/types';
 import * as Helpers from '../../utils/helpers';
 import { processStations } from '../../utils/dataProcessing';
 import { KEYS as K, FORMATTERS as F, appConfig } from '../../utils/constants';
-import { create } from 'domain';
 
 /** Basic Selectors */
 export const getSectionData = (state: Store<State>) => state.getState().sectionData;
-export const getTurnstileData = (state: Store<State>) => state.getState().turnstileData;
+export const getSwipeData = (state: Store<State>) => state.getState().swipeData;
 export const getStationData = (state: Store<State>) => state.getState().stationData;
 export const getACSData = (state: Store<State>) => state.getState().acsData;
 export const getView = (state: Store<State>) => state.getState().view;
 
 /** Turnstile Manipulations */
-export const getFilteredTurnstileData = createSelector([
-  getTurnstileData
-], data=> data.filter(({WEEK})=> WEEK >= appConfig.startDate))
+export const getFilteredSwipeData = createSelector([
+  getSwipeData,
+], (data) => data.filter(({ WEEK }) => WEEK >= appConfig.startDate));
 
 export const getOverallTimeline = createSelector([
-  getFilteredTurnstileData,
+  getFilteredSwipeData,
 ], (data) => data && processStations(data, true));
 
 export const getStationRollup = createSelector([
-  getFilteredTurnstileData,
+  getFilteredSwipeData,
 ], (data) => data
 && rollup(data, processStations,
-  ({REMOTE})=> REMOTE));
+  ({ REMOTE }) => REMOTE));
 
 export const getStationTimelines = createSelector([
   getStationRollup,
@@ -45,36 +44,11 @@ export const getStationTimelines = createSelector([
       .filter(({ date }) => F.pDate(date) > appConfig.startDate), // filter for only after startDate
   })) as ProcessedStation[]);
 
-/** calculates extents for commonly used values */
+/** GEOGRAPHIC TRANSFORMATIONS */
 const getACSGeometries = createSelector([
-  getACSData
+  getACSData,
 ],
-(data)=> data.objects.acs_nta.geometries)
-
-export const getDataExtents = createSelector([
-  getStationTimelines,
-  getStationData,
-  getACSGeometries,
-], (stationStats, stations, acs): {[key:string]: (number|Date| string)[]} => {
-  const stationTimelines = stationStats.map(({ timeline }) => timeline);
-  return {
-    [K.SWIPES_PCT_CHG]: [-1, quantile(stationTimelines
-      .map((t) => t
-      .map(({ swipes_pct_chg }) => swipes_pct_chg))
-      .flat(), 0.999)],
-    [K.SUMMARY_SWIPES_PCT_CHG]: [-1, quantile(stationStats
-      .map(({ summary }) => summary)
-      .map(({ swipes_pct_chg }) => swipes_pct_chg),0.99)],
-    [K.SUMMARY_SWIPES_AVG_POST]: [-1, quantile(stationStats
-      .map(({ summary }) => summary)
-      .map(({ swipes_avg_post }) => swipes_avg_post),0.99)],
-    [K.BOROUGH]: Helpers.getUnique(stations, (d) => d[K.BOROUGH]),
-    [K.ED_HEALTH_PCT]: extent(acs,({properties}) => +properties[K.ED_HEALTH_PCT]),
-    [K.INCOME_PC]: [0, max(acs, ({properties}) => +properties[K.INCOME_PC])],
-    [K.UNINSURED]: [0, quantile(acs.map(({properties}) => +properties[K.UNINSURED]), .99)],
-
-  };
-});
+(data) => data.objects.acs_nta.geometries);
 
 export const getGeoJSONData = createSelector([
   getACSData,
@@ -90,8 +64,35 @@ export const getGeoMeshExterior = createSelector([
 ], (data) => topojson.mesh(data, data.objects.acs_nta,
   (a, b) => a === b));
 
+
+/** EXTENTS */
+export const getDataExtents = createSelector([
+  getStationTimelines,
+  getStationData,
+  getACSGeometries,
+], (stationStats, stations, acs): {[key:string]: (number|Date| string)[]} => {
+  const stationTimelines = stationStats.map(({ timeline }) => timeline);
+  return {
+    [K.SWIPES_PCT_CHG]: [-1, quantile(stationTimelines
+      .map((t) => t
+        .map(({ swipes_pct_chg }) => swipes_pct_chg))
+      .flat(), 0.999)],
+    [K.SUMMARY_SWIPES_PCT_CHG]: [-1, quantile(stationStats
+      .map(({ summary }) => summary)
+      .map(({ swipes_pct_chg }) => swipes_pct_chg), 0.99)],
+    [K.SUMMARY_SWIPES_AVG_POST]: [-1, quantile(stationStats
+      .map(({ summary }) => summary)
+      .map(({ swipes_avg_post }) => swipes_avg_post), 0.99)],
+    [K.BOROUGH]: Helpers.getUnique(stations, (d) => d[K.BOROUGH]),
+    [K.ED_HEALTH_PCT]: extent(acs, ({ properties }) => +properties[K.ED_HEALTH_PCT]),
+    [K.INCOME_PC]: [0, max(acs, ({ properties }) => +properties[K.INCOME_PC])],
+    [K.UNINSURED]: [0, quantile(acs.map(({ properties }) => +properties[K.UNINSURED]), 0.99)],
+
+  };
+});
+
 /** creates a map from NTACode => ACS summary data */
 export const getStationToACSMap = createSelector([
   getACSGeometries,
 ], (data) => data
-&& new Map(data.map(({properties}) => ([properties.NTACode, properties]))));
+&& new Map(data.map(({ properties }) => ([properties.NTACode, properties]))));

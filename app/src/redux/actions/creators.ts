@@ -1,9 +1,9 @@
-import { TurnstileData } from '../../utils/types';
+import { SwipeData } from '../../utils/types';
 import { VIEWS } from '../../utils/constants';
 
-export const SET_TURNSTILE_DATA = 'SET_TURNSTILE_DATA';
-export const setTurnstileData = (data: TurnstileData[]) => ({
-  type: SET_TURNSTILE_DATA,
+export const SET_SWIPE_DATA = 'SET_SWIPE_DATA';
+export const setSwipeData = (data: SwipeData[]) => ({
+  type: SET_SWIPE_DATA,
   data,
 });
 

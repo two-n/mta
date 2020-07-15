@@ -2,7 +2,7 @@ import { SECTIONS, VIEWS } from './constants';
 
 export interface State {
   sectionData: AppDataType
-  turnstileData: null | TurnstileData[],
+  swipeData: null | SwipeData[],
   mapData: any,
   stationData: null | StationData[],
   acsData: null | ACSData,
@@ -22,9 +22,10 @@ export type StepDataType = {
   step_id: number,
   header: string,
   text: string
+  [key:string]: string | number
 }
 
-export interface TurnstileData {
+export interface SwipeData {
   STATION: string;
   REMOTE: string;
   WEEK: Date;

@@ -5,7 +5,7 @@ import {
 export enum SECTIONS {
   S_TIMELINE = 'section-timeline',
   S_PCT_CHNG = 'section-pct-change',
-  S_MOVING_MAP = 'section-moving-map',
+  S_MOVING_MAP = 'section-map',
 }
 
 export enum DIRECTIONS {
@@ -59,9 +59,9 @@ export enum CLASSES {
 
 export enum KEYS {
   SWIPES = 'swipes',
-  SWIPES_PCT_CHG="swipes_pct_chg",
-  SUMMARY_SWIPES_PCT_CHG="summary_swipes_pct_chg",
-  SUMMARY_SWIPES_AVG_POST="summary_swipes_avg_post",
+  SWIPES_PCT_CHG='swipes_pct_chg',
+  SUMMARY_SWIPES_PCT_CHG='summary_swipes_pct_chg',
+  SUMMARY_SWIPES_AVG_POST='summary_swipes_avg_post',
 
   NA='-',
   BOROUGH= 'BoroCode',

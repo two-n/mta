@@ -1,12 +1,13 @@
 import { Action } from 'redux';
-import sectionData from '../../../public/content/sectionData.json';
-import { State } from '../../utils/types';
+import * as H from '../../utils/helpers';
+import sectionData from '../../../public/content/narrativeCopy.json';
+import { State, AppDataType } from '../../utils/types';
 import A from '../actions';
 import { VIEWS } from '../../utils/constants';
 
 const initialState: State = {
-  sectionData,
-  turnstileData: null,
+  sectionData: H.addStepIds(sectionData) as AppDataType,
+  swipeData: null,
   mapData: null,
   stationData: null,
   acsData: null,
@@ -15,8 +16,8 @@ const initialState: State = {
 
 export default function reducer(state = initialState, action: Action): State {
   switch (action.type) {
-    case A.SET_TURNSTILE_DATA:
-      return { ...state, turnstileData: action.data };
+    case A.SET_SWIPE_DATA:
+      return { ...state, swipeData: action.data };
     case A.SET_STATION_DATA:
       return { ...state, stationData: action.data };
     case A.SET_ACS_DATA:
