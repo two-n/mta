@@ -3,6 +3,7 @@
 body{
   font-family: $fontRegular;
   background-color: $colorBackground;
+  -webkit-font-smoothing: antialiased;
 }
 
 #app{

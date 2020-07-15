@@ -87,7 +87,7 @@ export default class Section {
     // console.log('exit: element, index, direction', element, index, direction);
     select(element).classed(C.ACTIVE, false);
     this.header
-      .classed(C.FADE_IN, false); // remove class to allow css animation to be re-triggered
+      .classed(C.FADE_IN, false);// remove class to allow css animation to be re-triggered
   }
 
   setUpSection() {

@@ -10,7 +10,7 @@ section.section {
 
     .section-header {
       opacity: 0;
-      transition: opacity 200ms;
+      transition: opacity 2s;
       width: 100%;
       font-family: $fontLight;
       height: 4em;
@@ -18,7 +18,7 @@ section.section {
       font-weight: unset;
 
       &.fade-in {
-        animation: fade-in 3s 1 0s forwards;
+        opacity:  1;
       }
     }
 

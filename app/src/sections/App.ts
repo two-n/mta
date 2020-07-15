@@ -5,6 +5,7 @@ import { selectAll } from 'd3';
 import * as Stickyfill from 'stickyfill';
 import SectionTimeline from './SectionTimeline';
 import SectionMovingMap from './SectionMovingMap';
+import SectionIntro from './SectionIntro';
 
 import * as S from '../redux/selectors';
 import { State } from '../utils/types';
@@ -25,6 +26,9 @@ export default class App {
 
     // TITLE
     this.Title = new Title({ data: sectionData[SECTIONS.S_TITLE] });
+
+    // INTRO
+    this.SectionIntro = new SectionIntro({ data: sectionData[SECTIONS.S_INTRO] });
 
     // SECTION 1
     this.SectionTimeline = new SectionTimeline({
