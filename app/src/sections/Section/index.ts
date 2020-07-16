@@ -2,7 +2,7 @@ import { Store } from 'redux';
 import { select, Selection } from 'd3';
 import 'intersection-observer';
 import scrollama from 'scrollama';
-import { SectionDataType, State } from '../../utils/types';
+import { SectionDataType, State, StepDataType } from '../../utils/types';
 import './style.scss';
 import { CLASSES as C, SECTIONS as S } from '../../utils/constants';
 
@@ -30,11 +30,15 @@ export default class Section {
 
   section: string;
 
+  header: any;
+
   constructor({ data, store, sectionName }: Props) {
     this.store = store;
     this.data = data;
     this.scroller = scrollama();
     this.section = sectionName;
+    this.onStepEnter = this.onStepEnter.bind(this);
+    this.onStepExit = this.onStepExit.bind(this);
   }
 
   init() {
@@ -64,6 +68,13 @@ export default class Section {
 
   onStepEnter({ element, index, direction }) {
     // console.log('enter: element, index, direction', element, index, direction);
+    const data = select(element).data()[0] as StepDataType;
+
+    if (data) {
+      this.header
+        .html(data.text) // replace header text with current step data
+        .classed(C.FADE_IN, true);
+    }
     // select(element).classed(C.ACTIVE, true);
   }
 
@@ -73,8 +84,10 @@ export default class Section {
   }
 
   onStepExit({ element, index, direction }) {
-    select(element).classed(C.ACTIVE, false);
     // console.log('exit: element, index, direction', element, index, direction);
+    select(element).classed(C.ACTIVE, false);
+    this.header
+      .classed(C.FADE_IN, false);// remove class to allow css animation to be re-triggered
   }
 
   setUpSection() {
@@ -89,7 +102,7 @@ export default class Section {
       .attr('class', C.STICKY);
 
     // create header
-    this.sticky.append('h2').attr('class', C.SECTION_HEADER)
+    this.header = this.sticky.append('div').attr('class', C.SECTION_HEADER)
       .html(data.title);
 
     // create header
@@ -108,10 +121,6 @@ export default class Section {
     this.steps.append('h3')
       .attr('class', C.STEP_HEADER)
       .html((d) => d.header);
-
-    this.steps.append('div')
-      .attr('class', C.STEP_TEXT)
-      .html((d) => d.text);
   }
 
   setUpGraphic() {
@@ -121,10 +130,10 @@ export default class Section {
   // generic window resize listener event
   handleResize() {
     // 1. update height of step elements
-    const stepH = Math.floor(window.innerHeight * 0.75);
+    const stepH = Math.floor(window.innerHeight);
     this.steps.style('height', `${stepH}px`);
 
-    const figureHeight = window.innerHeight * 0.75;
+    const figureHeight = window.innerHeight * 0.8;
     const figureMarginTop = (window.innerHeight - figureHeight) / 2;
 
     this.sticky

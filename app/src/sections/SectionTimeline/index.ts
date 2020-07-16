@@ -1,6 +1,6 @@
 import { Store } from 'redux';
 import Section from '../Section';
-import { SectionDataType, State, Controller } from '../../utils/types';
+import { SectionDataType } from '../../utils/types';
 import { SECTIONS as S, DIRECTIONS as D } from '../../utils/constants';
 import './style.scss';
 import Timeline from '../../components/Timeline';
@@ -13,6 +13,7 @@ export default class SectionTimeline extends Section {
   constructor({ data, store }: Props) {
     super({ data, store, sectionName: S.S_TIMELINE });
     this.onStepEnter = this.onStepEnter.bind(this);
+    this.init();
   }
 
   setUpGraphic() {
@@ -21,6 +22,8 @@ export default class SectionTimeline extends Section {
   }
 
   onStepEnter({ element, index, direction }) {
+    // call parent's handler first - handles the default scrolly-telling mechanisms
+    super.onStepEnter({ element, index, direction });
     this.timeline.handleTransition(index, direction);
   }
 

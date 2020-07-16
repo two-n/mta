@@ -3,6 +3,7 @@
 body{
   font-family: $fontRegular;
   background-color: $colorBackground;
+  -webkit-font-smoothing: antialiased;
 }
 
 #app{
@@ -15,75 +16,18 @@ body{
   }
 }
 
-section#intro{
-  height: 100vh;
-  display: flex;
-  align-items: center;
-
-  h1{
-    margin: 0;
-  }
-}
-
-.section {
-  position: relative;
-}
-
-.section-header{
-  max-width: 40rem;
-  background-color: $colorBackground;
-}
-
-.sticky{
-  position: sticky;
-  display: flex;
-  flex-direction: column;
-
-  .graphic{
-    width: 100%;
-    height: 100%;
-    position:relative;
-
-    .overlay{
-      position: absolute;
-      top:0;
-      left:0;
-    }
-  }
-}
-
-.article{
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  //  margin: 0 auto; // uncomment to center
-
-  .step{
-    max-width: $maxTextWidth;
-    position: relative;
-    min-height: 500px;
-    transition: opacity 500ms;
-    opacity: 0;
-    pointer-events: none;
-
-    &.active{
-      opacity: 1;
-    }
-  }
-}
-
 /** DEFAULT ELEMENTS */
 
 h1{
   font-family: $fontBold;
   font-size: $fontSizeXXLarge;
-  max-width: 40rem;
+  // max-width: 40rem;
 }
 
 h2{
   font-family: $fontBold;
   font-size: $fontSizeXLarge;
-  max-width: $maxTextWidth;
+  // max-width: $maxTextWidth;
 }
 
 .axis{

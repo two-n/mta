@@ -41,6 +41,7 @@ export default class SectionMovingMap extends Section {
         [D.UP]: () => this.movingMap.setView(V.SCATTER_UNINSURED),
       },
     };
+    this.init();
   }
 
   setUpGraphic() {
@@ -52,6 +53,7 @@ export default class SectionMovingMap extends Section {
   }
 
   onStepEnter({ element, index, direction }) {
+    super.onStepEnter({ element, index, direction });
     if (this.controller[index]
       && this.controller[index][direction]) {
       this.controller[index][direction]();

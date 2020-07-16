@@ -4,12 +4,13 @@ import { Store } from 'redux';
 import { selectAll } from 'd3';
 import * as Stickyfill from 'stickyfill';
 import SectionTimeline from './SectionTimeline';
-import SectionPctChange from './SectionPctChange';
 import SectionMovingMap from './SectionMovingMap';
+import SectionIntro from './SectionIntro';
 
 import * as S from '../redux/selectors';
 import { State } from '../utils/types';
 import { SECTIONS, CLASSES as C } from '../utils/constants';
+import Title from './Title';
 
 export default class App {
   [x: string]: any;
@@ -22,28 +23,25 @@ export default class App {
 
   init() {
     const sectionData = S.getSectionData(this.store);
+
+    // TITLE
+    this.Title = new Title({ data: sectionData[SECTIONS.S_TITLE] });
+
+    // INTRO
+    this.SectionIntro = new SectionIntro({ data: sectionData[SECTIONS.S_INTRO] });
+
     // SECTION 1
     this.SectionTimeline = new SectionTimeline({
       data: sectionData[SECTIONS.S_TIMELINE],
       store: this.store,
     });
-    this.SectionTimeline.init();
-
 
     // SECTION 2
     this.SectionMovingMap = new SectionMovingMap({
       data: sectionData[SECTIONS.S_MOVING_MAP],
       store: this.store,
     });
-    this.SectionMovingMap.init();
 
-
-    // // SECTION 3
-    // this.SectionPctChange = new SectionPctChange({
-    //   data: sectionData[SECTIONS.S_PCT_CHNG],
-    //   store: this.store,
-    // });
-    // this.SectionPctChange.init();
 
     // polyfil for sticky positioning
     this.setupStickyfill();

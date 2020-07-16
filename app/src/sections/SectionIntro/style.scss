@@ -1,0 +1,11 @@
+@import "../../styling/variables";
+
+section#section-intro{
+
+  .section-header{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%)
+  }
+
+}
