@@ -28,7 +28,7 @@ export const processStations = (data: TurnstileData[],
   ({ TOTAL }) => TOTAL);
 
   const summary: StationSummary = {
-    swipes_pct_chg: (postSwipes - preSwipes) / preSwipes,
+    swipes_pct_chg: 1 - ((preSwipes - postSwipes) / preSwipes),
     swipes_avg_post: postSwipes,
     swipes_avg_pre: preSwipes,
   };
@@ -41,7 +41,7 @@ export const processStations = (data: TurnstileData[],
     ) => ({
       date: F.fDate(WEEK),
       swipes: TOTAL,
-      swipes_pct_chg: (TOTAL - preSwipes) / preSwipes,
+      swipes_pct_chg: 1 - ((preSwipes - TOTAL) / preSwipes),
     })).sort((a, b) => ascending(F.pDate(a.date), F.pDate(b.date))),
     summary,
   };

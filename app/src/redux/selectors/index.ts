@@ -76,11 +76,11 @@ export const getDataExtents = createSelector([
 ], (stationStats, stations, acs): {[key:string]: (number|Date| string)[]} => {
   const stationTimelines = stationStats.map(({ timeline }) => timeline);
   return {
-    [K.SWIPES_PCT_CHG]: [-1, quantile(stationTimelines
+    [K.SWIPES_PCT_CHG]: [0, quantile(stationTimelines
       .map((t) => t
         .map(({ swipes_pct_chg }) => swipes_pct_chg))
       .flat(), 0.999)],
-    [K.SUMMARY_SWIPES_PCT_CHG]: [-1, quantile(stationStats
+    [K.SUMMARY_SWIPES_PCT_CHG]: [0, quantile(stationStats
       .map(({ summary }) => summary)
       .map(({ swipes_pct_chg }) => swipes_pct_chg), 0.99)],
     [K.SUMMARY_SWIPES_AVG_POST]: [-1, quantile(stationStats
