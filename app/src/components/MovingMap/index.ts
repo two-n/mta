@@ -40,6 +40,7 @@ const FORMAT_MAP:{[key:string]: (d:number)=> string} = {
   [K.SNAP_PCT]: F.fPctNoMult,
 };
 
+const MAP_VISIBLE = [V.MAP_OUTLINE, V.MAP_DOTS_LINES, V.MAP_DOTS_LINES_NTAS];
 export default class MovingMap {
   yScales: {[key:string]: ScaleObject}
 
@@ -86,11 +87,6 @@ export default class MovingMap {
       .domain(E[K.SUMMARY_SWIPES_PCT_CHG] as [number, number]);
     this.xScale.tickFormat(null, F.sPct);
 
-    this.rScale = scaleSqrt()
-      .domain(E[K.SUMMARY_SWIPES_AVG_POST] as [number, number])
-      .range([2, 10]);
-
-
     // AXES
     this.xAxis = axisBottom(this.xScale).tickFormat(F.fPct);
 
@@ -109,14 +105,16 @@ export default class MovingMap {
     const view = S.getView(this.store);
     this.geoPath = geoPath().projection(this.proj);
     this.map
-      .classed(C.VISIBLE, view === V.MAP)
+      .classed(C.VISIBLE, MAP_VISIBLE.includes(view))
       .selectAll('path')
       .data([this.geoMeshExterior])
       .join('path')
       .attr('d', this.geoPath);
 
-    this.stations = this.stationsG.selectAll(`g.${C.STATION}`)
-      .data(this.stationsGISData)
+    this.stations = this.stationsG
+      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES)
+      .selectAll(`g.${C.STATION}`)
+      .data(this.stationsGISData, (d) => d.station_code)
       .join('g')
       .attr('class', C.STATION)
       .on('mouseover', function () { select(this).raise(); });
@@ -142,7 +140,7 @@ export default class MovingMap {
 
     this.stations.selectAll('circle').data((d) => [d])
       .join('circle')
-      .attr('r', (d) => this.rScale(this.turnstileData.get(d.unit).summary.swipes_avg_post))
+      .attr('r', R)
       .attr('fill', (d) => (this.colorScale(this.getPctChange(d))));
 
     this.stations.selectAll('text').data((d) => [d])
@@ -186,8 +184,8 @@ export default class MovingMap {
     }
 
     // VISIBILITY
-    this.parent.selectAll('.x');
-    // .classed(C.VISIBLE, view !== V.MAP); // TODO: fix
+    this.parent.selectAll('.x')
+      .classed(C.VISIBLE, view > V.MAP_DOTS_LINES_NTAS);
     this.parent.selectAll('.y')
       .classed(C.VISIBLE, !!this.yKey);
   }

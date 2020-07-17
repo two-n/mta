@@ -4,18 +4,21 @@
 
   .map{
     opacity: 0;
-    transition: opacity 500ms;
+    transition: opacity $durationOpacity;
     &.visible{
       opacity: 1;
     }
     path{
-      fill: $colorLightGrey;
+      fill: transparent;
       stroke: $colorLightGrey;
     }
   }
   .stations{
+    opacity: 0;
+    transition: opacity $durationOpacity;
+
     .station{
-      transition: transform 1000ms;
+      transition: transform $durationMovement;
       cursor: pointer;
 
       text{
@@ -29,7 +32,9 @@
       }
 
       circle{
-        opacity: .5;
+        // opacity: .5;
+        stroke: white;
+        box-shadow: 0 1px 3px;
       }
 
       &:hover{
@@ -42,11 +47,15 @@
         }
       }
     }
+
+    &.visible{
+      opacity: 1;
+    }
   }
 
   .x, .y{
     opacity: 0;
-    transition: opacity 500ms;
+    transition: opacity $durationOpacity;
     &.visible{
       opacity: 1;
     }
