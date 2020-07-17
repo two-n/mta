@@ -9,8 +9,6 @@ import {
 } from '../../utils/constants';
 import './style.scss';
 import styleVars from '../../styling/_variables.scss';
-import { ticks } from 'd3-array';
-
 
 interface Props {
   parent: Selection;
