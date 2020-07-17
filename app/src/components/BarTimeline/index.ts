@@ -5,7 +5,7 @@ import {
 import * as S from '../../redux/selectors';
 import { State, StationTimelineItem } from '../../utils/types';
 import {
-  CLASSES as C, FORMATTERS as F, DIRECTIONS, SECTIONS, KEYS,
+  CLASSES as C, FORMATTERS as F, DIRECTIONS as D, SECTIONS, KEYS,
 } from '../../utils/constants';
 import './style.scss';
 import styleVars from '../../styling/_variables.scss';
@@ -153,7 +153,9 @@ export default class BarTimeline {
     this.lines
       .transition()
       .duration((d) => (isActive(d) ? +styleVars.durationOpacity.slice(0, -2) : 0))
-      .delay((d, i) => (isActive(d) ? i * DELAY : 0)) // only add delay to those transitioning in
+      .delay((d, i) => (isActive(d)
+        ? (direction === D.DOWN ? i : this.steps.length - i) * DELAY // reverse delay on the way up
+        : 0)) // only add delay to those transitioning in
       .attr('opacity', (d) => (isActive(d) ? 1 : 0))
       .end()
       .then(() => {
