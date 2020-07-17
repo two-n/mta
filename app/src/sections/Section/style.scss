@@ -41,11 +41,13 @@ section.section {
     //  margin: 0 auto; // uncomment to center
 
     .step {
+      border: $colorYellow 2px solid;
+      width: 2em;
       max-width: $maxTextWidth;
       position: relative;
       min-height: 500px;
       transition: opacity 500ms;
-      opacity: 0;
+      // opacity: 0; // temporary in order to see the steps pass by
       pointer-events: none;
       margin-bottom: 50vh; // used to add some space for transitions between steps
 

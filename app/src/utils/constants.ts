@@ -103,6 +103,7 @@ export const FORMATTERS = {
   fDate: utcFormat('%d-%m-%Y'),
   pDate: utcParse('%d-%m-%Y'),
   fNumber: format('.2s'),
+  fSNum: format('.0s'),
   fPct: format('.0%'),
   fPctNoMult: (d:number) => `${format('.0f')(d)}%`,
   fBorough: (d:number) => boroughMap[d],

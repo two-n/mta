@@ -11,15 +11,25 @@
       }
     }
 
-    .ref-lines{
+    .ref-lines .ref{
+      transition:transform $durationMovement;
       path{
         stroke: $colorBlack;
         stroke-width: 3px;
-        transition:transform $durationMovement;
+      }
+      text.label{
+        text-anchor: middle;
+        opacity: 0;
+        transition: opacity $durationOpacity;
+
+        &.visible{
+          opacity: 1;
+        }
       }
     }
 
     .gradient{
+      transition: opacity $durationOpacity;
       opacity: 0;
 
       &.visible{

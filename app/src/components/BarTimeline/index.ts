@@ -16,7 +16,7 @@ interface Props {
 }
 
 const M = {
-  top: 20, bottom: 30, left: 50, right: 50,
+  top: 100, bottom: 30, left: 100, right: 100,
 };
 const PAD = 20;
 const DELAY = 100;
@@ -74,13 +74,19 @@ export default class BarTimeline {
     this.linesWrapper = this.el.append('g').attr('class', 'lines');
 
     // set up right/left reference bands - position in draw
-    this.refLines = this.el.append('g')
+    this.refLinesWrapper = this.el.append('g')
       .attr('class', 'ref-lines')
       .selectAll('g.ref')
       .data([swipes_avg_pre, swipes_avg_post])
       .join('g')
-      .attr('class', 'ref')
-      .append('path');
+      .attr('class', 'ref');
+
+    this.refLinesWrapper.append('path');
+    this.refLinesWrapper.append('text')
+      .attr('class', C.LABEL)
+      .text((d) => F.fSNum(d))
+      .attr('dy', '-.5em')
+    ;
 
     // set up annotation labels - position in draw
     this.annotations = this.overlay.append('div').attr('class', C.ANNOTATIONS)
@@ -97,11 +103,14 @@ export default class BarTimeline {
       .attr('class', C.GRADIENT);
     this.gradient.append('rect')
       .attr('fill', (d) => this.c(d.label));
+    this.gradient.append('text').attr('class', C.LABEL)
+      .text((d) => F.fPct(d.label)).attr('dx', '.5em');
   }
 
   draw() {
     const { timeline } = S.getOverallTimeline(this.store);
 
+    console.log('this.y.domain(), this.y.range()', this.y.domain(), this.y.range(), this.y);
     const [width, height] = this.dims;
     this.barW = Math.max(((width - M.left - M.right) / timeline.length) - 20, 2);
 
@@ -113,32 +122,38 @@ export default class BarTimeline {
       .attr('opacity', 0)
       .attr(
         'transform',
-        (d: StationTimelineItem) => `translate(${this.x(F.pDate(d.date))}, ${(height - M.top - M.bottom) / 2
+        (d: StationTimelineItem) => `translate(${this.x(F.pDate(d.date))}, ${(height) / 2
             - this.y(d.swipes) / 2})`,
       );
 
     // position reference bands
-    this.refLines
-      .attr('d', (d) => `M 0 0 H ${this.barW * 2} M ${this.barW} 0 V ${this.y(d)} M 0 ${this.y(d)} H ${this.barW * 2}`)
+    this.refLinesWrapper
       .style('transform', (d, i) => `translate(${this.x.range()[i]
-      + (i === 0 ? -PAD - this.barW : PAD)}px, ${(height - M.top - M.bottom) / 2
-        - this.y(d) / 2}px)`);
+    + (i === 0 ? -PAD - this.barW : PAD)}px, ${height / 2
+      - (this.y(d) / 2)}px)`)
+      .select('path')
+      .attr('d', (d) => `M 0 ${0} H ${this.barW * 2} M ${this.barW} ${0} V ${this.y(d)} M 0 ${this.y(d)} H ${this.barW * 2}`);
 
     // position labels
     this.annotations
-      .style('transform', (d) => `translate(${this.x(F.pDate(d.date))}px, ${(height - M.top - M.bottom) / 2
+      .style('transform', (d) => `translate(${this.x(F.pDate(d.date))}px, ${height / 2
       - this.y(d.swipes) / 2}px) translateY(-100%)`);
 
     // position and size gradient
     const gradW = PAD * 2;
-    this.gradient.select('rect')
-      .attr('width', gradW + this.barW)
-      .attr('height', (d) => this.y(d.swipes))
+    this.gradient
       .style('transform', (d) => `translate(${width / 2 - (gradW / 2)}px, ${(height - M.bottom)
-      - this.y(d.swipes)}px)`);
+      - this.y(d.swipes)}px)`)
+      .select('rect')
+      .attr('width', gradW + this.barW)
+      .attr('height', (d) => this.y(d.swipes));
+
+    this.gradient.select('text')
+      .attr('x', gradW + this.barW)
+      .attr('y', (d) => this.y(d.swipes) / 2);
   }
 
-  handleTransition(element:any, index:number, direction: DIRECTIONS) {
+  handleTransition(element:any, index:number, direction: D) {
     const { tStopsMap } = this;
     const [width, height] = this.dims;
     const data = select(element).data()[0];
@@ -149,6 +164,16 @@ export default class BarTimeline {
     const isActive = (d) => (data.date && F.pDate(d.date) <= F.pDate(this.steps.get(data.step_id).date))
       || data.step_id === this.lastDateStep + 1; // include bars after last date
 
+    // callback for when bars finish transitioning
+    const onTransitionDone = () => {
+      this.annotations
+        .classed(C.VISIBLE, (d) => d.step_id === data.step_id)
+        .classed(C.FADED, (d) => d.step_id < data.step_id)
+        .classed(C.HIDDEN, (d) => data.step_id >= tStopsMap.get(TS.FADE_BARS));
+
+      this.lines.attr('opacity', (d) => (isActive(d) ? 1 : 0));
+    };
+
     // TODO: fix animation logic for scrolling back up
     this.lines
       .transition()
@@ -158,28 +183,19 @@ export default class BarTimeline {
         : 0)) // only add delay to those transitioning in
       .attr('opacity', (d) => (isActive(d) ? 1 : 0))
       .end()
-      .then(() => {
-        this.annotations
-          .classed(C.VISIBLE, (d) => d.step_id === data.step_id)
-          .classed(C.FADED, (d) => d.step_id < data.step_id)
-          .classed(C.HIDDEN, (d) => data.step_id >= tStopsMap.get(TS.FADE_BARS));
-      })
-      .catch(() => {
-        this.annotations
-          .classed(C.VISIBLE, (d) => d.step_id === data.step_id)
-          .classed(C.FADED, (d) => d.step_id < data.step_id)
-          .classed(C.HIDDEN, (d) => data.step_id >= tStopsMap.get(TS.FADE_BARS));
-      });
+      .then(onTransitionDone)
+      .catch(onTransitionDone);
 
-    this.refLines
+    this.refLinesWrapper
       .style('transform', (d, i) => (
         (data.step_id < tStopsMap.get(TS.MOVE_REFS))
         // far apart
           ? `translate(${this.x.range()[i] + (i === 0 ? -PAD - this.barW : PAD)}px, ${
-            (height - M.top - M.bottom) / 2 - this.y(d) / 2}px)`
+            (height) / 2 - this.y(d) / 2}px)`
           // close together
           : `translate(${width / 2 + (i === 0 ? -PAD - this.barW : PAD)}px, ${
-            height - M.bottom - this.y(d)}px)`));
+            height - M.bottom - this.y(d)}px)`))
+      .select('text').classed(C.VISIBLE, data.step_id >= tStopsMap.get(TS.MOVE_REFS));
 
     this.gradient.classed(C.VISIBLE, data.step_id >= tStopsMap.get(TS.GRADIENT));
   }
@@ -191,7 +207,7 @@ export default class BarTimeline {
     this.el.attr('width', width).attr('height', height);
     this.overlay.style('width', `${width}px`).style('height', `${height}px`);
     // update scales
-    this.y.range([M.top, height - M.bottom]);
+    this.y.range([0, height - M.bottom - M.top]);
     this.x.range([M.left, width - M.right]);
     this.draw();
   }
