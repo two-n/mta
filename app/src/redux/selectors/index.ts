@@ -7,10 +7,13 @@ import {
   quantile,
   max,
 } from 'd3-array';
+import { scaleSequential } from 'd3';
 import { State, ProcessedStation } from '../../utils/types';
 import * as Helpers from '../../utils/helpers';
 import { processStations } from '../../utils/dataProcessing';
-import { KEYS as K, FORMATTERS as F, appConfig } from '../../utils/constants';
+import {
+  KEYS as K, FORMATTERS as F, appConfig, colorInterpolator,
+} from '../../utils/constants';
 
 /** Basic Selectors */
 export const getSectionData = (state: Store<State>) => state.getState().sectionData;
@@ -90,6 +93,11 @@ export const getDataExtents = createSelector([
 
   };
 });
+
+export const getColorScheme = createSelector([
+  getDataExtents,
+], (extents) => scaleSequential(colorInterpolator)
+  .domain(extents[K.SUMMARY_SWIPES_PCT_CHG] as [number, number]));
 
 /** creates a map from NTACode => ACS summary data */
 export const getStationToACSMap = createSelector([

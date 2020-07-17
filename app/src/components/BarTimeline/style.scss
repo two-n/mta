@@ -1,0 +1,54 @@
+@import "../../styling/variables";
+
+.timeline{
+
+  svg{
+    .lines rect{
+      fill: $colorDarkGrey;
+
+      &.selected{
+        fill: $colorBlack;
+      }
+    }
+
+    .ref-lines{
+      path{
+        stroke: $colorBlack;
+        stroke-width: 3px;
+        transition:transform $durationMovement;
+      }
+    }
+
+    .gradient{
+      opacity: 0;
+
+      &.visible{
+        opacity: 1;
+      }
+    }
+  }
+
+  .overlay{
+    .annotations{
+      position: relative;
+      font-size: $fontSizeLarge;
+
+      .annotation{
+        max-width: 6em;
+        position: absolute;
+        opacity: 0;
+        transition: opacity $durationOpacity;
+
+        &.visible{
+          opacity: 1;
+        }
+
+        &.faded:not(.hidden){
+          opacity: .7;
+        }
+
+      }
+    }
+  }
+
+}
