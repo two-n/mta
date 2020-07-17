@@ -59,7 +59,7 @@ export default class Section {
     this.scroller.setup({
       step: `#${this.section} .${C.STEP}`,
       progress: true,
-      offset: 0.9,
+      offset: 0.3,
     })
       .onStepEnter(this.onStepEnter)
       .onStepProgress(this.onStepProgress)
