@@ -24,6 +24,9 @@ export type StepDataType = {
   header: string,
   text: string,
   date: string,
+  'dot-position':{
+    [key:string]: string
+  }
   [key:string]: string | number
 }
 

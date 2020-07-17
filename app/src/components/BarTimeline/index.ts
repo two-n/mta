@@ -3,7 +3,7 @@ import {
   Selection, scaleLinear, max, scaleUtc, extent, bisector, select,
 } from 'd3';
 import * as S from '../../redux/selectors';
-import { State, StationTimelineItem } from '../../utils/types';
+import { State, StationTimelineItem, StepDataType } from '../../utils/types';
 import {
   CLASSES as C, FORMATTERS as F, DIRECTIONS as D, SECTIONS, KEYS,
 } from '../../utils/constants';
@@ -156,7 +156,7 @@ export default class BarTimeline {
   handleTransition(element:any, index:number, direction: D) {
     const { tStopsMap } = this;
     const [width, height] = this.dims;
-    const data = select(element).data()[0];
+    const data = select(element).data()[0] as StepDataType;
 
     // either the date is earlier than the current step's date
     // or the steps are past the date step range
