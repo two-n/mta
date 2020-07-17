@@ -12,19 +12,18 @@
     }
 
     .ref-lines .ref{
-      transition:transform $durationMovement;
+      opacity: 0;
+      transition: opacity $durationOpacity, transform $durationMovement;
       path{
         stroke: $colorBlack;
         stroke-width: 1px;
       }
       text.label{
         text-anchor: middle;
-        opacity: 0;
-        transition: opacity $durationOpacity;
 
-        &.visible{
-          opacity: 1;
-        }
+      }
+      &.visible{
+        opacity: 1;
       }
     }
 

@@ -110,9 +110,8 @@ export default class BarTimeline {
   draw() {
     const { timeline } = S.getOverallTimeline(this.store);
 
-    console.log('this.y.domain(), this.y.range()', this.y.domain(), this.y.range(), this.y);
     const [width, height] = this.dims;
-    this.barW = Math.max(((width - M.left - M.right) / timeline.length) - 20, 2);
+    this.barW = Math.max(((width - M.left - M.right) / timeline.length) * 0.8, 2);
 
     this.lines = this.linesWrapper.selectAll('rect')
       .data(timeline)
@@ -133,6 +132,7 @@ export default class BarTimeline {
       - (this.y(d) / 2)}px)`)
       .select('path')
       .attr('d', (d) => `M 0 ${0} H ${this.barW * 2} M ${this.barW} ${0} V ${this.y(d)} M 0 ${this.y(d)} H ${this.barW * 2}`);
+    this.refLinesWrapper.select('text').attr('dx', this.barW);
 
     // position labels
     this.annotations
@@ -157,7 +157,6 @@ export default class BarTimeline {
     const { tStopsMap } = this;
     const [width, height] = this.dims;
     const data = select(element).data()[0];
-    console.log('data.step-description', data);
 
     // either the date is earlier than the current step's date
     // or the steps are past the date step range
@@ -195,7 +194,8 @@ export default class BarTimeline {
           // close together
           : `translate(${width / 2 + (i === 0 ? -PAD - this.barW : PAD)}px, ${
             height - M.bottom - this.y(d)}px)`))
-      .select('text').classed(C.VISIBLE, data.step_id >= tStopsMap.get(TS.MOVE_REFS));
+      .classed(C.VISIBLE, (d, i) => i === 0 || data.step_id >= tStopsMap.get(TS.FADE_BARS) - 1)
+      .select('text');
 
     this.gradient.classed(C.VISIBLE, data.step_id >= tStopsMap.get(TS.GRADIENT));
   }
