@@ -4,12 +4,15 @@ body{
   font-family: $fontRegular;
   background-color: $colorBackground;
   -webkit-font-smoothing: antialiased;
+  margin: 0;
 }
 
 #app{
   padding: 1rem;
   max-width: 900px;
   margin: 0 auto;
+  width: 100vw;
+  box-sizing: border-box;
 
   *{
     box-sizing: border-box;
