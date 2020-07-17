@@ -7,6 +7,7 @@ section.section {
     position: sticky;
     display: flex;
     flex-direction: column;
+    padding: 0 .5em;
 
     .section-header {
       opacity: 0;
@@ -42,7 +43,7 @@ section.section {
 
     .step {
       border: $colorYellow 2px solid;
-      width: 2em;
+      width: 1em;
       max-width: $maxTextWidth;
       position: relative;
       min-height: 500px;
