@@ -15,7 +15,7 @@
       transition:transform $durationMovement;
       path{
         stroke: $colorBlack;
-        stroke-width: 3px;
+        stroke-width: 1px;
       }
       text.label{
         text-anchor: middle;
@@ -41,7 +41,7 @@
   .overlay{
     .annotations{
       position: relative;
-      font-size: $fontSizeLarge;
+      font-size: $fontSizeSmall;
 
       .annotation{
         max-width: 6em;

@@ -6,11 +6,11 @@ $fontLight: "Helvetica Neue Light";
 $fontThin: "Helvetica Neue Thin";
 $fontMedium: "Helvetica Neue Medium";
 
-$fontSizeBase: 16px;
-$fontSizeLarge: 1.618 * $fontSizeBase;
+$fontSizeBase: 1em;
+$fontSizeLarge: 1.618rem;
 $fontSizeXLarge: 1.618 * $fontSizeLarge;
 $fontSizeXXLarge: 1.618 * $fontSizeXLarge;
-$fontSizeSmall: $fontSizeBase / 1.618;
+$fontSizeSmall: 0.6180rem;
 $fontSizeXSmall: $fontSizeSmall / 1.618;
 
 /** COLORS */

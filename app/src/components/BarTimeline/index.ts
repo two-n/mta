@@ -16,9 +16,9 @@ interface Props {
 }
 
 const M = {
-  top: 100, bottom: 30, left: 100, right: 100,
+  top: 30, bottom: 30, left: 30, right: 30,
 };
-const PAD = 20;
+const PAD = 10;
 const DELAY = 100;
 
 // transition-stops -- step_ids
