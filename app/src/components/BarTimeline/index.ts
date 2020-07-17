@@ -16,7 +16,7 @@ interface Props {
 }
 
 const M = {
-  top: 30, bottom: 30, left: 30, right: 30,
+  top: 30, bottom: 30, left: 30, right: 60,
 };
 const PAD = 10;
 const DELAY = 100;
@@ -111,7 +111,7 @@ export default class BarTimeline {
     const { timeline } = S.getOverallTimeline(this.store);
 
     const [width, height] = this.dims;
-    this.barW = Math.max(((width - M.left - M.right) / timeline.length) * 0.8, 2);
+    this.barW = Math.max(((width - M.left - M.right) / timeline.length) * 0.7, 2);
 
     this.lines = this.linesWrapper.selectAll('rect')
       .data(timeline)
