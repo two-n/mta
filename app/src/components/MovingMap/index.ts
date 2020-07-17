@@ -19,24 +19,18 @@ interface Props{
   parent: Selection
 }
 
+interface ScaleObject {
+    scale: ScaleLinear<number, number>,
+    format: (d:number)=> string,
+    label: string,
+    median: string
+}
+
 const M = {
-  top: 20, bottom: 50, left: 90, right: 20,
+  top: 10, bottom: 50, left: 90, right: 20,
 };
 const R = 3;
 const duration = 200;
-
-
-// this.scaleMap = {
-//   [V.MAP]: { label: null, scale: null },
-//   [V.PCT_CHANGE]: { label: null, scale: null },
-//   [V.BOROUGH]: { label: null, scale: this.boroYScale, format: F.fBorough },
-//   [V.PCT_CHANGE_BOROUGH]: { label: null, scale: null },
-//   [K.WHITE]: { scale: this.incomeYScale, format: F.sDollar },
-//   [K.INCOME_PC]: { scale: this.incomeYScale, format: F.sDollar },
-//   [K.ED_HEALTH_PCT]: { scale: this.edHealthYScale, format: F.fPctNoMult },
-//   [K.UNINSURED]: { scale: this.uninsuredYScale, format: F.fPctNoMult },
-//   [K.SNAP_PCT]: { scale: this.uninsuredYScale, format: F.fPctNoMult },
-// };
 
 const FORMAT_MAP:{[key:string]: (d:number)=> string} = {
   [K.WHITE]: F.fPctNoMult,
@@ -47,14 +41,7 @@ const FORMAT_MAP:{[key:string]: (d:number)=> string} = {
 };
 
 export default class MovingMap {
-  yScales: {
-    [key:string]: {
-      scale: ScaleLinear<number, number>,
-      format: (d:number)=> string,
-      label: string,
-      median: string
-    }
-  }
+  yScales: {[key:string]: ScaleObject}
 
   [x: string]: any;
 
@@ -70,13 +57,11 @@ export default class MovingMap {
 
   init() {
     const E = S.getDataExtents(this.store);
-
+    // keys for the yScales of the scatter plot segment
     const scatterKeys = S.getSectionData(this.store)[SECTIONS.S_MOVING_MAP]
       .steps
       .filter((d) => d[K.DOT_POSITION] && d[K.DOT_POSITION][K.Y_KEY])
       .map((d) => d[K.DOT_POSITION]);
-
-    console.log('scatterKeys', scatterKeys);
 
     // SCALES
     this.proj = geoAlbersUsa();
@@ -87,7 +72,7 @@ export default class MovingMap {
 
     this.boroYScale = scaleBand().domain(E[K.BOROUGH] as string[]);
 
-    this.yScales = scatterKeys.reduce((obj, d) => ({
+    this.yScales = scatterKeys.reduce((obj:{[key:string]:ScaleObject}, d) => ({
       ...obj,
       [d[K.Y_KEY]]: {
         scale: scaleLinear().domain(E[d[K.Y_KEY]] as number[]),
@@ -234,7 +219,7 @@ export default class MovingMap {
     this.overlay.style('width', `${width}px`).style('height', `${height}px`);
 
     // update scales
-    this.proj.fitSize([width, height * 1.4], this.geoMeshExterior); // 1.4 to scale up for SI
+    this.proj.fitSize([width, height], this.geoMeshExterior);
     this.xScale.range([M.left, width - M.right]);
 
     // update yScale ranges
