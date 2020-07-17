@@ -12,7 +12,7 @@ import { State, ProcessedStation } from '../../utils/types';
 import * as Helpers from '../../utils/helpers';
 import { processStations } from '../../utils/dataProcessing';
 import {
-  KEYS as K, FORMATTERS as F, appConfig, colorInterpolator,
+  KEYS as K, FORMATTERS as F, appConfig, colorInterpolator, boroughMap,
 } from '../../utils/constants';
 
 /** Basic Selectors */
@@ -48,22 +48,37 @@ export const getStationTimelines = createSelector([
   })) as ProcessedStation[]);
 
 /** GEOGRAPHIC TRANSFORMATIONS */
-const getACSGeometries = createSelector([
+// filter out Staten Island
+const getFilteredACSData = createSelector([
   getACSData,
+], (data) => ({
+  ...data,
+  objects: {
+    ...data.objects,
+    acs_nta: {
+      ...data.objects.acs_nta,
+      geometries: data.objects.acs_nta.geometries
+        .filter(({ properties }) => properties.BoroCode !== 5),
+    },
+  },
+}));
+
+const getACSGeometries = createSelector([
+  getFilteredACSData,
 ],
 (data) => data.objects.acs_nta.geometries);
 
 export const getGeoJSONData = createSelector([
-  getACSData,
+  getFilteredACSData,
 ], (data) => topojson.feature(data, data.objects.acs_nta));
 
 export const getGeoMeshInterior = createSelector([
-  getACSData,
+  getFilteredACSData,
 ], (data) => topojson.mesh(data, data.objects.acs_nta,
   (a, b) => a !== b));
 
 export const getGeoMeshExterior = createSelector([
-  getACSData,
+  getFilteredACSData,
 ], (data) => topojson.mesh(data, data.objects.acs_nta,
   (a, b) => a === b));
 
