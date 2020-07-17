@@ -3,8 +3,8 @@ import {
 } from 'd3';
 
 export enum SECTIONS {
-  S_TITLE='section-title',
-  S_INTRO='section-intro',
+  S_TITLE = 'section-title',
+  S_INTRO = 'section-intro',
   S_TIMELINE = 'section-timeline',
   S_PCT_CHNG = 'section-pct-change',
   S_MOVING_MAP = 'section-map',
@@ -16,13 +16,14 @@ export enum DIRECTIONS {
 }
 
 export enum VIEWS {
-  MAP,
-  PCT_CHANGE,
-  BOROUGH,
-  PCT_CHANGE_BOROUGH,
-  SCATTER_PCT_INCOME,
-  SCATTER_ED_HEALTH,
-  SCATTER_UNINSURED,
+  BLANK,
+  MAP_OUTLINE,
+  MAP_DOTS_LINES,
+  MAP_DOTS_LINES_NTAS,
+  ZOOM_SOHO,
+  ZOOM_BROWNSVILLE,
+  SWARM,
+  SCATTER,
 }
 
 export enum CLASSES {
@@ -34,7 +35,7 @@ export enum CLASSES {
   STEP_TEXT = 'step-text',
   STICKY = 'sticky',
   GRAPHIC = 'graphic',
-  TIMELINE='timeline',
+  TIMELINE = 'timeline',
   LINES = 'lines',
   LINE = 'line',
   AXIS = 'axis',
@@ -50,8 +51,8 @@ export enum CLASSES {
   VISIBLE = 'visible',
   FADED = 'faded',
   ACTIVE = 'active',
-  STATIONS ='stations',
-  STATION ='station',
+  STATIONS = 'stations',
+  STATION = 'station',
   ANNOTATIONS = 'annotations',
   ANNOTATION = 'annotation',
   DATA_STEP = 'data-step',
@@ -65,22 +66,28 @@ export enum CLASSES {
 
 export enum KEYS {
   SWIPES = 'swipes',
-  SWIPES_PCT_CHG='swipes_pct_chg',
-  SUMMARY_SWIPES_PCT_CHG='summary_swipes_pct_chg',
-  SUMMARY_SWIPES_AVG_POST='summary_swipes_avg_post',
+  SWIPES_PCT_CHG = 'swipes_pct_chg',
+  SUMMARY_SWIPES_PCT_CHG = 'summary_swipes_pct_chg',
+  SUMMARY_SWIPES_AVG_POST = 'summary_swipes_avg_post',
 
-  NA='-',
-  BOROUGH= 'BoroCode',
-  NTA_CODE= 'NTACode',
+  NA = '-',
+  BOROUGH = 'BoroCode',
+  NTA_CODE = 'NTACode',
   INCOME_PC = 'percapincE', // "Per Capita Income ($)"
   SNAP_PCT = 'inc_snapP', // "Percent With Food Stamp/SNAP benefits in the past 12 months (%)"
   ED_HEALTH_PCT = 'edhlthcsaP', // Percent Employed in Educational Services, and Health Care and Social Assistance (%)"
-  UNINSURED='nhinsP', // "Percent with No Health Insurance Coverage (%)"
+  UNINSURED = 'nhinsP', // "Percent with No Health Insurance Coverage (%)"
+  WHITE = 'wtnhP', // "Percent with No Health Insurance Coverage (%)"
 
-  ANIMATION_KEY='animation-key'
+  ANIMATION_KEY = 'animation-key',
+  DOT_POSITION = 'dot-position',
+  Y_KEY = 'yKey',
+  Y_DISPLAY = 'yDisplayName',
+  Y_MEDIAN_LABEL = 'yMedianLabel',
+  X_DISPLAY_NAME = 'xDisplayName'
 }
 
-export const boroughMap: {[key:number]: string} = {
+export const boroughMap: { [key: number]: string } = {
   1: 'Manhattan',
   2: 'Bronx',
   3: 'Brooklyn',
@@ -105,8 +112,8 @@ export const FORMATTERS = {
   fNumber: format('.2s'),
   fSNum: format('.0s'),
   fPct: format('.0%'),
-  fPctNoMult: (d:number) => `${format('.0f')(d)}%`,
-  fBorough: (d:number) => boroughMap[d],
+  fPctNoMult: (d: number) => `${format('.0f')(d)}%`,
+  fBorough: (d: number) => boroughMap[d],
   sDollar: format('$,.0s'),
   sNumber: '.0s',
   sPct: '.0%',

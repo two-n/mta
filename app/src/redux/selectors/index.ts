@@ -90,6 +90,8 @@ export const getDataExtents = createSelector([
     [K.ED_HEALTH_PCT]: extent(acs, ({ properties }) => +properties[K.ED_HEALTH_PCT]),
     [K.INCOME_PC]: [0, max(acs, ({ properties }) => +properties[K.INCOME_PC])],
     [K.UNINSURED]: [0, quantile(acs.map(({ properties }) => +properties[K.UNINSURED]), 0.99)],
+    [K.SNAP_PCT]: [0, quantile(acs.map(({ properties }) => +properties[K.SNAP_PCT]), 0.99)],
+    [K.WHITE]: [0, quantile(acs.map(({ properties }) => +properties[K.WHITE]), 0.99)],
 
   };
 });
