@@ -68,6 +68,13 @@ To pull a new version of the data, run:
 That will open a server at `http://127.0.0.1:6006/`. To get a JSON formatted dataset, just go to `http://127.0.0.1:6006/GOOGLE_DOC_ID` and save the resulting file.
 
 
+### NYC Outline
+Downloaded borough outlines from [NYC Open Data](https://data.cityofnewyork.us/City-Government/Borough-Boundaries/tqmj-j8zm), then filtered out SI in the command line with the following command:
+
+```sh
+jq '{type: .type , features: [ .features[]| select( .properties.boro_code != "5") ] }' data/output/borough-boundaries.geojson > data/output/mapOutline.geojson
+```
+
 ## Process
 
 ## Notes
