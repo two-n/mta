@@ -5,40 +5,52 @@
   .map, .lines, .ntas{
     opacity: 0;
     transition: opacity $durationOpacity;
+
     &.visible{
       opacity: 1;
     }
     path{
       fill: transparent;
       stroke: $colorLightGrey;
+      stroke-width: .5px;
+    }
+
+    &.outline path{
+      stroke-width: .25px;
+    }
+
+    &.lines{
+      path{
+        stroke: $colorBlack;
+        stroke-width: 1px;
+      }
     }
   }
   .stations{
   opacity: 0;
-    transition: opacity $durationOpacity;
+  transition: opacity $durationOpacity;
 
-    .station{
-      transition: transform $durationMovement;
-      cursor: pointer;
+  .station{
+    transition: transform $durationMovement;
+    cursor: pointer;
 
+    text{
+      visibility: hidden;
+      text-anchor: middle;
+      pointer-events: none;
+      text-transform: uppercase;
+      font-size: $fontSizeSmall;
+      font-family: $fontRegular;
+      fill: $colorDarkGrey;
+    }
+
+    circle{
+      // opacity: .5;
+      stroke: white;
+    }
+
+    &:hover{
       text{
-        visibility: hidden;
-        text-anchor: middle;
-        pointer-events: none;
-        text-transform: uppercase;
-        font-size: $fontSizeSmall;
-        font-family: $fontRegular;
-        fill: $colorDarkGrey;
-      }
-
-      circle{
-        // opacity: .5;
-        stroke: white;
-        box-shadow: 0 1px 3px;
-      }
-
-      &:hover{
-        text{
           visibility: visible;
         }
 

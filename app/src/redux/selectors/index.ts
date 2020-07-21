@@ -49,7 +49,7 @@ export const getStationTimelines = createSelector([
     })) as ProcessedStation[]);
 
 /** GEOGRAPHIC TRANSFORMATIONS */
-export const getMapOutline = createSelector([getMapData], (data) => topojson.feature(data, data.objects['borough-boundaries']));
+export const getMapOutline = createSelector([getMapData], (data) => topojson.feature(data, data.objects.mapOutline));
 export const getLinesData = createSelector([getMapData], (data) => topojson.feature(data, data.objects['subway-lines']));
 
 // filter out Staten Island

@@ -82,7 +82,7 @@ export interface MapData {
   bbox: number[];
   objects: {
     acs_nta: TopoJSONObjectType;
-    'borough-boundaries': TopoJSONObjectType;
+    'mapOutline': TopoJSONObjectType;
     'subway-lines': TopoJSONObjectType;
   }
 }

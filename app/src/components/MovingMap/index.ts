@@ -94,8 +94,8 @@ export default class MovingMap {
 
     // ELEMENTS
     this.map = this.el.append('g').attr('class', C.MAP);
-    this.lines = this.el.append('g').attr('class', C.LINES);
     this.ntas = this.el.append('g').attr('class', 'ntas');
+    this.lines = this.el.append('g').attr('class', C.LINES);
     this.stationsG = this.el.append('g').attr('class', C.STATIONS);
     this.xAxisEl = this.el.append('g').attr('class', `${C.AXIS} x`);
     this.yAxisEl = this.el.append('g').attr('class', `${C.AXIS} y`);
@@ -105,57 +105,36 @@ export default class MovingMap {
   }
 
   draw() {
-    const [width, height] = this.dims;
-    const view = S.getView(this.store);
+    const [, height] = this.dims;
     this.geoPath = geoPath().projection(this.proj);
 
     // map outline
     this.map
-      .classed(C.VISIBLE, MAP_VISIBLE.includes(view))
       .selectAll('path')
       .data(this.mapOutline.features)
       .join('path')
       .attr('d', this.geoPath);
 
-    // map lines
-    this.lines
-      .classed(C.VISIBLE, MAP_VISIBLE.includes(view))
-      .selectAll('path')
-      .data(this.linesData.features)
-      .join('path')
-      .attr('d', this.geoPath);
-
     this.ntas
-      .classed(C.VISIBLE, MAP_VISIBLE.includes(view))
       .selectAll('path')
       .data(this.ntasData.features)
       .join('path')
       .attr('d', this.geoPath);
 
+    // map lines
+    this.lines
+      .selectAll('path')
+      .data(this.linesData.features)
+      .join('path')
+      .attr('d', this.geoPath);
+
+
     this.stations = this.stationsG
-      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES)
       .selectAll(`g.${C.STATION}`)
       .data(this.stationsGISData, (d) => d.station_code)
       .join('g')
       .attr('class', C.STATION)
       .on('mouseover', function () { select(this).raise(); });
-
-    this.stations
-      .style('transform', (d: StationData) => {
-        switch (view) {
-          case (V.SWARM): // TODO: calculate swarm positions
-            return `translate(
-          ${this.xScale(this.getPctChange(d))}px,${height / 2}px)`;
-          case (V.SCATTER): {
-            const yScale = this.yScales[this.yKey].scale; return `translate(
-              ${this.xScale(this.getPctChange(d))}px,${yScale(this.getACS(d, this.yKey))}px)`;
-          }
-          default: {
-            const [x, y] = this.proj([d.long, d.lat]);
-            return `translate(${x}px, ${y}px)`;
-          }
-        }
-      });
 
     this.stations.selectAll('circle').data((d) => [d])
       .join('circle')
@@ -167,12 +146,6 @@ export default class MovingMap {
       .attr('y', -R - 3)
       .text((d) => getNameHash(d));
 
-    // AXES
-    this.xAxisEl
-      .transition()
-      .duration(duration)
-      .attr('transform', `translate(${0}, ${height - M.bottom})`)
-      .call(this.xAxis);
 
     this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.x`)
       .data(['← Higher decrease in ridership', 'Lower decrease in ridership→'])
@@ -182,6 +155,51 @@ export default class MovingMap {
       .style('right', (d, i) => i === 1 && `${M.right}px`)
       .style('transform', `translateY(${height - M.bottom}px)`)
       .html((d) => d);
+  }
+
+  handleViewTransition() {
+    const [, height] = this.dims;
+    const view = S.getView(this.store);
+    // VISIBILITY
+    // map
+    this.map
+      .classed(C.VISIBLE, MAP_VISIBLE.includes(view));
+    this.lines
+      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES && view < V.SWARM);
+    this.ntas
+      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES_NTAS && view < V.SWARM);
+
+    this.stationsG
+      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES);
+
+    this.stations.style('transform', (d: StationData) => {
+      switch (view) {
+        case (V.SWARM): // TODO: calculate swarm positions
+          return `translate(
+        ${this.xScale(this.getPctChange(d))}px,${height / 2}px)`;
+        case (V.SCATTER): {
+          const yScale = this.yScales[this.yKey].scale; return `translate(
+            ${this.xScale(this.getPctChange(d))}px,${yScale(this.getACS(d, this.yKey))}px)`;
+        }
+        default: {
+          const [x, y] = this.proj([d.long, d.lat]);
+          return `translate(${x}px, ${y}px)`;
+        }
+      }
+    });
+
+    // VISIBILITY
+    this.parent.selectAll('.x')
+      .classed(C.VISIBLE, view > V.SWARM);
+    this.parent.selectAll('.y')
+      .classed(C.VISIBLE, !!this.yKey);
+
+    // AXES
+    this.xAxisEl
+      .transition()
+      .duration(duration)
+      .attr('transform', `translate(${0}, ${height - M.bottom})`)
+      .call(this.xAxis);
 
     if (this.yScales[this.yKey]) {
       const { scale: yScale, format, label } = this.yScales[this.yKey];
@@ -201,18 +219,12 @@ export default class MovingMap {
         .style('width', `${M.left - 20}px`)
         .html((d) => d);
     }
-
-    // VISIBILITY
-    this.parent.selectAll('.x')
-      .classed(C.VISIBLE, view > V.MAP_DOTS_LINES_NTAS);
-    this.parent.selectAll('.y')
-      .classed(C.VISIBLE, !!this.yKey);
   }
 
   setView(view: V, key?: string) {
     this.store.dispatch(A.setView(view));
     this.yKey = key;
-    this.draw();
+    this.handleViewTransition();
   }
 
   getPctChange(station: StationData) {
