@@ -70,7 +70,7 @@ const getACSGeometries = createSelector([
   getFilteredACSData,
 ], (data) => data.objects.acs_nta.geometries);
 
-export const getGeoJSONData = createSelector([
+export const getNTAFeatures = createSelector([
   getFilteredACSData,
 ], (data) => topojson.feature(data, data.objects.acs_nta));
 

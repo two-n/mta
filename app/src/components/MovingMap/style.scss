@@ -2,7 +2,7 @@
 
 .moving-map{
 
-  .map{
+  .map, .lines, .ntas{
     opacity: 0;
     transition: opacity $durationOpacity;
     &.visible{
@@ -14,7 +14,7 @@
     }
   }
   .stations{
-    opacity: 0;
+  opacity: 0;
     transition: opacity $durationOpacity;
 
     .station{

@@ -14,25 +14,25 @@ import {
 import { getNameHash } from '../../utils/helpers';
 import './style.scss';
 
-interface Props{
+interface Props {
   store: Store<State>
   parent: Selection
 }
 
 interface ScaleObject {
-    scale: ScaleLinear<number, number>,
-    format: (d:number)=> string,
-    label: string,
-    median: string
+  scale: ScaleLinear<number, number>,
+  format: (d: number) => string,
+  label: string,
+  median: string
 }
 
 const M = {
-  top: 10, bottom: 50, left: 90, right: 20,
+  top: 10, bottom: 50, left: 30, right: 20,
 };
 const R = 3;
 const duration = 200;
 
-const FORMAT_MAP:{[key:string]: (d:number)=> string} = {
+const FORMAT_MAP: { [key: string]: (d: number) => string } = {
   [K.WHITE]: F.fPctNoMult,
   [K.INCOME_PC]: F.sDollar,
   [K.ED_HEALTH_PCT]: F.fPctNoMult,
@@ -42,17 +42,19 @@ const FORMAT_MAP:{[key:string]: (d:number)=> string} = {
 
 const MAP_VISIBLE = [V.MAP_OUTLINE, V.MAP_DOTS_LINES, V.MAP_DOTS_LINES_NTAS];
 export default class MovingMap {
-  yScales: {[key:string]: ScaleObject}
+  yScales: { [key: string]: ScaleObject }
 
   [x: string]: any;
 
-  constructor({ store, parent }:Props) {
+  constructor({ store, parent }: Props) {
     this.store = store;
     this.parent = parent.classed(C.MOVING_MAP, true);
     this.el = parent.append('svg');
-    this.geoMeshExterior = S.getGeoMeshExterior(this.store);
+    this.mapOutline = S.getMapOutline(this.store);
+    this.linesData = S.getLinesData(this.store);
+    this.ntasData = S.getNTAFeatures(this.store);
     this.stationsGISData = S.getStationData(this.store);
-    this.turnstileData = S.getStationRollup(this.store);
+    this.swipeData = S.getStationRollup(this.store);
     this.acsMap = S.getStationToACSMap(this.store);
   }
 
@@ -73,7 +75,7 @@ export default class MovingMap {
 
     this.boroYScale = scaleBand().domain(E[K.BOROUGH] as string[]);
 
-    this.yScales = scatterKeys.reduce((obj:{[key:string]:ScaleObject}, d) => ({
+    this.yScales = scatterKeys.reduce((obj: { [key: string]: ScaleObject }, d) => ({
       ...obj,
       [d[K.Y_KEY]]: {
         scale: scaleLinear().domain(E[d[K.Y_KEY]] as number[]),
@@ -92,6 +94,8 @@ export default class MovingMap {
 
     // ELEMENTS
     this.map = this.el.append('g').attr('class', C.MAP);
+    this.lines = this.el.append('g').attr('class', C.LINES);
+    this.ntas = this.el.append('g').attr('class', 'ntas');
     this.stationsG = this.el.append('g').attr('class', C.STATIONS);
     this.xAxisEl = this.el.append('g').attr('class', `${C.AXIS} x`);
     this.yAxisEl = this.el.append('g').attr('class', `${C.AXIS} y`);
@@ -104,10 +108,27 @@ export default class MovingMap {
     const [width, height] = this.dims;
     const view = S.getView(this.store);
     this.geoPath = geoPath().projection(this.proj);
+
+    // map outline
     this.map
       .classed(C.VISIBLE, MAP_VISIBLE.includes(view))
       .selectAll('path')
-      .data([this.geoMeshExterior])
+      .data(this.mapOutline.features)
+      .join('path')
+      .attr('d', this.geoPath);
+
+    // map lines
+    this.lines
+      .classed(C.VISIBLE, MAP_VISIBLE.includes(view))
+      .selectAll('path')
+      .data(this.linesData.features)
+      .join('path')
+      .attr('d', this.geoPath);
+
+    this.ntas
+      .classed(C.VISIBLE, MAP_VISIBLE.includes(view))
+      .selectAll('path')
+      .data(this.ntasData.features)
       .join('path')
       .attr('d', this.geoPath);
 
@@ -120,15 +141,13 @@ export default class MovingMap {
       .on('mouseover', function () { select(this).raise(); });
 
     this.stations
-      .style('transform', (d:StationData) => {
+      .style('transform', (d: StationData) => {
         switch (view) {
           case (V.SWARM): // TODO: calculate swarm positions
             return `translate(
           ${this.xScale(this.getPctChange(d))}px,${height / 2}px)`;
-          case (V.SCATTER):
-          {
-            const yScale = this.yScales[this.yKey].scale;
-            return `translate(
+          case (V.SCATTER): {
+            const yScale = this.yScales[this.yKey].scale; return `translate(
               ${this.xScale(this.getPctChange(d))}px,${yScale(this.getACS(d, this.yKey))}px)`;
           }
           default: {
@@ -177,7 +196,7 @@ export default class MovingMap {
         .data([label])
         .join('div')
         .attr('class', `${C.AXIS}-${C.LABEL} y`)
-        .style('top', `${height / 2}px`)
+        .style('top', `${M.top}px`)
         .style('transform', 'translateY(-50%)')
         .style('width', `${M.left - 20}px`)
         .html((d) => d);
@@ -190,21 +209,21 @@ export default class MovingMap {
       .classed(C.VISIBLE, !!this.yKey);
   }
 
-  setView(view: V, key?:string) {
+  setView(view: V, key?: string) {
     this.store.dispatch(A.setView(view));
     this.yKey = key;
     this.draw();
   }
 
   getPctChange(station: StationData) {
-    return this.turnstileData.get(station.unit)
-     && this.turnstileData.get(station.unit).summary.swipes_pct_chg;
+    return this.swipeData.get(station.unit)
+      && this.swipeData.get(station.unit).summary.swipes_pct_chg;
   }
 
-  getACS(station:StationData, field: string) {
+  getACS(station: StationData, field: string) {
     return this.acsMap.get(station.NTACode)
-     && this.acsMap.get(station.NTACode)[field] !== K.NA
-     && this.acsMap.get(station.NTACode)[field];
+      && this.acsMap.get(station.NTACode)[field] !== K.NA
+      && this.acsMap.get(station.NTACode)[field];
   }
 
   handleResize() {
@@ -217,7 +236,7 @@ export default class MovingMap {
     this.overlay.style('width', `${width}px`).style('height', `${height}px`);
 
     // update scales
-    this.proj.fitSize([width, height], this.geoMeshExterior);
+    this.proj.fitSize([width, height], this.ntasData);
     this.xScale.range([M.left, width - M.right]);
 
     // update yScale ranges
