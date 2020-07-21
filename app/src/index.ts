@@ -11,6 +11,6 @@ const app = new App(store);
 Promise.all([
   A.loadSwipeData(store.dispatch),
   A.loadStationData(store.dispatch),
-  A.loadACSData(store.dispatch),
+  A.loadMapData(store.dispatch),
 ]).then(() => app.init())
   .catch((e) => console.error(e));

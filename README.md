@@ -56,6 +56,9 @@ https://www1.nyc.gov/site/planning/data-maps/open-data/dwn-acs-nta.page
 
 ran `processingScripts/acsByNTA.py` to create a cleaned up geojson and then `geo2topo data/output/acs_nta.geojson > data/output/acs_nta_topo.json` to create a topojson.
 
+Alternatively, to create a topojson with all of the required geographic data, you can run:
+`geo2topo data/output/acs_nta.geojson data/output/borough-boundaries.geojson data/output/subway-lines.geojson > mapData_topo.json` and each file creates an `object` with the same name as the input file's original name.
+
 ### App Content
 Using (ArchieML)[http://archieml.org/#resources] via Quartz's (aml-gdoc-server)[https://github.com/Quartz/aml-gdoc-server] to pull unstructured data from [this google doc](https://docs.google.com/document/d/1Dc9L6cVkBEpUPbp2vSby0Mpx40MzCeKqe_4cX5I11oE/edit) into a json format.
 To pull a new version of the data, run:

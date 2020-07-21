@@ -3,9 +3,8 @@ import { SECTIONS, VIEWS } from './constants';
 export interface State {
   sectionData: AppDataType
   swipeData: null | SwipeData[],
-  mapData: any,
   stationData: null | StationData[],
-  acsData: null | ACSData,
+  mapData: null | MapData,
   view: VIEWS,
 }
 
@@ -24,10 +23,10 @@ export type StepDataType = {
   header: string,
   text: string,
   date: string,
-  'dot-position':{
-    [key:string]: string
+  'dot-position': {
+    [key: string]: string
   }
-  [key:string]: string | number
+  [key: string]: string | number
 }
 
 export interface SwipeData {
@@ -45,8 +44,8 @@ export interface StationTimelineItem {
 
 export interface StationSummary {
   swipes_pct_chg: number;
-  swipes_avg_pre:number;
-  swipes_avg_post:number;
+  swipes_avg_pre: number;
+  swipes_avg_post: number;
 }
 
 export interface ProcessedStation {
@@ -57,8 +56,8 @@ export interface ProcessedStation {
 }
 
 export interface Controller {
-  [key:number]: {
-    [key:string]: ()=> void
+  [key: number]: {
+    [key: string]: () => void
   }
 }
 
@@ -77,30 +76,34 @@ export interface StationData {
   long: number;
 }
 
-export interface ACSData{
+export interface MapData {
   type: string;
-  arcs: number[] [];
+  arcs: number[][];
   bbox: number[];
   objects: {
-    acs_nta:{
-      type: string;
-      geometries: {
-        type: string;
-        arcs: number[];
-        properties: {
-          [key:string]: string | number;
-          NTACode: string;
-          NTAName: string;
-          BoroCode: number;
-          BoroName: string;
-
-        }
-      }[]
-    }
+    acs_nta: TopoJSONObjectType;
+    'borough-boundaries': TopoJSONObjectType;
+    'subway-lines': TopoJSONObjectType;
   }
 }
 
-export interface TimelineAnnotation{
+interface TopoJSONObjectType {
+  type: string;
+  geometries: {
+    type: string;
+    arcs: number[];
+    properties: {
+      [key: string]: string | number;
+      NTACode: string;
+      NTAName: string;
+      BoroCode: number;
+      BoroName: string;
+
+    }
+  }[]
+}
+
+export interface TimelineAnnotation {
   date: Date,
   step_id: number,
   label: string,

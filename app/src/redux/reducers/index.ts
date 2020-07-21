@@ -8,10 +8,9 @@ import { VIEWS } from '../../utils/constants';
 const initialState: State = {
   sectionData: H.addStepIds(sectionData) as AppDataType,
   swipeData: null,
-  mapData: null,
   stationData: null,
-  acsData: null,
-  view: VIEWS.MAP,
+  mapData: null,
+  view: VIEWS.BLANK,
 };
 
 export default function reducer(state = initialState, action: Action): State {
@@ -20,8 +19,8 @@ export default function reducer(state = initialState, action: Action): State {
       return { ...state, swipeData: action.data };
     case A.SET_STATION_DATA:
       return { ...state, stationData: action.data };
-    case A.SET_ACS_DATA:
-      return { ...state, acsData: action.data };
+    case A.SET_MAP_DATA:
+      return { ...state, mapData: action.data };
     case A.SET_VIEW:
       return { ...state, view: action.view };
     default:
