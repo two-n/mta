@@ -75,6 +75,19 @@ Downloaded borough outlines from [NYC Open Data](https://data.cityofnewyork.us/C
 jq '{type: .type , features: [ .features[]| select( .properties.boro_code != "5") ] }' data/output/borough-boundaries.geojson > data/output/mapOutline.geojson
 ```
 
+Downloaded [New Jersey County Boundaries](https://njogis-newjersey.opendata.arcgis.com/datasets/5f45e1ece6e14ef5866974a7b57d3b95_1?geometry=-74.891%2C40.521%2C-73.572%2C40.886) and [NY Civil Boundaries](http://gis.ny.gov/gisdata/inventories/details.cfm?DSID=927) (both shapefiles) and loaded them into folder called `mapOutlines`. Then from there:
+
+```sh
+# merge into single file
+ogrmerge.py -o output/mapOutline -overwrite_ds mapOutlines/County_Boundaries_of_NJ-shp/County_Boundaries_of_NJ.shp mapOutlines/NYS_Civil_Boundaries_SHP/Counties_Shoreline.shp -single
+
+# re-project
+ogr2ogr output/mapOutline/reproj.shp -t_srs "WGS84" output/mapOutline/merged.shp
+
+# clip to bounding box
+ogr2ogr output/mapOutline/clipped.shp  output/mapOutline/reproj.shp -spat -74.178 40.5320 -73.7309 40.946
+```
+
 ## Process
 
 ## Notes
