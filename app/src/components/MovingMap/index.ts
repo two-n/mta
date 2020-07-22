@@ -99,7 +99,7 @@ export default class MovingMap {
     // ELEMENTS
     this.map = this.el.append('g').attr('class', C.MAP);
     this.ntas = this.el.append('g').attr('class', 'ntas');
-    this.lines = this.el.append('g').attr('class', C.LINES).attr('vector-effect', 'non-scaling-stroke');
+    this.lines = this.el.append('g').attr('class', C.LINES);
     this.stationsG = this.el.append('g').attr('class', C.STATIONS);
     this.xAxisEl = this.el.append('g').attr('class', `${C.AXIS} x`);
     this.yAxisEl = this.el.append('g').attr('class', `${C.AXIS} y`);
@@ -131,8 +131,8 @@ export default class MovingMap {
       .selectAll('path')
       .data(this.linesData.features)
       .join('path')
-      .attr('d', this.geoPath);
-
+      .attr('d', this.geoPath)
+      .attr('vector-effect', 'non-scaling-stroke');
 
     this.stations = this.stationsG
       .selectAll(`g.${C.STATION}`)
@@ -144,6 +144,7 @@ export default class MovingMap {
     this.stations.selectAll('circle').data((d) => [d])
       .join('circle')
       .attr('r', R)
+      .attr('vector-effect', 'non-scaling-stroke')
       .attr('fill', (d) => (this.colorScale(this.getPctChange(d))));
 
     this.stations.selectAll('text').data((d) => [d])
