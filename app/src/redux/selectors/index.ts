@@ -1,6 +1,7 @@
 import { Store } from 'redux';
 import { createSelector } from 'reselect';
 import * as topojson from 'topojson-client';
+import bbox from '@turf/bbox';
 import {
   rollup,
   extent,
@@ -13,6 +14,7 @@ import * as Helpers from '../../utils/helpers';
 import { processStations } from '../../utils/dataProcessing';
 import {
   KEYS as K, FORMATTERS as F, appConfig, colorInterpolator,
+  VIEWS as V,
 } from '../../utils/constants';
 
 /** Basic Selectors */
@@ -123,3 +125,19 @@ export const getStationToACSMap = createSelector([
   getACSGeometries,
 ], (data) => data
   && new Map(data.map(({ properties }) => ([properties.NTACode, properties]))));
+
+
+// get bounding boxes surounding each focus neighborhood
+export const getSelectedNTAS = createSelector([
+  getNTAFeatures,
+], (data) => (data && [
+  data.features.find((d) => d.properties.NTACode === 'MN24'), // SOHO
+  data.features.find((d) => d.properties.NTACode === 'BK81'), // browsville
+]));
+
+export const getNTAbboxes = createSelector([
+  getSelectedNTAS,
+], ([soho, brownsville]) => (soho && brownsville && {
+  [V.ZOOM_SOHO]: bbox(soho),
+  [V.ZOOM_BROWNSVILLE]: bbox(brownsville),
+}));

@@ -31,6 +31,9 @@ const M = {
 };
 const R = 3;
 const duration = 200;
+const geoPadding = {
+  top: 50, bottom: 100, left: 30, right: 100,
+};
 
 const FORMAT_MAP: { [key: string]: (d: number) => string } = {
   [K.WHITE]: F.fPctNoMult,
@@ -56,6 +59,7 @@ export default class MovingMap {
     this.stationsGISData = S.getStationData(this.store);
     this.swipeData = S.getStationRollup(this.store);
     this.acsMap = S.getStationToACSMap(this.store);
+    this.bboxes = S.getNTAbboxes(this.store);
   }
 
   init() {
@@ -95,7 +99,7 @@ export default class MovingMap {
     // ELEMENTS
     this.map = this.el.append('g').attr('class', C.MAP);
     this.ntas = this.el.append('g').attr('class', 'ntas');
-    this.lines = this.el.append('g').attr('class', C.LINES);
+    this.lines = this.el.append('g').attr('class', C.LINES).attr('vector-effect', 'non-scaling-stroke');
     this.stationsG = this.el.append('g').attr('class', C.STATIONS);
     this.xAxisEl = this.el.append('g').attr('class', `${C.AXIS} x`);
     this.yAxisEl = this.el.append('g').attr('class', `${C.AXIS} y`);
@@ -105,8 +109,9 @@ export default class MovingMap {
   }
 
   draw() {
-    const [, height] = this.dims;
+    const [width, height] = this.dims;
     this.geoPath = geoPath().projection(this.proj);
+    this.el.attr('viewBox', `0 0 ${width} ${height}`);
 
     // map outline
     this.map
@@ -158,7 +163,7 @@ export default class MovingMap {
   }
 
   handleViewTransition() {
-    const [, height] = this.dims;
+    const [width, height] = this.dims;
     const view = S.getView(this.store);
     // VISIBILITY
     // map
@@ -188,11 +193,24 @@ export default class MovingMap {
       }
     });
 
-    // VISIBILITY
-    this.parent.selectAll('.x')
-      .classed(C.VISIBLE, view > V.SWARM);
-    this.parent.selectAll('.y')
-      .classed(C.VISIBLE, !!this.yKey);
+    // VIEWBOX
+    this.el
+      .transition()
+      .duration(1000)
+      .attr('viewBox', () => { // [x, y, width, height]
+        if (this.bboxes[view]) {
+          const [xMin, yMin, xMax, yMax] = this.bboxes[view];
+          const [x0, y0, x1, y1] = [...this.proj([xMin, yMax]), ...this.proj([xMax, yMin])]; // swith yMin/Max b/c browser coordinate system
+          return [
+            x0 - geoPadding.left,
+            y0 - geoPadding.top,
+            (x1 - x0) + geoPadding.right,
+            (y1 - y0) + geoPadding.bottom,
+          ];
+        }
+        return [0, 0, width, height];
+      });
+
 
     // AXES
     this.xAxisEl
@@ -215,10 +233,14 @@ export default class MovingMap {
         .join('div')
         .attr('class', `${C.AXIS}-${C.LABEL} y`)
         .style('top', `${M.top}px`)
-        .style('transform', 'translateY(-50%)')
-        .style('width', `${M.left - 20}px`)
+        .style('transform', 'translateY(-100%)')
         .html((d) => d);
     }
+    // VISIBILITY
+    this.parent.selectAll('.x')
+      .classed(C.VISIBLE, view > V.SWARM);
+    this.parent.selectAll('.y')
+      .classed(C.VISIBLE, !!this.yKey);
   }
 
   setView(view: V, key?: string) {

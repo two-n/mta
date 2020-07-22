@@ -24,7 +24,7 @@ export default class SectionMovingMap extends Section {
       7: () => this.movingMap.setView(V.ZOOM_SOHO),
       8: () => this.movingMap.setView(V.ZOOM_BROWNSVILLE),
       9: () => this.movingMap.setView(V.ZOOM_BROWNSVILLE),
-      10: () => this.movingMap.setView(V.SWARM),
+      10: () => this.movingMap.setView(V.MAP_DOTS_LINES),
       11: () => this.movingMap.setView(V.SWARM),
       12: (key:string) => this.movingMap.setView(V.SCATTER, key),
       13: (key:string) => this.movingMap.setView(V.SCATTER, key),
