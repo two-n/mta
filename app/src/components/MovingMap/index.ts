@@ -11,7 +11,7 @@ import {
   CLASSES as C, VIEWS as V,
   KEYS as K, FORMATTERS as F, MTA_Colors, SECTIONS,
 } from '../../utils/constants';
-import { getNameHash } from '../../utils/helpers';
+import { getNameHash, calcSwarm } from '../../utils/helpers';
 import './style.scss';
 
 interface Props {
@@ -27,7 +27,7 @@ interface ScaleObject {
 }
 
 const M = {
-  top: 10, bottom: 50, left: 30, right: 20,
+  top: 10, bottom: 150, left: 30, right: 20,
 };
 const R = 3;
 const duration = 200;
@@ -60,6 +60,8 @@ export default class MovingMap {
     this.swipeData = S.getStationRollup(this.store);
     this.acsMap = S.getStationToACSMap(this.store);
     this.bboxes = S.getNTAbboxes(this.store);
+
+    this.getPctChange = this.getPctChange.bind(this);
   }
 
   init() {
@@ -112,6 +114,7 @@ export default class MovingMap {
     const [width, height] = this.dims;
     this.geoPath = geoPath().projection(this.proj);
     this.el.attr('viewBox', `0 0 ${width} ${height}`);
+    this.positionedStations = calcSwarm(this.stationsGISData, this.getPctChange, this.xScale, R * 2);
 
     // map outline
     this.map
@@ -136,7 +139,7 @@ export default class MovingMap {
 
     this.stations = this.stationsG
       .selectAll(`g.${C.STATION}`)
-      .data(this.stationsGISData, (d) => d.station_code)
+      .data(this.positionedStations, (d) => d.station_code)
       .join('g')
       .attr('class', C.STATION)
       .on('mouseover', function () { select(this).raise(); });
@@ -154,7 +157,7 @@ export default class MovingMap {
 
 
     this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.x`)
-      .data(['← Higher decrease in ridership', 'Lower decrease in ridership→'])
+      .data(['←', 'Higher percentage still riding→'])
       .join('div')
       .attr('class', `${C.AXIS}-${C.LABEL} ${C.NO_WRAP} x`)
       .style('left', (d, i) => i === 0 && `${M.left}px`)
@@ -180,9 +183,8 @@ export default class MovingMap {
 
     this.stations.style('transform', (d: StationData) => {
       switch (view) {
-        case (V.SWARM): // TODO: calculate swarm positions
-          return `translate(
-        ${this.xScale(this.getPctChange(d))}px,${height / 2}px)`;
+        case (V.SWARM):
+          return `translate(${d.x}px,${height - M.bottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
         case (V.SCATTER): {
           const yScale = this.yScales[this.yKey].scale; return `translate(
             ${this.xScale(this.getPctChange(d))}px,${yScale(this.getACS(d, this.yKey))}px)`;
@@ -192,7 +194,8 @@ export default class MovingMap {
           return `translate(${x}px, ${y}px)`;
         }
       }
-    });
+    })
+      .classed('allow-pointer', view >= V.SWARM);
 
     // VIEWBOX
     this.el
@@ -239,7 +242,7 @@ export default class MovingMap {
     }
     // VISIBILITY
     this.parent.selectAll('.x')
-      .classed(C.VISIBLE, view > V.SWARM);
+      .classed(C.VISIBLE, view >= V.SWARM);
     this.parent.selectAll('.y')
       .classed(C.VISIBLE, !!this.yKey);
   }
@@ -251,6 +254,7 @@ export default class MovingMap {
   }
 
   getPctChange(station: StationData) {
+    // TODO: update this to grab specific year from state
     return this.swipeData.get(station.unit)
       && this.swipeData.get(station.unit).summary.swipes_pct_chg;
   }

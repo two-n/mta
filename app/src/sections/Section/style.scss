@@ -14,13 +14,14 @@ section.section {
       transition: opacity $durationOpacity;
       width: 100%;
       font-family: $fontLight;
-      height: 4em;
-      font-size: $fontSizeLarge;
+      height: 6em;
+      font-size: $fontSizeMid;
       font-weight: unset;
 
       &.fade-in {
         opacity:  1;
       }
+
     }
 
     .graphic {
@@ -42,13 +43,13 @@ section.section {
     //  margin: 0 auto; // uncomment to center
 
     .step {
-      border: $colorYellow 2px solid;
+      // border: $colorYellow 2px solid;
       width: 10px;
       max-width: $maxTextWidth;
       position: relative;
       min-height: 500px;
       transition: opacity 500ms;
-      // opacity: 0; // temporary in order to see the steps pass by
+      opacity: 0; // temporary in order to see the steps pass by
       pointer-events: none;
       margin-bottom: 50vh; // used to add some space for transitions between steps
 
