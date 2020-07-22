@@ -1,1 +1,9 @@
 @import "../../styling/variables";
+
+section#section-timeline{
+
+  .graphic{
+    height:30vh;
+    transform: translate(0,50%);
+  }
+}

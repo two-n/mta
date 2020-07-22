@@ -22,7 +22,8 @@ export type SectionDataType = {
 export type StepDataType = {
   step_id: number,
   header: string,
-  text: string
+  text: string,
+  date: string,
   [key:string]: string | number
 }
 

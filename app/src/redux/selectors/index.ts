@@ -7,10 +7,13 @@ import {
   quantile,
   max,
 } from 'd3-array';
+import { scaleSequential } from 'd3';
 import { State, ProcessedStation } from '../../utils/types';
 import * as Helpers from '../../utils/helpers';
 import { processStations } from '../../utils/dataProcessing';
-import { KEYS as K, FORMATTERS as F, appConfig } from '../../utils/constants';
+import {
+  KEYS as K, FORMATTERS as F, appConfig, colorInterpolator,
+} from '../../utils/constants';
 
 /** Basic Selectors */
 export const getSectionData = (state: Store<State>) => state.getState().sectionData;
@@ -73,11 +76,11 @@ export const getDataExtents = createSelector([
 ], (stationStats, stations, acs): {[key:string]: (number|Date| string)[]} => {
   const stationTimelines = stationStats.map(({ timeline }) => timeline);
   return {
-    [K.SWIPES_PCT_CHG]: [-1, quantile(stationTimelines
+    [K.SWIPES_PCT_CHG]: [0, quantile(stationTimelines
       .map((t) => t
         .map(({ swipes_pct_chg }) => swipes_pct_chg))
       .flat(), 0.999)],
-    [K.SUMMARY_SWIPES_PCT_CHG]: [-1, quantile(stationStats
+    [K.SUMMARY_SWIPES_PCT_CHG]: [0, quantile(stationStats
       .map(({ summary }) => summary)
       .map(({ swipes_pct_chg }) => swipes_pct_chg), 0.99)],
     [K.SUMMARY_SWIPES_AVG_POST]: [-1, quantile(stationStats
@@ -90,6 +93,11 @@ export const getDataExtents = createSelector([
 
   };
 });
+
+export const getColorScheme = createSelector([
+  getDataExtents,
+], (extents) => scaleSequential(colorInterpolator)
+  .domain(extents[K.SUMMARY_SWIPES_PCT_CHG] as [number, number]));
 
 /** creates a map from NTACode => ACS summary data */
 export const getStationToACSMap = createSelector([

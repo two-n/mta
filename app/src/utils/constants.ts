@@ -1,5 +1,5 @@
 import {
-  format, utcFormat, utcParse,
+  format, utcFormat, utcParse, piecewise, interpolateRgb,
 } from 'd3';
 
 export enum SECTIONS {
@@ -59,7 +59,8 @@ export enum CLASSES {
   OVERLAY = 'overlay',
   NO_WRAP = 'no-wrap',
   FADE_IN = 'fade-in',
-  FADE_OUT = 'fade-out'
+  FADE_OUT = 'fade-out',
+  GRADIENT = 'gradient'
 }
 
 export enum KEYS {
@@ -72,9 +73,11 @@ export enum KEYS {
   BOROUGH= 'BoroCode',
   NTA_CODE= 'NTACode',
   INCOME_PC = 'percapincE', // "Per Capita Income ($)"
-  SNAP_PCT = 'inc_snapE', // "Percent With Food Stamp/SNAP benefits in the past 12 months (%)"
+  SNAP_PCT = 'inc_snapP', // "Percent With Food Stamp/SNAP benefits in the past 12 months (%)"
   ED_HEALTH_PCT = 'edhlthcsaP', // Percent Employed in Educational Services, and Health Care and Social Assistance (%)"
   UNINSURED='nhinsP', // "Percent with No Health Insurance Coverage (%)"
+
+  ANIMATION_KEY='animation-key'
 }
 
 export const boroughMap: {[key:number]: string} = {
@@ -100,6 +103,7 @@ export const FORMATTERS = {
   fDate: utcFormat('%d-%m-%Y'),
   pDate: utcParse('%d-%m-%Y'),
   fNumber: format('.2s'),
+  fSNum: format('.0s'),
   fPct: format('.0%'),
   fPctNoMult: (d:number) => `${format('.0f')(d)}%`,
   fBorough: (d:number) => boroughMap[d],
@@ -107,6 +111,9 @@ export const FORMATTERS = {
   sNumber: '.0s',
   sPct: '.0%',
 };
+
+const colorDomain = ['#3D696C', '#54B1B8', '#B87242', '#FFBD59'];
+export const colorInterpolator = piecewise(interpolateRgb, colorDomain);
 
 export const appConfig = {
   thresholdDate: new Date('2020-03-15'), // date for pre/post comparisions

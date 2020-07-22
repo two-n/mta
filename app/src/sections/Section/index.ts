@@ -59,7 +59,7 @@ export default class Section {
     this.scroller.setup({
       step: `#${this.section} .${C.STEP}`,
       progress: true,
-      offset: 0.9,
+      offset: 0.3,
     })
       .onStepEnter(this.onStepEnter)
       .onStepProgress(this.onStepProgress)
@@ -130,7 +130,7 @@ export default class Section {
   // generic window resize listener event
   handleResize() {
     // 1. update height of step elements
-    const stepH = Math.floor(window.innerHeight);
+    const stepH = Math.floor(window.innerHeight) * 0.7;
     this.steps.style('height', `${stepH}px`);
 
     const figureHeight = window.innerHeight * 0.8;

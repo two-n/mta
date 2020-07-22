@@ -7,14 +7,15 @@ section.section {
     position: sticky;
     display: flex;
     flex-direction: column;
+    padding: 0 .5em;
 
     .section-header {
       opacity: 0;
-      transition: opacity 2s;
+      transition: opacity $durationOpacity;
       width: 100%;
       font-family: $fontLight;
       height: 4em;
-      font-size: $fontSizeXXLarge;
+      font-size: $fontSizeLarge;
       font-weight: unset;
 
       &.fade-in {
@@ -41,11 +42,13 @@ section.section {
     //  margin: 0 auto; // uncomment to center
 
     .step {
+      border: $colorYellow 2px solid;
+      width: 1em;
       max-width: $maxTextWidth;
       position: relative;
       min-height: 500px;
       transition: opacity 500ms;
-      opacity: 0;
+      // opacity: 0; // temporary in order to see the steps pass by
       pointer-events: none;
       margin-bottom: 50vh; // used to add some space for transitions between steps
 
