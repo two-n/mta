@@ -83,24 +83,48 @@ export const getGeoMeshExterior = createSelector([
 
 
 /** EXTENTS */
+/** Returns an object {extents: {
+ * [key]: [data extent]
+ * }, averages: {
+ * [key]: mean data value
+ * }} */
 export const getDemoDataExtents = createSelector([
   getStationData,
   getACSGeometries,
-], (stations, acs): { [key: string]: (number | Date | string)[] } => ({
-  [K.BOROUGH]: Helpers.getUnique(stations, (d) => d[K.BOROUGH]),
-  [K.ED_HEALTH_PCT]: extent(acs, ({ properties }) => +properties[K.ED_HEALTH_PCT]),
-  [K.INCOME_PC]: [0, max(acs, ({ properties }) => +properties[K.INCOME_PC])],
-  [K.UNINSURED]: [0, quantile(acs.map(({ properties }) => +properties[K.UNINSURED]), 0.99)],
-  [K.SNAP_PCT]: [0, quantile(acs.map(({ properties }) => +properties[K.SNAP_PCT]), 0.99)],
-  [K.WHITE]: [0, quantile(acs.map(({ properties }) => +properties[K.WHITE]), 0.99)],
+], (stations, acs):{
+  'extents':{
+    [key: string]: (number | Date | string)[]
+  },
+  'averages':{
+    [key: string]: number
+  },
+} => ({
+  extents: {
+    [K.BOROUGH]: Helpers.getUnique(stations, (d) => d[K.BOROUGH]),
+    [K.ED_HEALTH_PCT]: extent(acs, ({ properties }) => +properties[K.ED_HEALTH_PCT]),
+    [K.INCOME_PC]: [0, max(acs, ({ properties }) => +properties[K.INCOME_PC])],
+    [K.UNINSURED]: [0, quantile(acs.map(({ properties }) => +properties[K.UNINSURED]), 0.99)],
+    [K.SNAP_PCT]: [0, quantile(acs.map(({ properties }) => +properties[K.SNAP_PCT]), 0.99)],
+    [K.WHITE]: [0, quantile(acs.map(({ properties }) => +properties[K.WHITE]), 0.99)],
+  },
+  averages: {
+    [K.ED_HEALTH_PCT]: mean(acs, ({ properties }) => +properties[K.ED_HEALTH_PCT]),
+    [K.INCOME_PC]: mean(acs, ({ properties }) => +properties[K.INCOME_PC]),
+    [K.UNINSURED]: mean(acs, ({ properties }) => +properties[K.UNINSURED]),
+    [K.SNAP_PCT]: mean(acs, ({ properties }) => +properties[K.SNAP_PCT]),
+    [K.WHITE]: mean(acs, ({ properties }) => +properties[K.WHITE]),
+  },
 }));
 
 export const getWeeklyDataExtent = createSelector([
   getSelectedWeek,
   getStationRollup,
-], (week, stationStats): number[] => {
+], (week, stationStats): {extent: number[], average: number} => {
   const currentWeekStationStats = [...stationStats].map(([, { timeline }]) => timeline.get(week));
-  return extent(currentWeekStationStats.map((d) => d && d.swipes_pct_chg));
+  return {
+    extent: extent(currentWeekStationStats.map((d) => d && d.swipes_pct_chg)),
+    average: mean(currentWeekStationStats.map((d) => d && d.swipes_pct_chg)),
+  };
 });
 
 const getSummarySwipeExtent = createSelector([

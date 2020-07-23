@@ -55,25 +55,23 @@ export default class MovingMap {
     this.el = parent.append('svg');
 
     // SELECTORS
-    const state = this.store.getState();
-    this.mapOutline = S.getMapOutline(state);
-    this.linesData = S.getLinesData(state);
-    this.ntasData = S.getNTAFeatures(state);
-    this.stationsGISData = S.getStationData(state);
-    this.swipeData = S.getStationRollup(state);
-    this.acsMap = S.getStationToACSMap(state);
-    this.bboxes = S.getNTAbboxes(state);
-    this.selectedNTAFeatures = S.getSelectedNTAS(state);
+    this.mapOutline = S.getMapOutline(this.state);
+    this.linesData = S.getLinesData(this.state);
+    this.ntasData = S.getNTAFeatures(this.state);
+    this.stationsGISData = S.getStationData(this.state);
+    this.swipeData = S.getStationRollup(this.state);
+    this.acsMap = S.getStationToACSMap(this.state);
+    this.bboxes = S.getNTAbboxes(this.state);
+    this.selectedNTAFeatures = S.getSelectedNTAS(this.state);
 
     this.getPctChange = this.getPctChange.bind(this);
   }
 
   init() {
-    const state = this.store.getState();
-    const E = S.getDemoDataExtents(state);
-    const ES = S.getWeeklyDataExtent(state);
+    const { extents: E, averages: A } = S.getDemoDataExtents(this.state);
+    const { extent: EW, average: AW } = S.getWeeklyDataExtent(this.state);
     // keys for the yScales of the scatter plot segment
-    const scatterKeys = S.getSectionData(state)[SECTIONS.S_MOVING_MAP]
+    const scatterKeys = S.getSectionData(this.state)[SECTIONS.S_MOVING_MAP]
       .steps
       .filter((d) => d[K.DOT_POSITION] && d[K.DOT_POSITION][K.Y_KEY])
       .map((d) => d[K.DOT_POSITION]);
@@ -81,7 +79,7 @@ export default class MovingMap {
     // SCALES
     this.proj = geoAlbersUsa();
 
-    this.colorScale = S.getColorScheme(state);
+    this.colorScale = S.getColorScheme(this.state);
 
     this.colorBoroughScale = scaleOrdinal().domain(E[K.BOROUGH] as string[]).range(MTA_Colors);
 
@@ -98,7 +96,7 @@ export default class MovingMap {
     }), {});
 
     this.xScale = scaleLinear()
-      .domain(ES);
+      .domain(EW);
     this.xScale.tickFormat(null, F.sPct);
 
     // AXES
@@ -112,6 +110,7 @@ export default class MovingMap {
     this.stationsG = this.el.append('g').attr('class', C.STATIONS);
     this.xAxisEl = this.el.append('g').attr('class', `${C.AXIS} x`);
     this.yAxisEl = this.el.append('g').attr('class', `${C.AXIS} y`);
+    this.refLines = this.el.append('g').attr('class', C.ANNOTATIONS);
     this.overlay = this.parent.append('div').attr('class', C.OVERLAY);
 
     this.handleResize();
@@ -124,69 +123,16 @@ export default class MovingMap {
     this.positionedStations = calcSwarm(this.stationsGISData,
       this.getPctChange, this.xScale, R * 2);
 
-    // map outline
-    this.map
-      .selectAll('path')
-      .data(this.mapOutline.features)
-      .join('path')
-      .attr('vector-effect', 'non-scaling-stroke')
-      .attr('d', this.geoPath);
-
-    this.ntas
-      .selectAll('path')
-      .data(this.ntasData.features)
-      .join('path')
-      .attr('vector-effect', 'non-scaling-stroke')
-      .attr('d', this.geoPath);
-
-    this.selectedNtas
-      .selectAll('path')
-      .data(this.selectedNTAFeatures)
-      .join('path')
-      .attr('d', this.geoPath)
-      .attr('fill', ({ properties }) => this.colorScale(properties[K.SWIPES_PCT_CHG]));
-
-    // map lines
-    this.lines
-      .selectAll('path')
-      .data(this.linesData.features)
-      .join('path')
-      .attr('d', this.geoPath)
-      .attr('vector-effect', 'non-scaling-stroke');
-
-    this.stations = this.stationsG
-      .selectAll(`g.${C.STATION}`)
-      .data(this.positionedStations, (d) => d.station_code)
-      .join('g')
-      .attr('class', C.STATION)
-      .on('mouseover', function () { select(this).raise(); });
-
-    this.stations.selectAll('circle').data((d) => [d])
-      .join('circle')
-      .attr('r', R)
-      .attr('vector-effect', 'non-scaling-stroke')
-      .attr('fill', (d) => (this.colorScale(this.getPctChange(d))));
-
-    this.stations.selectAll('text').data((d) => [d])
-      .join('text')
-      .attr('y', -R - 3)
-      .text((d) => getNameHash(d));
-
-
-    this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.x`)
-      .data(['←', 'Higher percentage still riding→'])
-      .join('div')
-      .attr('class', `${C.AXIS}-${C.LABEL} ${C.NO_WRAP} x`)
-      .style('left', (d, i) => i === 0 && `${M.left}px`)
-      .style('right', (d, i) => i === 1 && `${M.right}px`)
-      .style('transform', `translateY(${height - M.bottom}px)`)
-      .html((d) => d);
+    this.setupGeographicElements();
+    this.setupStations();
+    this.setupAnnotations();
   }
 
   handleViewTransition() {
     const [width, height] = this.dims;
-    const state = this.store.getState();
-    const view = S.getView(state);
+    const view = S.getView(this.state);
+    const { extent: EW, average: AW } = S.getWeeklyDataExtent(this.state);
+    this.xScale.domain(EW); // update for new data
     // VISIBILITY
     // map
     this.map
@@ -202,6 +148,7 @@ export default class MovingMap {
     this.stationsG
       .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES);
 
+    // MOVE STATIONS
     this.stations.style('transform', (d: StationData) => {
       switch (view) {
         case (V.SWARM):
@@ -218,7 +165,7 @@ export default class MovingMap {
     })
       .classed('allow-pointer', view >= V.SWARM);
 
-    // VIEWBOX
+    // SCALE VIEWBOX
     this.el
       .transition()
       .duration(1000)
@@ -239,7 +186,79 @@ export default class MovingMap {
         this.stations.selectAll('circle').style('transform', `scale(${1 / matrix.a})`);
       });
 
+    this.transitionAnnotations();
+  }
 
+  setupGeographicElements() {
+    // GEOGRAPHIC
+    // map outline
+    this.map
+      .selectAll('path')
+      .data(this.mapOutline.features)
+      .join('path')
+      .attr('vector-effect', 'non-scaling-stroke')
+      .attr('d', this.geoPath);
+
+    // neighborhood outlines
+    this.ntas
+      .selectAll('path')
+      .data(this.ntasData.features)
+      .join('path')
+      .attr('vector-effect', 'non-scaling-stroke')
+      .attr('d', this.geoPath);
+
+    // selected neighborhood outlines
+    this.selectedNtas
+      .selectAll('path')
+      .data(this.selectedNTAFeatures)
+      .join('path')
+      .attr('d', this.geoPath)
+      .attr('fill', ({ properties }) => this.colorScale(properties[K.SWIPES_PCT_CHG]));
+
+    // train lines
+    this.lines
+      .selectAll('path')
+      .data(this.linesData.features)
+      .join('path')
+      .attr('d', this.geoPath)
+      .attr('vector-effect', 'non-scaling-stroke');
+  }
+
+  setupStations() {
+    this.stations = this.stationsG
+      .selectAll(`g.${C.STATION}`)
+      .data(this.positionedStations, (d) => d.station_code)
+      .join('g')
+      .attr('class', C.STATION)
+      .on('mouseover', function () { select(this).raise(); });
+
+    this.stations.selectAll('circle').data((d) => [d])
+      .join('circle')
+      .attr('r', R)
+      .attr('vector-effect', 'non-scaling-stroke')
+      .attr('fill', (d) => (this.colorScale(this.getPctChange(d))));
+
+    this.stations.selectAll('text').data((d) => [d])
+      .join('text')
+      .attr('y', -R - 3)
+      .text((d) => getNameHash(d));
+  }
+
+  setupAnnotations() {
+    const [, height] = this.dims;
+    this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.x`)
+      .data(['←', 'Higher percentage still riding→'])
+      .join('div')
+      .attr('class', `${C.AXIS}-${C.LABEL} ${C.NO_WRAP} x`)
+      .style('left', (d, i) => i === 0 && `${M.left}px`)
+      .style('right', (d, i) => i === 1 && `${M.right}px`)
+      .style('transform', `translateY(${height - M.bottom}px)`)
+      .html((d) => d);
+  }
+
+  transitionAnnotations() {
+    const [, height] = this.dims;
+    const view = S.getView(this.state);
     // AXES
     this.xAxisEl
       .transition()
@@ -278,9 +297,9 @@ export default class MovingMap {
   }
 
   getPctChange(station: StationData) {
-    // TODO: update this to grab specific year from state
+    const week = S.getSelectedWeek(this.state);
     return this.swipeData.get(station.unit)
-      && this.swipeData.get(station.unit).summary.swipes_pct_chg;
+      && this.swipeData.get(station.unit).timeline.get(week).swipes_pct_chg;
   }
 
   getACS(station: StationData, field: string) {
@@ -305,5 +324,9 @@ export default class MovingMap {
     // update yScale ranges
     Object.values(this.yScales).forEach((d) => d.scale.range([height - M.bottom - R, M.top]));
     this.draw();
+  }
+
+  get state() {
+    return this.store.getState();
   }
 }
