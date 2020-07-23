@@ -22,7 +22,8 @@ export default class App {
   }
 
   init() {
-    const sectionData = S.getSectionData(this.store);
+    const state = this.store.getState();
+    const sectionData = S.getSectionData(state);
 
     // TITLE
     this.Title = new Title({ data: sectionData[SECTIONS.S_TITLE] });

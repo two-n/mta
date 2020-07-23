@@ -1,4 +1,3 @@
-import { Store } from 'redux';
 import { createSelector } from 'reselect';
 import * as topojson from 'topojson-client';
 import bbox from '@turf/bbox';
@@ -20,12 +19,12 @@ import {
 
 /** Basic Selectors */
 // TODO: refactor base selectors to take state instead of store
-export const getSectionData = (state: Store<State>) => state.getState().sectionData;
-export const getSwipeData = (state: Store<State>) => state.getState().swipeData;
-export const getStationData = (state: Store<State>) => state.getState().stationData;
-export const getMapData = (state: Store<State>) => state.getState().mapData;
-export const getView = (state: Store<State>) => state.getState().view;
-export const getSelectedWeek = (state: Store<State>) => state.getState().selectedWeek;
+export const getSectionData = (state: State) => state.sectionData;
+export const getSwipeData = (state: State) => state.swipeData;
+export const getStationData = (state: State) => state.stationData;
+export const getMapData = (state: State) => state.mapData;
+export const getView = (state: State) => state.view;
+export const getSelectedWeek = (state: State) => state.selectedWeek;
 
 /** Turnstile Manipulations */
 export const getFilteredSwipeData = createSelector([

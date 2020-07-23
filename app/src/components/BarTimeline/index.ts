@@ -33,7 +33,7 @@ export default class BarTimeline {
   [x: string]: any;
 
   constructor({ parent, store }: Props) {
-    this.store = store;
+    this.state = store.getState();
     this.parent = parent.classed(C.TIMELINE, true);
     this.el = this.parent.append('svg');
     this.overlay = this.parent.append('div').attr('class', C.OVERLAY);
@@ -44,16 +44,16 @@ export default class BarTimeline {
     const {
       timeline,
       summary: { swipes_avg_pre, swipes_avg_post, swipes_pct_chg },
-    } = S.getOverallTimeline(this.store);
+    } = S.getOverallTimeline(this.state);
 
     this.timeline = [...timeline].map(([, val]) => val)
       .sort((a, b) => ascending(F.pWeek(a.date), F.pWeek(b.date)));
 
-    this.c = S.getColorScheme(this.store);
+    this.c = S.getColorScheme(this.state);
     const bisect = bisector((d: StationTimelineItem) => F.pWeek(d.date));
 
     // pre-populate annotations
-    const section = S.getSectionData(this.store)[SECTIONS.S_TIMELINE];
+    const section = S.getSectionData(this.state)[SECTIONS.S_TIMELINE];
     this.steps = new Map(section.steps
       .filter((step) => step.date) // select all the steps that have dates in them
       .map((d) => { // find the closest data values (for y positionint)

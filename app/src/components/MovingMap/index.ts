@@ -53,21 +53,26 @@ export default class MovingMap {
     this.store = store;
     this.parent = parent.classed(C.MOVING_MAP, true);
     this.el = parent.append('svg');
-    this.mapOutline = S.getMapOutline(this.store);
-    this.linesData = S.getLinesData(this.store);
-    this.ntasData = S.getNTAFeatures(this.store);
-    this.stationsGISData = S.getStationData(this.store);
-    this.swipeData = S.getStationRollup(this.store);
-    this.acsMap = S.getStationToACSMap(this.store);
-    this.bboxes = S.getNTAbboxes(this.store);
+
+    // SELECTORS
+    const state = this.store.getState();
+    this.mapOutline = S.getMapOutline(state);
+    this.linesData = S.getLinesData(state);
+    this.ntasData = S.getNTAFeatures(state);
+    this.stationsGISData = S.getStationData(state);
+    this.swipeData = S.getStationRollup(state);
+    this.acsMap = S.getStationToACSMap(state);
+    this.bboxes = S.getNTAbboxes(state);
 
     this.getPctChange = this.getPctChange.bind(this);
   }
 
   init() {
-    const E = S.getDataExtents(this.store);
+    const state = this.store.getState();
+    const E = S.getDemoDataExtents(state);
+    const ES = S.getWeeklyDataExtent(state);
     // keys for the yScales of the scatter plot segment
-    const scatterKeys = S.getSectionData(this.store)[SECTIONS.S_MOVING_MAP]
+    const scatterKeys = S.getSectionData(state)[SECTIONS.S_MOVING_MAP]
       .steps
       .filter((d) => d[K.DOT_POSITION] && d[K.DOT_POSITION][K.Y_KEY])
       .map((d) => d[K.DOT_POSITION]);
@@ -75,7 +80,7 @@ export default class MovingMap {
     // SCALES
     this.proj = geoAlbersUsa();
 
-    this.colorScale = S.getColorScheme(this.store);
+    this.colorScale = S.getColorScheme(state);
 
     this.colorBoroughScale = scaleOrdinal().domain(E[K.BOROUGH] as string[]).range(MTA_Colors);
 
@@ -92,7 +97,7 @@ export default class MovingMap {
     }), {});
 
     this.xScale = scaleLinear()
-      .domain(E[K.SUMMARY_SWIPES_PCT_CHG] as [number, number]);
+      .domain(ES);
     this.xScale.tickFormat(null, F.sPct);
 
     // AXES
@@ -114,7 +119,8 @@ export default class MovingMap {
     const [width, height] = this.dims;
     this.geoPath = geoPath().projection(this.proj);
     this.el.attr('viewBox', `0 0 ${width} ${height}`);
-    this.positionedStations = calcSwarm(this.stationsGISData, this.getPctChange, this.xScale, R * 2);
+    this.positionedStations = calcSwarm(this.stationsGISData,
+      this.getPctChange, this.xScale, R * 2);
 
     // map outline
     this.map
@@ -168,7 +174,8 @@ export default class MovingMap {
 
   handleViewTransition() {
     const [width, height] = this.dims;
-    const view = S.getView(this.store);
+    const state = this.store.getState();
+    const view = S.getView(state);
     // VISIBILITY
     // map
     this.map
@@ -214,6 +221,11 @@ export default class MovingMap {
         }
         return [0, 0, width, height];
       });
+    // TODO:
+    // .end()
+    // .then(()=> {
+    //   this.stations =
+    // })
 
 
     // AXES
