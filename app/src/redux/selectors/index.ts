@@ -7,8 +7,9 @@ import {
   quantile,
   max,
   min,
+  mean,
 } from 'd3-array';
-import { scaleSequential } from 'd3';
+import { scaleSequential, geoContains } from 'd3';
 import { State } from '../../utils/types';
 import * as Helpers from '../../utils/helpers';
 import { processStations } from '../../utils/dataProcessing';
@@ -129,11 +130,29 @@ export const getStationToACSMap = createSelector([
 
 // get bounding boxes surounding each focus neighborhood
 export const getSelectedNTAS = createSelector([
+  getStationData,
+  getStationRollup,
   getNTAFeatures,
-], (data) => (data && [
-  data.features.find((d) => d.properties.NTACode === 'MN24'), // SOHO
-  data.features.find((d) => d.properties.NTACode === 'BK81'), // browsville
-]));
+], (stations, swipes, ntas) => {
+  // helper function to grab relevant stations and return their average percent change
+  const getAvgPctChg = (nta) => {
+    const relevantStations = stations.filter((d) => geoContains(nta, [d.long, d.lat]));
+    return mean(relevantStations
+      .map((d) => swipes.get(d.unit)
+      && swipes.get(d.unit).summary.swipes_pct_chg));
+  };
+
+  return ntas && [
+    'MN24', // SOHO
+    'BK81', // Brownsville
+  ].map((code) => {
+    const nta = ntas.features.find((d) => d.properties.NTACode === code);
+    return {
+      ...nta,
+      properties: { ...nta.properties, [K.SWIPES_PCT_CHG]: getAvgPctChg(nta) },
+    };
+  });
+});
 
 export const getNTAbboxes = createSelector([
   getSelectedNTAS,

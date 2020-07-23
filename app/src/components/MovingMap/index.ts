@@ -63,6 +63,7 @@ export default class MovingMap {
     this.swipeData = S.getStationRollup(state);
     this.acsMap = S.getStationToACSMap(state);
     this.bboxes = S.getNTAbboxes(state);
+    this.selectedNTAFeatures = S.getSelectedNTAS(state);
 
     this.getPctChange = this.getPctChange.bind(this);
   }
@@ -106,6 +107,7 @@ export default class MovingMap {
     // ELEMENTS
     this.map = this.el.append('g').attr('class', C.MAP);
     this.ntas = this.el.append('g').attr('class', 'ntas');
+    this.selectedNtas = this.el.append('g').attr('class', 'selected-ntas');
     this.lines = this.el.append('g').attr('class', C.LINES);
     this.stationsG = this.el.append('g').attr('class', C.STATIONS);
     this.xAxisEl = this.el.append('g').attr('class', `${C.AXIS} x`);
@@ -127,13 +129,22 @@ export default class MovingMap {
       .selectAll('path')
       .data(this.mapOutline.features)
       .join('path')
+      .attr('vector-effect', 'non-scaling-stroke')
       .attr('d', this.geoPath);
 
     this.ntas
       .selectAll('path')
       .data(this.ntasData.features)
       .join('path')
+      .attr('vector-effect', 'non-scaling-stroke')
       .attr('d', this.geoPath);
+
+    this.selectedNtas
+      .selectAll('path')
+      .data(this.selectedNTAFeatures)
+      .join('path')
+      .attr('d', this.geoPath)
+      .attr('fill', ({ properties }) => this.colorScale(properties[K.SWIPES_PCT_CHG]));
 
     // map lines
     this.lines
@@ -185,6 +196,9 @@ export default class MovingMap {
     this.ntas
       .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES_NTAS && view < V.SWARM);
 
+    this.selectedNtas
+      .classed(C.VISIBLE, view >= V.ZOOM_SOHO && view < V.SWARM);
+
     this.stationsG
       .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES);
 
@@ -220,12 +234,10 @@ export default class MovingMap {
           ];
         }
         return [0, 0, width, height];
+      }).on('end interrupt', () => {
+        const matrix = this.el.node().getCTM();
+        this.stations.selectAll('circle').style('transform', `scale(${1 / matrix.a})`);
       });
-    // TODO:
-    // .end()
-    // .then(()=> {
-    //   this.stations =
-    // })
 
 
     // AXES

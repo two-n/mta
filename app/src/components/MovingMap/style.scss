@@ -27,6 +27,18 @@
       }
     }
   }
+
+  .selected-ntas{
+    stroke: $colorBlack;
+    transition: opacity $durationOpacity;
+    opacity: 0;
+
+    &.visible{
+      opacity: 1;
+    }
+
+  }
+
   .stations{
   opacity: 0;
   transition: opacity $durationOpacity;
@@ -46,8 +58,9 @@
     }
 
     circle{
-      // opacity: .5;
+      transition: transform $durationOpacity;
       stroke: white;
+      stroke-width: .5;
     }
 
     &:not(.allow-pointer){
