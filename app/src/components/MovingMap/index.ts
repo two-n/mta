@@ -2,7 +2,7 @@ import { Store } from 'redux';
 import {
   Selection, geoAlbersUsa, geoPath,
   scaleLinear, scaleBand,
-  axisBottom, axisLeft, scaleOrdinal, select, scaleSqrt, ScaleLinear,
+  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear,
 } from 'd3';
 import * as S from '../../redux/selectors/index';
 import * as A from '../../redux/actions/creators';
@@ -68,8 +68,8 @@ export default class MovingMap {
   }
 
   init() {
-    const { extents: E, averages: A } = S.getDemoDataExtents(this.state);
-    const { extent: EW, average: AW } = S.getWeeklyDataExtent(this.state);
+    const { extents: E } = S.getDemoDataExtents(this.state);
+    const { extent: EW } = S.getWeeklyDataExtent(this.state);
     // keys for the yScales of the scatter plot segment
     const scatterKeys = S.getSectionData(this.state)[SECTIONS.S_MOVING_MAP]
       .steps
@@ -112,6 +112,21 @@ export default class MovingMap {
     this.yAxisEl = this.el.append('g').attr('class', `${C.AXIS} y`);
     this.refLines = this.el.append('g').attr('class', C.ANNOTATIONS);
     this.overlay = this.parent.append('div').attr('class', C.OVERLAY);
+
+    // Ref lines
+    this.refLines
+      .attr('class', `${C.ANNOTATION} x`)
+      .append('path');
+
+    this.refLines
+      .append('g')
+      .attr('class', `${C.ANNOTATION} y`)
+      .append('path');
+
+    // Ref labels
+    this.overlay.append('div').attr('class', `${C.ANNOTATION}-${C.LABEL} x`)
+      .html('% still riding');
+    this.overlay.append('div').attr('class', `${C.ANNOTATION}-${C.LABEL} y`);
 
     this.handleResize();
   }
@@ -245,7 +260,9 @@ export default class MovingMap {
   }
 
   setupAnnotations() {
-    const [, height] = this.dims;
+    const [width, height] = this.dims;
+    const { averages: A } = S.getDemoDataExtents(this.state);
+    const { average: AW } = S.getWeeklyDataExtent(this.state);
     this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.x`)
       .data(['←', 'Higher percentage still riding→'])
       .join('div')
@@ -254,11 +271,20 @@ export default class MovingMap {
       .style('right', (d, i) => i === 1 && `${M.right}px`)
       .style('transform', `translateY(${height - M.bottom}px)`)
       .html((d) => d);
+
+    // Ref lines
+    this.refLines.select(`g.${C.ANNOTATION}.y`)
+      .select('path').attr('d', `M ${M.left} 0 H ${width - M.right}`);
+
+    this.refLines.select(`g.${C.ANNOTATION}.x`).select('path')
+      .attr('d', `M ${0} ${M.top} V ${height - M.bottom}`);
   }
 
   transitionAnnotations() {
     const [, height] = this.dims;
     const view = S.getView(this.state);
+    const { averages: AD } = S.getDemoDataExtents(this.state);
+    const { average: AW } = S.getWeeklyDataExtent(this.state);
     // AXES
     this.xAxisEl
       .transition()
@@ -267,7 +293,9 @@ export default class MovingMap {
       .call(this.xAxis);
 
     if (this.yScales[this.yKey]) {
-      const { scale: yScale, format, label } = this.yScales[this.yKey];
+      const {
+        scale: yScale, format, label, median,
+      } = this.yScales[this.yKey];
       this.yAxis = axisLeft(yScale).tickFormat(format);
       this.yAxisEl
         .transition()
@@ -282,7 +310,19 @@ export default class MovingMap {
         .style('top', `${M.top}px`)
         .style('transform', 'translateY(-100%)')
         .html((d) => d);
+
+      // average lines and labesl
+      this.refLines.select(`${C.ANNOTATION}.x`)
+        .attr('transform', `translate(${this.xScale(AW)}, ${0})`);
+      this.refLines.select(`${C.ANNOTATION}.y`)
+        .attr('transform', `translate(0, ${this.yScale(AD[this.key])})`);
+      this.overlay.select(`${C.ANNOTATION}-${C.LABEL}.x`)
+        .attr('transform', `translate(${this.xScale(AW)}, ${0})`);
+      this.overlay.select(`${C.ANNOTATION}-${C.LABEL}.y`)
+        .attr('transform', `translate(0, ${this.yScale(AD[this.key])})`)
+        .html(median);
     }
+
     // VISIBILITY
     this.parent.selectAll('.x')
       .classed(C.VISIBLE, view >= V.SWARM);
@@ -324,6 +364,7 @@ export default class MovingMap {
     // update yScale ranges
     Object.values(this.yScales).forEach((d) => d.scale.range([height - M.bottom - R, M.top]));
     this.draw();
+    this.handleResize();
   }
 
   get state() {
