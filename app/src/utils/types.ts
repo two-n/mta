@@ -6,6 +6,7 @@ export interface State {
   stationData: null | StationData[],
   mapData: null | MapData,
   view: VIEWS,
+  selectedWeek: string,
 }
 
 export type AppDataType = {
@@ -51,7 +52,7 @@ export interface StationSummary {
 export interface ProcessedStation {
   station: string;
   remote: string;
-  timeline: StationTimelineItem[],
+  timeline: Map<string, StationTimelineItem>,
   summary: StationSummary
 }
 

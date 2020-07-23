@@ -109,6 +109,8 @@ export const FORMATTERS = {
   fDay: utcFormat('%a'),
   fDate: utcFormat('%d-%m-%Y'),
   pDate: utcParse('%d-%m-%Y'),
+  fWeek: utcFormat('%W-%Y'),
+  pWeek: utcParse('%W-%Y'),
   fNumber: format('.2s'),
   fSNum: format('.0s'),
   fPct: format('.0%'),
@@ -125,4 +127,5 @@ export const colorInterpolator = piecewise(interpolateRgb, colorDomain);
 export const appConfig = {
   thresholdDate: new Date('2020-03-15'), // date for pre/post comparisions
   startDate: new Date('2020-01-01'), // date that we show data from for station timelines
+  endDate: new Date('2020-06-08'), // end for pre/post comparisons, aligns with NYC Phase 1 reopening
 };

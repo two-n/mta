@@ -2,7 +2,7 @@
 import {
   // @ts-ignore
   rollups,
-  mean, ascending, sum,
+  mean, sum,
 } from 'd3-array';
 import { TurnstileData, ProcessedStation, StationSummary } from './types';
 import { FORMATTERS as F, appConfig } from './constants';
@@ -24,7 +24,7 @@ export const processStations = (data: TurnstileData[],
     .filter(({ WEEK }:weeklySum) => WEEK < appConfig.thresholdDate),
   ({ TOTAL }) => TOTAL);
   const postSwipes = mean(sumByWeek
-    .filter(({ WEEK }:weeklySum) => WEEK >= appConfig.thresholdDate),
+    .filter(({ WEEK }:weeklySum) => WEEK >= appConfig.thresholdDate && WEEK <= appConfig.endDate),
   ({ TOTAL }) => TOTAL);
 
   const summary: StationSummary = {
@@ -36,13 +36,13 @@ export const processStations = (data: TurnstileData[],
   return {
     station: isOverall ? '' : data[0].STATION,
     remote: isOverall ? '' : data[0].REMOTE,
-    timeline: sumByWeek.map((
+    timeline: new Map(sumByWeek.map((
       { WEEK, TOTAL },
-    ) => ({
-      date: F.fDate(WEEK),
+    ) => ([F.fWeek(WEEK), {
+      date: F.fWeek(WEEK),
       swipes: TOTAL,
       swipes_pct_chg: 1 - ((preSwipes - TOTAL) / preSwipes),
-    })).sort((a, b) => ascending(F.pDate(a.date), F.pDate(b.date))),
+    }]))),
     summary,
   };
 };

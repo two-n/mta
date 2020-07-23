@@ -2,6 +2,7 @@ import { Store } from 'redux';
 import {
   Selection, scaleLinear, max, scaleUtc, extent, bisector, select,
 } from 'd3';
+import { ascending } from 'd3-array';
 import * as S from '../../redux/selectors';
 import { State, StationTimelineItem, StepDataType } from '../../utils/types';
 import {
@@ -40,20 +41,27 @@ export default class BarTimeline {
   }
 
   init() {
-    const { timeline, summary: { swipes_avg_pre, swipes_avg_post, swipes_pct_chg } } = S.getOverallTimeline(this.store);
+    const {
+      timeline,
+      summary: { swipes_avg_pre, swipes_avg_post, swipes_pct_chg },
+    } = S.getOverallTimeline(this.store);
+
+    this.timeline = [...timeline].map(([, val]) => val)
+      .sort((a, b) => ascending(F.pWeek(a.date), F.pWeek(b.date)));
+
     this.c = S.getColorScheme(this.store);
-    const bisect = bisector((d: StationTimelineItem) => F.pDate(d.date));
+    const bisect = bisector((d: StationTimelineItem) => F.pWeek(d.date));
 
     // pre-populate annotations
     const section = S.getSectionData(this.store)[SECTIONS.S_TIMELINE];
     this.steps = new Map(section.steps
       .filter((step) => step.date) // select all the steps that have dates in them
       .map((d) => { // find the closest data values (for y positionint)
-        const closestIndex = bisect.left(timeline, F.pDate(d.date));
+        const closestIndex = bisect.left(this.timeline, F.pDate(d.date));
         return [d.step_id, {
           ...d,
-          date: timeline[closestIndex].date, // matche it up with closest week
-          swipes: timeline[closestIndex].swipes,
+          date: this.timeline[closestIndex].date, // matche it up with closest week
+          swipes: this.timeline[closestIndex].swipes,
         }];
       }));
     this.lastDateStep = max([...this.steps], ([, d]) => d.step_id);
@@ -66,10 +74,10 @@ export default class BarTimeline {
 
     // scales - range set in resize handler
     this.y = scaleLinear()
-      .domain([0, max(timeline, ({ swipes }) => swipes)]);
+      .domain([0, max(this.timeline, ({ swipes }) => swipes)]);
 
     this.x = scaleUtc()
-      .domain(extent(timeline, ({ date }) => F.pDate(date)));
+      .domain(extent(this.timeline, ({ date }) => F.pWeek(date)));
 
     this.linesWrapper = this.el.append('g').attr('class', 'lines');
 
@@ -85,8 +93,7 @@ export default class BarTimeline {
     this.refLinesWrapper.append('text')
       .attr('class', C.LABEL)
       .text((d) => F.fSNum(d))
-      .attr('dy', '-.5em')
-    ;
+      .attr('dy', '-.5em');
 
     // set up annotation labels - position in draw
     this.annotations = this.overlay.append('div').attr('class', C.ANNOTATIONS)
@@ -108,20 +115,18 @@ export default class BarTimeline {
   }
 
   draw() {
-    const { timeline } = S.getOverallTimeline(this.store);
-
     const [width, height] = this.dims;
-    this.barW = Math.max(((width - M.left - M.right) / timeline.length) * 0.7, 2);
+    this.barW = Math.max(((width - M.left - M.right) / this.timeline.length) * 0.7, 2);
 
     this.lines = this.linesWrapper.selectAll('rect')
-      .data(timeline)
+      .data(this.timeline)
       .join('rect')
       .attr('width', this.barW)
       .attr('height', (d: StationTimelineItem) => this.y(d.swipes))
       .attr('opacity', 0)
       .attr(
         'transform',
-        (d: StationTimelineItem) => `translate(${this.x(F.pDate(d.date))}, ${(height) / 2
+        (d: StationTimelineItem) => `translate(${this.x(F.pWeek(d.date))}, ${(height) / 2
             - this.y(d.swipes) / 2})`,
       );
 
@@ -136,7 +141,7 @@ export default class BarTimeline {
 
     // position labels
     this.annotations
-      .style('transform', (d) => `translate(${this.x(F.pDate(d.date))}px, ${height / 2
+      .style('transform', (d) => `translate(${this.x(F.pWeek(d.date))}px, ${height / 2
       - this.y(d.swipes) / 2}px) translateY(-100%)`);
 
     // position and size gradient
@@ -160,7 +165,7 @@ export default class BarTimeline {
 
     // either the date is earlier than the current step's date
     // or the steps are past the date step range
-    const isActive = (d) => (data.date && F.pDate(d.date) <= F.pDate(this.steps.get(data.step_id).date))
+    const isActive = (d) => (data.date && F.pWeek(d.date) <= F.pWeek(this.steps.get(data.step_id).date))
       || data.step_id === this.lastDateStep + 1; // include bars after last date
 
     // callback for when bars finish transitioning

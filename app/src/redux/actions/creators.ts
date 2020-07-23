@@ -22,3 +22,8 @@ export const setView = (view: VIEWS) => ({
   type: SET_VIEW,
   view,
 });
+export const SET_WEEK = 'SET_WEEK';
+export const setWeek = (week: string) => ({
+  type: SET_WEEK,
+  week,
+});
