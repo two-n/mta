@@ -83,6 +83,23 @@
     }
   }
 
+  .annotations{
+    .annotation{
+      stroke: $colorDarkGrey;
+      transition: transform $durationMovement;
+    }
+  }
+
+  .overlay{
+    position:absolute;
+
+    .annotation-label{
+      font-size: $fontSizeSmall;
+      position: absolute;
+      transition: transform $durationMovement;
+    }
+  }
+
   .x, .y{
     opacity: 0;
     transition: opacity $durationOpacity;

@@ -116,6 +116,7 @@ export default class MovingMap {
 
     // Ref lines
     this.refLines
+      .append('g')
       .attr('class', `${C.ANNOTATION} x`)
       .append('path');
 
@@ -125,8 +126,7 @@ export default class MovingMap {
       .append('path');
 
     // Ref labels
-    this.overlay.append('div').attr('class', `${C.ANNOTATION}-${C.LABEL} x`)
-      .html('% still riding');
+    this.overlay.append('div').attr('class', `${C.ANNOTATION}-${C.LABEL} x`);
     this.overlay.append('div').attr('class', `${C.ANNOTATION}-${C.LABEL} y`);
 
     this.handleResize();
@@ -149,7 +149,7 @@ export default class MovingMap {
   handleViewTransition() {
     const [width, height] = this.dims;
     this.state = this.store.getState();
-    this.week = S.getSelectedWeek(this.state);
+    this.week = S.getSelectedWeek(this.state); // TODO: maybe move into  `getPctChg` function
     const view = S.getView(this.state);
     const { extent: EW, average: AW } = S.getWeeklyDataExtent(this.state);
     this.xScale.domain(EW); // update for new data
@@ -286,7 +286,7 @@ export default class MovingMap {
   }
 
   transitionAnnotations() {
-    const [, height] = this.dims;
+    const [width, height] = this.dims;
     const view = S.getView(this.state);
     const { averages: AD } = S.getDemoDataExtents(this.state);
     const { average: AW } = S.getWeeklyDataExtent(this.state);
@@ -317,15 +317,16 @@ export default class MovingMap {
         .html((d) => d);
 
       // average lines and labesl
-      this.refLines.select(`${C.ANNOTATION}.x`)
-        .attr('transform', `translate(${this.xScale(AW)}, ${0})`);
-      this.refLines.select(`${C.ANNOTATION}.y`)
-        .attr('transform', `translate(0, ${this.yScale(AD[this.key])})`);
-      this.overlay.select(`${C.ANNOTATION}-${C.LABEL}.x`)
-        .attr('transform', `translate(${this.xScale(AW)}, ${0})`);
-      this.overlay.select(`${C.ANNOTATION}-${C.LABEL}.y`)
-        .attr('transform', `translate(0, ${this.yScale(AD[this.key])})`)
-        .html(median);
+      this.refLines.select(`.${C.ANNOTATION}.x`)
+        .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`);
+      this.refLines.select(`.${C.ANNOTATION}.y`)
+        .style('transform', `translate(0px, ${yScale(AD[this.yKey])}px)`);
+      this.overlay.select(`.${C.ANNOTATION}-${C.LABEL}.x`)
+        .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`)
+        .html(`${F.fPct(AW)} still riding`);
+      this.overlay.select(`.${C.ANNOTATION}-${C.LABEL}.y`)
+        .style('transform', `translate(${width - M.right}px, ${yScale(AD[this.yKey])}px) translateX(-100%)`)
+        .html(`${format(AD[this.yKey])} ${median}`);
     }
 
     // VISIBILITY
@@ -368,6 +369,5 @@ export default class MovingMap {
     // update yScale ranges
     Object.values(this.yScales).forEach((d) => d.scale.range([height - M.bottom - R, M.top]));
     this.draw();
-    this.handleResize();
   }
 }
