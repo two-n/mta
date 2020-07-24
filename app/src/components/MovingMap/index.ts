@@ -54,6 +54,7 @@ export default class MovingMap {
     this.parent = parent.classed(C.MOVING_MAP, true);
     this.el = parent.append('svg');
 
+    this.state = this.store.getState();
     // SELECTORS
     this.mapOutline = S.getMapOutline(this.state);
     this.linesData = S.getLinesData(this.state);
@@ -135,6 +136,8 @@ export default class MovingMap {
     const [width, height] = this.dims;
     this.geoPath = geoPath().projection(this.proj);
     this.el.attr('viewBox', `0 0 ${width} ${height}`);
+    this.state = this.store.getState();
+    this.week = S.getSelectedWeek(this.state);
     this.positionedStations = calcSwarm(this.stationsGISData,
       this.getPctChange, this.xScale, R * 2);
 
@@ -145,6 +148,8 @@ export default class MovingMap {
 
   handleViewTransition() {
     const [width, height] = this.dims;
+    this.state = this.store.getState();
+    this.week = S.getSelectedWeek(this.state);
     const view = S.getView(this.state);
     const { extent: EW, average: AW } = S.getWeeklyDataExtent(this.state);
     this.xScale.domain(EW); // update for new data
@@ -337,9 +342,8 @@ export default class MovingMap {
   }
 
   getPctChange(station: StationData) {
-    const week = S.getSelectedWeek(this.state);
     return this.swipeData.get(station.unit)
-      && this.swipeData.get(station.unit).timeline.get(week).swipes_pct_chg;
+      && this.swipeData.get(station.unit).timeline.get(this.week).swipes_pct_chg;
   }
 
   getACS(station: StationData, field: string) {
@@ -365,9 +369,5 @@ export default class MovingMap {
     Object.values(this.yScales).forEach((d) => d.scale.range([height - M.bottom - R, M.top]));
     this.draw();
     this.handleResize();
-  }
-
-  get state() {
-    return this.store.getState();
   }
 }
