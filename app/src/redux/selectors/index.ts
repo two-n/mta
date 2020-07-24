@@ -1,6 +1,7 @@
 import { Store } from 'redux';
 import { createSelector } from 'reselect';
 import * as topojson from 'topojson-client';
+import bbox from '@turf/bbox';
 import {
   rollup,
   extent,
@@ -13,13 +14,15 @@ import * as Helpers from '../../utils/helpers';
 import { processStations } from '../../utils/dataProcessing';
 import {
   KEYS as K, FORMATTERS as F, appConfig, colorInterpolator,
+  VIEWS as V,
 } from '../../utils/constants';
 
 /** Basic Selectors */
+// TODO: refactor base selectors to take state instead of store
 export const getSectionData = (state: Store<State>) => state.getState().sectionData;
 export const getSwipeData = (state: Store<State>) => state.getState().swipeData;
 export const getStationData = (state: Store<State>) => state.getState().stationData;
-export const getACSData = (state: Store<State>) => state.getState().acsData;
+export const getMapData = (state: Store<State>) => state.getState().mapData;
 export const getView = (state: Store<State>) => state.getState().view;
 
 /** Turnstile Manipulations */
@@ -34,36 +37,52 @@ export const getOverallTimeline = createSelector([
 export const getStationRollup = createSelector([
   getFilteredSwipeData,
 ], (data) => data
-&& rollup(data, processStations,
-  ({ REMOTE }) => REMOTE));
+  && rollup(data, processStations,
+    ({ REMOTE }) => REMOTE));
 
 export const getStationTimelines = createSelector([
   getStationRollup,
 ], (data) => data
-&& Array.from(data).map(([, processStation]: [string, ProcessedStation]) => processStation)
-  .map((d:ProcessedStation) => ({
-    ...d,
-    timeline: d.timeline
-      .filter(({ date }) => F.pDate(date) > appConfig.startDate), // filter for only after startDate
-  })) as ProcessedStation[]);
+  && Array.from(data).map(([, processStation]: [string, ProcessedStation]) => processStation)
+    .map((d: ProcessedStation) => ({
+      ...d,
+      timeline: d.timeline
+        .filter(({ date }) => F.pDate(date) > appConfig.startDate), // filter for only after startDate
+    })) as ProcessedStation[]);
 
 /** GEOGRAPHIC TRANSFORMATIONS */
-const getACSGeometries = createSelector([
-  getACSData,
-],
-(data) => data.objects.acs_nta.geometries);
+export const getMapOutline = createSelector([getMapData], (data) => topojson.feature(data, data.objects.mapOutline));
+export const getLinesData = createSelector([getMapData], (data) => topojson.feature(data, data.objects['subway-lines']));
 
-export const getGeoJSONData = createSelector([
-  getACSData,
+// filter out Staten Island
+const getFilteredACSData = createSelector([
+  getMapData,
+], (data) => ({
+  ...data,
+  objects: {
+    acs_nta: {
+      ...data.objects.acs_nta,
+      geometries: data.objects.acs_nta.geometries
+        .filter(({ properties }) => properties.BoroCode !== 5),
+    },
+  },
+}));
+
+const getACSGeometries = createSelector([
+  getFilteredACSData,
+], (data) => data.objects.acs_nta.geometries);
+
+export const getNTAFeatures = createSelector([
+  getFilteredACSData,
 ], (data) => topojson.feature(data, data.objects.acs_nta));
 
 export const getGeoMeshInterior = createSelector([
-  getACSData,
+  getFilteredACSData,
 ], (data) => topojson.mesh(data, data.objects.acs_nta,
   (a, b) => a !== b));
 
 export const getGeoMeshExterior = createSelector([
-  getACSData,
+  getFilteredACSData,
 ], (data) => topojson.mesh(data, data.objects.acs_nta,
   (a, b) => a === b));
 
@@ -73,7 +92,7 @@ export const getDataExtents = createSelector([
   getStationTimelines,
   getStationData,
   getACSGeometries,
-], (stationStats, stations, acs): {[key:string]: (number|Date| string)[]} => {
+], (stationStats, stations, acs): { [key: string]: (number | Date | string)[] } => {
   const stationTimelines = stationStats.map(({ timeline }) => timeline);
   return {
     [K.SWIPES_PCT_CHG]: [0, quantile(stationTimelines
@@ -90,6 +109,8 @@ export const getDataExtents = createSelector([
     [K.ED_HEALTH_PCT]: extent(acs, ({ properties }) => +properties[K.ED_HEALTH_PCT]),
     [K.INCOME_PC]: [0, max(acs, ({ properties }) => +properties[K.INCOME_PC])],
     [K.UNINSURED]: [0, quantile(acs.map(({ properties }) => +properties[K.UNINSURED]), 0.99)],
+    [K.SNAP_PCT]: [0, quantile(acs.map(({ properties }) => +properties[K.SNAP_PCT]), 0.99)],
+    [K.WHITE]: [0, quantile(acs.map(({ properties }) => +properties[K.WHITE]), 0.99)],
 
   };
 });
@@ -103,4 +124,20 @@ export const getColorScheme = createSelector([
 export const getStationToACSMap = createSelector([
   getACSGeometries,
 ], (data) => data
-&& new Map(data.map(({ properties }) => ([properties.NTACode, properties]))));
+  && new Map(data.map(({ properties }) => ([properties.NTACode, properties]))));
+
+
+// get bounding boxes surounding each focus neighborhood
+export const getSelectedNTAS = createSelector([
+  getNTAFeatures,
+], (data) => (data && [
+  data.features.find((d) => d.properties.NTACode === 'MN24'), // SOHO
+  data.features.find((d) => d.properties.NTACode === 'BK81'), // browsville
+]));
+
+export const getNTAbboxes = createSelector([
+  getSelectedNTAS,
+], ([soho, brownsville]) => (soho && brownsville && {
+  [V.ZOOM_SOHO]: bbox(soho),
+  [V.ZOOM_BROWNSVILLE]: bbox(brownsville),
+}));

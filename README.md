@@ -56,6 +56,9 @@ https://www1.nyc.gov/site/planning/data-maps/open-data/dwn-acs-nta.page
 
 ran `processingScripts/acsByNTA.py` to create a cleaned up geojson and then `geo2topo data/output/acs_nta.geojson > data/output/acs_nta_topo.json` to create a topojson.
 
+Alternatively, to create a topojson with all of the required geographic data, you can run:
+`geo2topo data/output/acs_nta.geojson data/output/borough-boundaries.geojson data/output/subway-lines.geojson > mapData_topo.json` and each file creates an `object` with the same name as the input file's original name.
+
 ### App Content
 Using (ArchieML)[http://archieml.org/#resources] via Quartz's (aml-gdoc-server)[https://github.com/Quartz/aml-gdoc-server] to pull unstructured data from [this google doc](https://docs.google.com/document/d/1Dc9L6cVkBEpUPbp2vSby0Mpx40MzCeKqe_4cX5I11oE/edit) into a json format.
 To pull a new version of the data, run:
@@ -64,6 +67,26 @@ To pull a new version of the data, run:
 
 That will open a server at `http://127.0.0.1:6006/`. To get a JSON formatted dataset, just go to `http://127.0.0.1:6006/GOOGLE_DOC_ID` and save the resulting file.
 
+
+### NYC Outline
+Downloaded borough outlines from [NYC Open Data](https://data.cityofnewyork.us/City-Government/Borough-Boundaries/tqmj-j8zm), then filtered out SI in the command line with the following command:
+
+```sh
+jq '{type: .type , features: [ .features[]| select( .properties.boro_code != "5") ] }' data/output/borough-boundaries.geojson > data/output/mapOutline.geojson
+```
+
+Downloaded [New Jersey County Boundaries](https://njogis-newjersey.opendata.arcgis.com/datasets/5f45e1ece6e14ef5866974a7b57d3b95_1?geometry=-74.891%2C40.521%2C-73.572%2C40.886) and [NY Civil Boundaries](http://gis.ny.gov/gisdata/inventories/details.cfm?DSID=927) (both shapefiles) and loaded them into folder called `mapOutlines`. Then from there:
+
+```sh
+# merge into single file
+ogrmerge.py -o output/mapOutline -overwrite_ds mapOutlines/County_Boundaries_of_NJ-shp/County_Boundaries_of_NJ.shp mapOutlines/NYS_Civil_Boundaries_SHP/Counties_Shoreline.shp -single
+
+# re-project
+ogr2ogr output/mapOutline/reproj.shp -t_srs "WGS84" output/mapOutline/merged.shp
+
+# clip to bounding box
+ogr2ogr output/mapOutline/clipped.shp  output/mapOutline/reproj.shp -spat -74.178 40.5320 -73.7309 40.946
+```
 
 ## Process
 

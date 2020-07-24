@@ -1,91 +1,107 @@
 import { Store } from 'redux';
 import {
-  Selection, geoAlbersUsa, geoPath, scaleSequential,
-  scaleLinear, scaleBand, interpolateYlOrBr,
-  axisBottom, axisLeft, scaleOrdinal, select, scaleSqrt,
+  Selection, geoAlbersUsa, geoPath,
+  scaleLinear, scaleBand,
+  axisBottom, axisLeft, scaleOrdinal, select, scaleSqrt, ScaleLinear,
 } from 'd3';
 import * as S from '../../redux/selectors/index';
 import * as A from '../../redux/actions/creators';
 import { State, StationData } from '../../utils/types';
 import {
   CLASSES as C, VIEWS as V,
-  KEYS as K, FORMATTERS as F, MTA_Colors,
+  KEYS as K, FORMATTERS as F, MTA_Colors, SECTIONS,
 } from '../../utils/constants';
-import { getNameHash } from '../../utils/helpers';
+import { getNameHash, calcSwarm } from '../../utils/helpers';
 import './style.scss';
 
-interface Props{
+interface Props {
   store: Store<State>
   parent: Selection
 }
 
+interface ScaleObject {
+  scale: ScaleLinear<number, number>,
+  format: (d: number) => string,
+  label: string,
+  median: string
+}
+
 const M = {
-  top: 20, bottom: 50, left: 90, right: 20,
+  top: 10, bottom: 150, left: 30, right: 20,
 };
 const R = 3;
 const duration = 200;
+const geoPadding = {
+  top: 50, bottom: 100, left: 30, right: 100,
+};
 
+const FORMAT_MAP: { [key: string]: (d: number) => string } = {
+  [K.WHITE]: F.fPctNoMult,
+  [K.INCOME_PC]: F.sDollar,
+  [K.ED_HEALTH_PCT]: F.fPctNoMult,
+  [K.UNINSURED]: F.fPctNoMult,
+  [K.SNAP_PCT]: F.fPctNoMult,
+};
+
+const MAP_VISIBLE = [V.MAP_OUTLINE, V.MAP_DOTS_LINES, V.MAP_DOTS_LINES_NTAS];
 export default class MovingMap {
+  yScales: { [key: string]: ScaleObject }
+
   [x: string]: any;
 
-  constructor({ store, parent }:Props) {
+  constructor({ store, parent }: Props) {
     this.store = store;
     this.parent = parent.classed(C.MOVING_MAP, true);
     this.el = parent.append('svg');
-    this.geoMeshExterior = S.getGeoMeshExterior(this.store);
+    this.mapOutline = S.getMapOutline(this.store);
+    this.linesData = S.getLinesData(this.store);
+    this.ntasData = S.getNTAFeatures(this.store);
     this.stationsGISData = S.getStationData(this.store);
-    this.turnstileData = S.getStationRollup(this.store);
+    this.swipeData = S.getStationRollup(this.store);
     this.acsMap = S.getStationToACSMap(this.store);
+    this.bboxes = S.getNTAbboxes(this.store);
+
+    this.getPctChange = this.getPctChange.bind(this);
   }
 
   init() {
     const E = S.getDataExtents(this.store);
+    // keys for the yScales of the scatter plot segment
+    const scatterKeys = S.getSectionData(this.store)[SECTIONS.S_MOVING_MAP]
+      .steps
+      .filter((d) => d[K.DOT_POSITION] && d[K.DOT_POSITION][K.Y_KEY])
+      .map((d) => d[K.DOT_POSITION]);
 
     // SCALES
     this.proj = geoAlbersUsa();
 
-    this.colorScale = scaleSequential((t) => interpolateYlOrBr(1 - t))
-      .domain(E[K.SUMMARY_SWIPES_PCT_CHG] as [number, number]);
+    this.colorScale = S.getColorScheme(this.store);
 
     this.colorBoroughScale = scaleOrdinal().domain(E[K.BOROUGH] as string[]).range(MTA_Colors);
 
     this.boroYScale = scaleBand().domain(E[K.BOROUGH] as string[]);
 
-    this.incomeYScale = scaleLinear()
-      .domain(E[K.INCOME_PC] as number[]);
-    this.incomeYScale.tickFormat(null, F.sDollar);
-
-    this.edHealthYScale = scaleLinear()
-      .domain(E[K.ED_HEALTH_PCT] as number[]);
-    this.edHealthYScale.tickFormat(null, F.sPct);
-
-    this.uninsuredYScale = scaleLinear()
-      .domain(E[K.UNINSURED] as number[]);
-    this.uninsuredYScale.tickFormat(null, F.sPct);
+    this.yScales = scatterKeys.reduce((obj: { [key: string]: ScaleObject }, d) => ({
+      ...obj,
+      [d[K.Y_KEY]]: {
+        scale: scaleLinear().domain(E[d[K.Y_KEY]] as number[]),
+        label: d[K.Y_DISPLAY],
+        median: d[K.Y_MEDIAN_LABEL] || d[K.Y_DISPLAY],
+        format: FORMAT_MAP[d[K.Y_KEY]],
+      },
+    }), {});
 
     this.xScale = scaleLinear()
       .domain(E[K.SUMMARY_SWIPES_PCT_CHG] as [number, number]);
     this.xScale.tickFormat(null, F.sPct);
-
-    this.rScale = scaleSqrt()
-      .domain(E[K.SUMMARY_SWIPES_AVG_POST] as [number, number])
-      .range([2, 10]);
-
-    this.scaleMap = {
-      [V.MAP]: { label: null, scale: null },
-      [V.PCT_CHANGE]: { label: null, scale: null },
-      [V.BOROUGH]: { label: null, scale: this.boroYScale, format: F.fBorough },
-      [V.PCT_CHANGE_BOROUGH]: { label: null, scale: null },
-      [V.SCATTER_PCT_INCOME]: { label: 'Per Capita Income ($)', scale: this.incomeYScale, format: F.sDollar },
-      [V.SCATTER_ED_HEALTH]: { label: 'Percent Employed in Educational Services, and Health Care and Social Assistance (%)', scale: this.edHealthYScale, format: F.fPctNoMult },
-      [V.SCATTER_UNINSURED]: { label: 'Percent with No Health Insurance Coverage (%)', scale: this.uninsuredYScale, format: F.fPctNoMult },
-    };
 
     // AXES
     this.xAxis = axisBottom(this.xScale).tickFormat(F.fPct);
 
     // ELEMENTS
     this.map = this.el.append('g').attr('class', C.MAP);
+    this.ntas = this.el.append('g').attr('class', 'ntas');
+    this.lines = this.el.append('g').attr('class', C.LINES);
     this.stationsG = this.el.append('g').attr('class', C.STATIONS);
     this.xAxisEl = this.el.append('g').attr('class', `${C.AXIS} x`);
     this.yAxisEl = this.el.append('g').attr('class', `${C.AXIS} y`);
@@ -96,66 +112,109 @@ export default class MovingMap {
 
   draw() {
     const [width, height] = this.dims;
-    const view = S.getView(this.store);
-    const { scale: yScale, label, format } = this.scaleMap[view];
     this.geoPath = geoPath().projection(this.proj);
+    this.el.attr('viewBox', `0 0 ${width} ${height}`);
+    this.positionedStations = calcSwarm(this.stationsGISData, this.getPctChange, this.xScale, R * 2);
+
+    // map outline
     this.map
-      .classed(C.VISIBLE, view === V.MAP)
       .selectAll('path')
-      .data([this.geoMeshExterior])
+      .data(this.mapOutline.features)
       .join('path')
       .attr('d', this.geoPath);
 
-    this.stations = this.stationsG.selectAll(`g.${C.STATION}`)
-      .data(this.stationsGISData)
+    this.ntas
+      .selectAll('path')
+      .data(this.ntasData.features)
+      .join('path')
+      .attr('d', this.geoPath);
+
+    // map lines
+    this.lines
+      .selectAll('path')
+      .data(this.linesData.features)
+      .join('path')
+      .attr('d', this.geoPath)
+      .attr('vector-effect', 'non-scaling-stroke');
+
+    this.stations = this.stationsG
+      .selectAll(`g.${C.STATION}`)
+      .data(this.positionedStations, (d) => d.station_code)
       .join('g')
       .attr('class', C.STATION)
       .on('mouseover', function () { select(this).raise(); });
 
-    this.stations
-      .style('transform', (d:StationData) => {
-        switch (view) {
-          case (V.PCT_CHANGE):
-            return `translate(
-              ${this.xScale(this.getPctChange(d))}px,${height / 2}px)`;
-          case (V.BOROUGH):
-            return `translate(
-              ${this.xScale(this.getPctChange(d))}px,${yScale(d[K.BOROUGH]) + yScale.bandwidth() / 2}px)`;
-          case (V.PCT_CHANGE_BOROUGH):
-            return `translate(
-              ${this.xScale(this.getPctChange(d))}px,${height / 2}px)`;
-          case (V.SCATTER_PCT_INCOME):
-            return `translate(
-              ${this.xScale(this.getPctChange(d))}px,
-              ${yScale(this.getACS(d, K.INCOME_PC))}px)`;
-          case (V.SCATTER_ED_HEALTH):
-            return `translate(
-              ${this.xScale(this.getPctChange(d))}px,
-              ${yScale(this.getACS(d, K.ED_HEALTH_PCT))}px)`;
-          case (V.SCATTER_UNINSURED):
-            return `translate(
-              ${this.xScale(this.getPctChange(d))}px,
-              ${yScale(this.getACS(d, K.UNINSURED))}px)`;
-          default: {
-            const [x, y] = this.proj([d.long, d.lat]);
-            return `translate(${x}px, ${y}px)`;
-          }
-        }
-      });
-
-    // views that should be colored by borough
-    const boroughFills = [V.PCT_CHANGE_BOROUGH, V.SCATTER_ED_HEALTH, V.SCATTER_PCT_INCOME, V.SCATTER_UNINSURED];
     this.stations.selectAll('circle').data((d) => [d])
       .join('circle')
-      .attr('r', (d) => this.rScale(this.turnstileData.get(d.unit).summary.swipes_avg_post))
-      .attr('fill', (d) => (boroughFills.includes(view)
-        ? this.colorBoroughScale(d[K.BOROUGH])
-        : this.colorScale(this.getPctChange(d))));
+      .attr('r', R)
+      .attr('vector-effect', 'non-scaling-stroke')
+      .attr('fill', (d) => (this.colorScale(this.getPctChange(d))));
 
     this.stations.selectAll('text').data((d) => [d])
       .join('text')
       .attr('y', -R - 3)
       .text((d) => getNameHash(d));
+
+
+    this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.x`)
+      .data(['←', 'Higher percentage still riding→'])
+      .join('div')
+      .attr('class', `${C.AXIS}-${C.LABEL} ${C.NO_WRAP} x`)
+      .style('left', (d, i) => i === 0 && `${M.left}px`)
+      .style('right', (d, i) => i === 1 && `${M.right}px`)
+      .style('transform', `translateY(${height - M.bottom}px)`)
+      .html((d) => d);
+  }
+
+  handleViewTransition() {
+    const [width, height] = this.dims;
+    const view = S.getView(this.store);
+    // VISIBILITY
+    // map
+    this.map
+      .classed(C.VISIBLE, MAP_VISIBLE.includes(view));
+    this.lines
+      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES && view < V.SWARM);
+    this.ntas
+      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES_NTAS && view < V.SWARM);
+
+    this.stationsG
+      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES);
+
+    this.stations.style('transform', (d: StationData) => {
+      switch (view) {
+        case (V.SWARM):
+          return `translate(${d.x}px,${height - M.bottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
+        case (V.SCATTER): {
+          const yScale = this.yScales[this.yKey].scale; return `translate(
+            ${this.xScale(this.getPctChange(d))}px,${yScale(this.getACS(d, this.yKey))}px)`;
+        }
+        default: {
+          const [x, y] = this.proj([d.long, d.lat]);
+          return `translate(${x}px, ${y}px)`;
+        }
+      }
+    })
+      .classed('allow-pointer', view >= V.SWARM);
+
+    // VIEWBOX
+    this.el
+      .transition()
+      .duration(1000)
+      .attr('viewBox', () => { // [x, y, width, height]
+        if (this.bboxes[view]) {
+          const [xMin, yMin, xMax, yMax] = this.bboxes[view];
+          const [x0, y0, x1, y1] = [...this.proj([xMin, yMax]), ...this.proj([xMax, yMin])]; // swith yMin/Max b/c browser coordinate system
+          return [
+            x0 - geoPadding.left,
+            y0 - geoPadding.top,
+            (x1 - x0) + geoPadding.right,
+            (y1 - y0) + geoPadding.bottom,
+          ];
+        }
+        return [0, 0, width, height];
+      });
+
 
     // AXES
     this.xAxisEl
@@ -164,16 +223,8 @@ export default class MovingMap {
       .attr('transform', `translate(${0}, ${height - M.bottom})`)
       .call(this.xAxis);
 
-    this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.x`)
-      .data(['← Higher decrease in ridership', 'Lower decrease in ridership→'])
-      .join('div')
-      .attr('class', `${C.AXIS}-${C.LABEL} ${C.NO_WRAP} x`)
-      .style('left', (d, i) => i === 0 && `${M.left}px`)
-      .style('right', (d, i) => i === 1 && `${M.right}px`)
-      .style('transform', `translateY(${height - M.bottom}px)`)
-      .html((d) => d);
-
-    if (yScale) {
+    if (this.yScales[this.yKey]) {
+      const { scale: yScale, format, label } = this.yScales[this.yKey];
       this.yAxis = axisLeft(yScale).tickFormat(format);
       this.yAxisEl
         .transition()
@@ -185,33 +236,33 @@ export default class MovingMap {
         .data([label])
         .join('div')
         .attr('class', `${C.AXIS}-${C.LABEL} y`)
-        .style('top', `${height / 2}px`)
-        .style('transform', 'translateY(-50%)')
-        .style('width', `${M.left - 20}px`)
+        .style('top', `${M.top}px`)
+        .style('transform', 'translateY(-100%)')
         .html((d) => d);
     }
-
     // VISIBILITY
     this.parent.selectAll('.x')
-      .classed(C.VISIBLE, view !== V.MAP);
+      .classed(C.VISIBLE, view >= V.SWARM);
     this.parent.selectAll('.y')
-      .classed(C.VISIBLE, !!yScale);
+      .classed(C.VISIBLE, !!this.yKey);
   }
 
-  setView(view: VIEWS) {
+  setView(view: V, key?: string) {
     this.store.dispatch(A.setView(view));
-    this.draw();
+    this.yKey = key;
+    this.handleViewTransition();
   }
 
   getPctChange(station: StationData) {
-    return this.turnstileData.get(station.unit)
-     && this.turnstileData.get(station.unit).summary.swipes_pct_chg;
+    // TODO: update this to grab specific year from state
+    return this.swipeData.get(station.unit)
+      && this.swipeData.get(station.unit).summary.swipes_pct_chg;
   }
 
-  getACS(station:StationData, field: string) {
+  getACS(station: StationData, field: string) {
     return this.acsMap.get(station.NTACode)
-     && this.acsMap.get(station.NTACode)[field] !== K.NA
-     && this.acsMap.get(station.NTACode)[field];
+      && this.acsMap.get(station.NTACode)[field] !== K.NA
+      && this.acsMap.get(station.NTACode)[field];
   }
 
   handleResize() {
@@ -224,12 +275,11 @@ export default class MovingMap {
     this.overlay.style('width', `${width}px`).style('height', `${height}px`);
 
     // update scales
-    this.proj.fitSize([width, height * 1.4], this.geoMeshExterior); // 1.4 to scale up for SI
+    this.proj.fitSize([width, height], this.ntasData);
     this.xScale.range([M.left, width - M.right]);
-    this.boroYScale.range([height - M.bottom - R, M.top]);
-    this.incomeYScale.range([height - M.bottom - R, M.top]);
-    this.edHealthYScale.range([height - M.bottom - R, M.top]);
-    this.uninsuredYScale.range([height - M.bottom - R, M.top]);
+
+    // update yScale ranges
+    Object.values(this.yScales).forEach((d) => d.scale.range([height - M.bottom - R, M.top]));
     this.draw();
   }
 }
