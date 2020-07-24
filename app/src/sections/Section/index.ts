@@ -59,7 +59,7 @@ export default class Section {
     this.scroller.setup({
       step: `#${this.section} .${C.STEP}`,
       progress: true,
-      offset: 0.3,
+      offset: 0.6, // how far from the top to trigger a step
     })
       .onStepEnter(this.onStepEnter)
       .onStepProgress(this.onStepProgress)
@@ -71,6 +71,7 @@ export default class Section {
     const data = select(element).data()[0] as StepDataType;
 
     if (data) {
+      // console.log('data', data);
       this.header
         .html(data.text) // replace header text with current step data
         .classed(C.FADE_IN, true);

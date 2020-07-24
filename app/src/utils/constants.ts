@@ -42,8 +42,6 @@ export enum CLASSES {
   CHART = 'chart',
   TITLE = 'title',
   SUBTITLE = 'subtitle',
-  FEVERLINE = 'feverline',
-  FEVERGRID = 'fevergrid',
   MOVING_MAP = 'moving-map',
   MAP = 'map',
   BENCHMARK = 'benchmark',
@@ -61,7 +59,10 @@ export enum CLASSES {
   NO_WRAP = 'no-wrap',
   FADE_IN = 'fade-in',
   FADE_OUT = 'fade-out',
-  GRADIENT = 'gradient'
+  GRADIENT = 'gradient',
+  WRAPPER = 'wrapper',
+  BAR = 'bar',
+  REFERENCE='reference'
 }
 
 export enum KEYS {
