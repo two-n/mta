@@ -141,6 +141,7 @@ export default class BarTimeline {
       });
 
     this.bars.select(`.${C.BAR}`)
+      .classed(C.VISIBLE, isActive)
       .style('max-height', (d) => (isActive(d) ? this.y(d.swipes) : 0))
       .style('transition-duration', (d) => `${isActive(d)
         ? DURATION
@@ -157,8 +158,8 @@ export default class BarTimeline {
           : '-50%'}, ${i === 0
           ? '-50%'
           : `${(height / 2 - (this.y(d) * 2))}px`})` : ''))
-      .style('background-color', (d, i) => (stepData.step_id >= tStopsMap.get(TS.GRADIENT)
-        ? i === 1 && this.c(this.pctChg) : ''));
+      .classed(C.GRADIENT, (d, i) => (stepData.step_id >= tStopsMap.get(TS.GRADIENT)
+      && i === 0));
   }
 
   // finds the step index for each animation key

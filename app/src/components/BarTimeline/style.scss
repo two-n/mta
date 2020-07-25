@@ -32,10 +32,12 @@
           max-height: 0;
           transition-property: max-height;
           border-radius: 2px;
+          // opacity: 0;
 
           &.active{
             animation: fadeToOrange 750ms 1 forwards;
           }
+
         }
       }
   }
@@ -49,7 +51,7 @@
     .box{
       position: absolute;
       border: $colorYellow 2px dashed;
-      opacity: .7;
+      opacity: 0;
       top: 50%;
       transform: translateY(-50%);
       max-width: 0;
@@ -58,6 +60,12 @@
 
       &.active{
         animation: growOut 3s 1 forwards;
+        opacity: 1;
+      }
+
+      &.gradient{
+        transition: background 1s;
+        background: linear-gradient(0deg, #3d696c 0%, #54b1b8 30%, #b87242 60%, #ffbd59 100%);
       }
     }
   }
