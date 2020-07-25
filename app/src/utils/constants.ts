@@ -126,7 +126,7 @@ const colorDomain = ['#3D696C', '#54B1B8', '#B87242', '#FFBD59'];
 export const colorInterpolator = piecewise(interpolateRgb, colorDomain);
 
 export const appConfig = {
-  thresholdDate: new Date('2020-03-15'), // date for pre/post comparisions
+  thresholdDate: new Date('2020-03-22'), // date for pre/post comparisions
   startDate: new Date('2020-01-01'), // date that we show data from for station timelines
   endDate: new Date('2020-06-08'), // end for pre/post comparisons, aligns with NYC Phase 1 reopening
 };

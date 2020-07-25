@@ -20,11 +20,13 @@ const M = {
   top: 30, bottom: 30, left: 30, right: 60,
 };
 const PAD = 10;
-const DELAY = 100;
+const DURATION = 500;
+const DELAY = DURATION / 2;
 const W_THRESH = 10;
 
 // transition-stops -- step_ids
 const TS = {
+  DRAW_BOXES: 'drawBoxes',
   FADE_BARS: 'fadeOut',
   MOVE_REFS: 'moveTogether',
   GRADIENT: 'gradient',
@@ -33,13 +35,13 @@ const TS = {
 export default class BarTimeline {
   [x: string]: any;
 
-  steps: {
+  steps: Map<number, {
     date: string,
     label: string,
     swipes: number,
     [key:string]: string | number | any[],
     data: StationTimelineItem[]
-  }[]
+  }>
 
   constructor({ parent, store }: Props) {
     this.state = store.getState();
@@ -54,6 +56,7 @@ export default class BarTimeline {
       summary: { swipes_avg_pre, swipes_avg_post, swipes_pct_chg },
     } = S.getOverallTimeline(this.state);
     this.section = S.getSectionData(this.state)[SECTIONS.S_TIMELINE];
+    this.pctChg = swipes_pct_chg;
     this.c = S.getColorScheme(this.state);
 
     this.timeline = [...timeline].map(([, val]) => val)
@@ -71,14 +74,9 @@ export default class BarTimeline {
       .domain(extent(this.timeline, ({ date }) => F.pWeek(date)));
 
     // elements
-    this.barSections = this.el.append('div').attr('class', `${C.TIMELINE}-${C.WRAPPER}`)
-      .selectAll(`div.${C.BAR}-${C.SECTION}`)
-      .data(this.steps)
-      .join('div')
-      .attr('class', `${C.BAR}-${C.SECTION}`);
-
-    this.bars = this.barSections.selectAll(`div.${C.BAR}-${C.WRAPPER}`)
-      .data((d) => d.data)
+    this.bars = this.el.append('div').attr('class', `${C.TIMELINE}-${C.WRAPPER}`)
+      .selectAll(`div.${C.BAR}-${C.WRAPPER}`)
+      .data(this.timeline)
       .join('div')
       .attr('class', `${C.BAR}-${C.WRAPPER}`);
 
@@ -92,7 +90,10 @@ export default class BarTimeline {
       .join('div')
       .attr('class', C.BAR);
 
-    this.refBoxes = this.el.append('div').attr('class', C.REFERENCE);
+    this.refBoxes = this.el.append('div').attr('class', C.REFERENCE).selectAll('div.box')
+      .data([swipes_avg_pre, swipes_avg_post])
+      .join('div')
+      .attr('class', (d, i) => `box ${i === 0 ? 'pre' : 'post'}`);
   }
 
   draw() {
@@ -104,28 +105,29 @@ export default class BarTimeline {
     this.bars.select(`.${C.BAR}`)
       .style('height', (d:StationTimelineItem) => `${this.y(d.swipes)}px`)
       .style('width', `${this.barW}px`);
+
+    const threshold = this.timeline[this.bisect.left(this.timeline, appConfig.thresholdDate)];
+    const middleBar = this.bars.filter((d) => d.date === threshold.date);
+    const middleX = middleBar.node().offsetLeft + this.barW;
+
+    this.refBoxes
+      .style('height', (d) => `${this.y(d)}px`)
+      .style('width', (d, i) => `${i === 0 ? middleX : width - middleX}px`)
+      .style('left', (d, i) => (i === 1) && `${middleX}px`)
+      .style('right', (d, i) => (i === 0) && `${width - middleX}px`);
   }
 
   handleTransition(element:any, index:number, direction: D) {
     const { tStopsMap } = this;
     const [width, height] = this.dims;
-    const data = select(element).data()[0] as StepDataType;
-
-    const isActive = (d) => F.pWeek(d.date) <= F.pDate(data.date);
-
-    this.barSections
-      .classed(C.ACTIVE, (d) => d.step_id <= data.step_id);
+    const stepData = select(element).data()[0] as StepDataType;
+    const isActive = (d) => (!!stepData.date
+      || (!stepData.date && stepData.step_id < tStopsMap.get(TS.FADE_BARS)));
 
     this.bars.select(`.${C.LABEL}`)
-      .classed(C.VISIBLE, (d, i, nodes) => {
-        // if active
-        if (isActive(d)) {
-          // if width is too narrow, only show last label for each group
-          return this.barW >= W_THRESH ? true : i === nodes.length - 1;
-        } return false;
-      })
+      .classed(C.VISIBLE, isActive)
       .transition()
-      .duration(2000)
+      .duration(DURATION)
       .delay((d, i) => (direction === D.DOWN ? i : 0) * DELAY)
       .tween('text', function (d) {
         if (isActive(d)) {
@@ -140,7 +142,23 @@ export default class BarTimeline {
 
     this.bars.select(`.${C.BAR}`)
       .style('max-height', (d) => (isActive(d) ? this.y(d.swipes) : 0))
-      .style('transition-delay', (d, i) => `${(direction === D.DOWN ? i : 0) * DELAY}ms`);
+      .style('transition-duration', (d) => `${isActive(d)
+        ? DURATION
+        : DURATION * 2}ms`) // slower to fade down
+      .style('transition-delay', (d, i) => `${((direction === D.DOWN && isActive(d)) ? i : 0) * DELAY}ms`)
+      .classed(C.ACTIVE, (d) => this.steps.get(stepData.step_id)
+      && (d.date === this.steps.get(stepData.step_id).date)); // need to get closest date
+
+    this.refBoxes
+      .classed(C.ACTIVE, stepData.step_id >= tStopsMap.get(TS.DRAW_BOXES))
+      .style('transform', (d, i) => (stepData.step_id >= tStopsMap.get(TS.MOVE_REFS)
+        ? `translate(${i === 0
+          ? '50%'
+          : '-50%'}, ${i === 0
+          ? '-50%'
+          : `${(height / 2 - (this.y(d) * 2))}px`})` : ''))
+      .style('background-color', (d, i) => (stepData.step_id >= tStopsMap.get(TS.GRADIENT)
+        ? i === 1 && this.c(this.pctChg) : ''));
   }
 
   // finds the step index for each animation key
@@ -154,22 +172,18 @@ export default class BarTimeline {
 
   getDateStopsMap() {
     this.bisect = bisector((d: StationTimelineItem) => F.pWeek(d.date));
-    let startIndex = 0;
     // pre-populate annotations
-    this.steps = this.section.steps
+    this.steps = new Map(this.section.steps
       .filter((step) => step.date) // select all the steps that have dates in them
       .map((d) => { // find the closest data values (for y positionint)
         const closestIndex = this.bisect.left(this.timeline, F.pDate(d.date));
-        const obj = {
+        return [d.step_id, {
           ...d,
           label: d.label,
           date: this.timeline[closestIndex].date, // matche it up with closest week
           swipes: this.timeline[closestIndex].swipes,
-          data: this.timeline.slice(startIndex, closestIndex),
-        };
-        startIndex = closestIndex;
-        return obj;
-      });
+        }];
+      }));
   }
 
   handleResize() {
