@@ -3,7 +3,7 @@ import * as H from '../../utils/helpers';
 import sectionData from '../../../public/content/narrativeCopy.json';
 import { State, AppDataType } from '../../utils/types';
 import A from '../actions';
-import { VIEWS } from '../../utils/constants';
+import { VIEWS, appConfig, FORMATTERS as F } from '../../utils/constants';
 
 const initialState: State = {
   sectionData: H.addStepIds(sectionData) as AppDataType,
@@ -11,6 +11,7 @@ const initialState: State = {
   stationData: null,
   mapData: null,
   view: VIEWS.BLANK,
+  selectedWeek: F.fWeek(appConfig.endDate), // beginning with the end of phase 1
 };
 
 export default function reducer(state = initialState, action: Action): State {
@@ -23,6 +24,8 @@ export default function reducer(state = initialState, action: Action): State {
       return { ...state, mapData: action.data };
     case A.SET_VIEW:
       return { ...state, view: action.view };
+    case A.SET_WEEK:
+      return { ...state, selectedWeek: action.week };
     default:
       return state;
   }

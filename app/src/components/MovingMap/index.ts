@@ -2,7 +2,7 @@ import { Store } from 'redux';
 import {
   Selection, geoAlbersUsa, geoPath,
   scaleLinear, scaleBand,
-  axisBottom, axisLeft, scaleOrdinal, select, scaleSqrt, ScaleLinear,
+  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear,
 } from 'd3';
 import * as S from '../../redux/selectors/index';
 import * as A from '../../redux/actions/creators';
@@ -53,21 +53,26 @@ export default class MovingMap {
     this.store = store;
     this.parent = parent.classed(C.MOVING_MAP, true);
     this.el = parent.append('svg');
-    this.mapOutline = S.getMapOutline(this.store);
-    this.linesData = S.getLinesData(this.store);
-    this.ntasData = S.getNTAFeatures(this.store);
-    this.stationsGISData = S.getStationData(this.store);
-    this.swipeData = S.getStationRollup(this.store);
-    this.acsMap = S.getStationToACSMap(this.store);
-    this.bboxes = S.getNTAbboxes(this.store);
+
+    this.state = this.store.getState();
+    // SELECTORS
+    this.mapOutline = S.getMapOutline(this.state);
+    this.linesData = S.getLinesData(this.state);
+    this.ntasData = S.getNTAFeatures(this.state);
+    this.stationsGISData = S.getStationData(this.state);
+    this.swipeData = S.getStationRollup(this.state);
+    this.acsMap = S.getStationToACSMap(this.state);
+    this.bboxes = S.getNTAbboxes(this.state);
+    this.selectedNTAFeatures = S.getSelectedNTAS(this.state);
 
     this.getPctChange = this.getPctChange.bind(this);
   }
 
   init() {
-    const E = S.getDataExtents(this.store);
+    const { extents: E } = S.getDemoDataExtents(this.state);
+    const { extent: EW } = S.getWeeklyDataExtent(this.state);
     // keys for the yScales of the scatter plot segment
-    const scatterKeys = S.getSectionData(this.store)[SECTIONS.S_MOVING_MAP]
+    const scatterKeys = S.getSectionData(this.state)[SECTIONS.S_MOVING_MAP]
       .steps
       .filter((d) => d[K.DOT_POSITION] && d[K.DOT_POSITION][K.Y_KEY])
       .map((d) => d[K.DOT_POSITION]);
@@ -75,7 +80,7 @@ export default class MovingMap {
     // SCALES
     this.proj = geoAlbersUsa();
 
-    this.colorScale = S.getColorScheme(this.store);
+    this.colorScale = S.getColorScheme(this.state);
 
     this.colorBoroughScale = scaleOrdinal().domain(E[K.BOROUGH] as string[]).range(MTA_Colors);
 
@@ -92,7 +97,7 @@ export default class MovingMap {
     }), {});
 
     this.xScale = scaleLinear()
-      .domain(E[K.SUMMARY_SWIPES_PCT_CHG] as [number, number]);
+      .domain(EW);
     this.xScale.tickFormat(null, F.sPct);
 
     // AXES
@@ -101,11 +106,28 @@ export default class MovingMap {
     // ELEMENTS
     this.map = this.el.append('g').attr('class', C.MAP);
     this.ntas = this.el.append('g').attr('class', 'ntas');
+    this.selectedNtas = this.el.append('g').attr('class', 'selected-ntas');
     this.lines = this.el.append('g').attr('class', C.LINES);
     this.stationsG = this.el.append('g').attr('class', C.STATIONS);
     this.xAxisEl = this.el.append('g').attr('class', `${C.AXIS} x`);
     this.yAxisEl = this.el.append('g').attr('class', `${C.AXIS} y`);
+    this.refLines = this.el.append('g').attr('class', C.ANNOTATIONS);
     this.overlay = this.parent.append('div').attr('class', C.OVERLAY);
+
+    // Ref lines
+    this.refLines
+      .append('g')
+      .attr('class', `${C.ANNOTATION} x`)
+      .append('path');
+
+    this.refLines
+      .append('g')
+      .attr('class', `${C.ANNOTATION} y`)
+      .append('path');
+
+    // Ref labels
+    this.overlay.append('div').attr('class', `${C.ANNOTATION}-${C.LABEL} x`);
+    this.overlay.append('div').attr('class', `${C.ANNOTATION}-${C.LABEL} y`);
 
     this.handleResize();
   }
@@ -114,29 +136,115 @@ export default class MovingMap {
     const [width, height] = this.dims;
     this.geoPath = geoPath().projection(this.proj);
     this.el.attr('viewBox', `0 0 ${width} ${height}`);
-    this.positionedStations = calcSwarm(this.stationsGISData, this.getPctChange, this.xScale, R * 2);
+    this.state = this.store.getState();
+    this.week = S.getSelectedWeek(this.state);
+    this.positionedStations = calcSwarm(this.stationsGISData,
+      this.getPctChange, this.xScale, R * 2);
 
+    this.setupGeographicElements();
+    this.setupStations();
+    this.setupAnnotations();
+  }
+
+  handleViewTransition() {
+    const [width, height] = this.dims;
+    this.state = this.store.getState();
+    this.week = S.getSelectedWeek(this.state); // TODO: maybe move into  `getPctChg` function
+    const view = S.getView(this.state);
+    const { extent: EW, average: AW } = S.getWeeklyDataExtent(this.state);
+    this.xScale.domain(EW); // update for new data
+    // VISIBILITY
+    // map
+    this.map
+      .classed(C.VISIBLE, MAP_VISIBLE.includes(view));
+    this.lines
+      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES && view < V.SWARM);
+    this.ntas
+      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES_NTAS && view < V.SWARM);
+
+    this.selectedNtas
+      .classed(C.VISIBLE, view >= V.ZOOM_SOHO && view < V.SWARM);
+
+    this.stationsG
+      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES);
+
+    // MOVE STATIONS
+    this.stations.style('transform', (d: StationData) => {
+      switch (view) {
+        case (V.SWARM):
+          return `translate(${d.x}px,${height - M.bottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
+        case (V.SCATTER): {
+          const yScale = this.yScales[this.yKey].scale; return `translate(
+            ${this.xScale(this.getPctChange(d))}px,${yScale(this.getACS(d, this.yKey))}px)`;
+        }
+        default: {
+          const [x, y] = this.proj([d.long, d.lat]);
+          return `translate(${x}px, ${y}px)`;
+        }
+      }
+    })
+      .classed('allow-pointer', view >= V.SWARM);
+
+    // SCALE VIEWBOX
+    this.el
+      .transition()
+      .duration(1000)
+      .attr('viewBox', () => { // [x, y, width, height]
+        if (this.bboxes[view]) {
+          const [xMin, yMin, xMax, yMax] = this.bboxes[view];
+          const [x0, y0, x1, y1] = [...this.proj([xMin, yMax]), ...this.proj([xMax, yMin])]; // swith yMin/Max b/c browser coordinate system
+          return [
+            x0 - geoPadding.left,
+            y0 - geoPadding.top,
+            (x1 - x0) + geoPadding.right,
+            (y1 - y0) + geoPadding.bottom,
+          ];
+        }
+        return [0, 0, width, height];
+      }).on('end interrupt', () => {
+        const matrix = this.el.node().getCTM();
+        this.stations.selectAll('circle').style('transform', `scale(${1 / matrix.a})`);
+      });
+
+    this.transitionAnnotations();
+  }
+
+  setupGeographicElements() {
+    // GEOGRAPHIC
     // map outline
     this.map
       .selectAll('path')
       .data(this.mapOutline.features)
       .join('path')
+      .attr('vector-effect', 'non-scaling-stroke')
       .attr('d', this.geoPath);
 
+    // neighborhood outlines
     this.ntas
       .selectAll('path')
       .data(this.ntasData.features)
       .join('path')
+      .attr('vector-effect', 'non-scaling-stroke')
       .attr('d', this.geoPath);
 
-    // map lines
+    // selected neighborhood outlines
+    this.selectedNtas
+      .selectAll('path')
+      .data(this.selectedNTAFeatures)
+      .join('path')
+      .attr('d', this.geoPath)
+      .attr('fill', ({ properties }) => this.colorScale(properties[K.SWIPES_PCT_CHG]));
+
+    // train lines
     this.lines
       .selectAll('path')
       .data(this.linesData.features)
       .join('path')
       .attr('d', this.geoPath)
       .attr('vector-effect', 'non-scaling-stroke');
+  }
 
+  setupStations() {
     this.stations = this.stationsG
       .selectAll(`g.${C.STATION}`)
       .data(this.positionedStations, (d) => d.station_code)
@@ -154,8 +262,12 @@ export default class MovingMap {
       .join('text')
       .attr('y', -R - 3)
       .text((d) => getNameHash(d));
+  }
 
-
+  setupAnnotations() {
+    const [width, height] = this.dims;
+    const { averages: A } = S.getDemoDataExtents(this.state);
+    const { average: AW } = S.getWeeklyDataExtent(this.state);
     this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.x`)
       .data(['←', 'Higher percentage still riding→'])
       .join('div')
@@ -164,58 +276,20 @@ export default class MovingMap {
       .style('right', (d, i) => i === 1 && `${M.right}px`)
       .style('transform', `translateY(${height - M.bottom}px)`)
       .html((d) => d);
+
+    // Ref lines
+    this.refLines.select(`g.${C.ANNOTATION}.y`)
+      .select('path').attr('d', `M ${M.left} 0 H ${width - M.right}`);
+
+    this.refLines.select(`g.${C.ANNOTATION}.x`).select('path')
+      .attr('d', `M ${0} ${M.top} V ${height - M.bottom}`);
   }
 
-  handleViewTransition() {
+  transitionAnnotations() {
     const [width, height] = this.dims;
-    const view = S.getView(this.store);
-    // VISIBILITY
-    // map
-    this.map
-      .classed(C.VISIBLE, MAP_VISIBLE.includes(view));
-    this.lines
-      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES && view < V.SWARM);
-    this.ntas
-      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES_NTAS && view < V.SWARM);
-
-    this.stationsG
-      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES);
-
-    this.stations.style('transform', (d: StationData) => {
-      switch (view) {
-        case (V.SWARM):
-          return `translate(${d.x}px,${height - M.bottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
-        case (V.SCATTER): {
-          const yScale = this.yScales[this.yKey].scale; return `translate(
-            ${this.xScale(this.getPctChange(d))}px,${yScale(this.getACS(d, this.yKey))}px)`;
-        }
-        default: {
-          const [x, y] = this.proj([d.long, d.lat]);
-          return `translate(${x}px, ${y}px)`;
-        }
-      }
-    })
-      .classed('allow-pointer', view >= V.SWARM);
-
-    // VIEWBOX
-    this.el
-      .transition()
-      .duration(1000)
-      .attr('viewBox', () => { // [x, y, width, height]
-        if (this.bboxes[view]) {
-          const [xMin, yMin, xMax, yMax] = this.bboxes[view];
-          const [x0, y0, x1, y1] = [...this.proj([xMin, yMax]), ...this.proj([xMax, yMin])]; // swith yMin/Max b/c browser coordinate system
-          return [
-            x0 - geoPadding.left,
-            y0 - geoPadding.top,
-            (x1 - x0) + geoPadding.right,
-            (y1 - y0) + geoPadding.bottom,
-          ];
-        }
-        return [0, 0, width, height];
-      });
-
-
+    const view = S.getView(this.state);
+    const { averages: AD } = S.getDemoDataExtents(this.state);
+    const { average: AW } = S.getWeeklyDataExtent(this.state);
     // AXES
     this.xAxisEl
       .transition()
@@ -224,7 +298,9 @@ export default class MovingMap {
       .call(this.xAxis);
 
     if (this.yScales[this.yKey]) {
-      const { scale: yScale, format, label } = this.yScales[this.yKey];
+      const {
+        scale: yScale, format, label, median,
+      } = this.yScales[this.yKey];
       this.yAxis = axisLeft(yScale).tickFormat(format);
       this.yAxisEl
         .transition()
@@ -239,7 +315,20 @@ export default class MovingMap {
         .style('top', `${M.top}px`)
         .style('transform', 'translateY(-100%)')
         .html((d) => d);
+
+      // average lines and labesl
+      this.refLines.select(`.${C.ANNOTATION}.x`)
+        .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`);
+      this.refLines.select(`.${C.ANNOTATION}.y`)
+        .style('transform', `translate(0px, ${yScale(AD[this.yKey])}px)`);
+      this.overlay.select(`.${C.ANNOTATION}-${C.LABEL}.x`)
+        .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`)
+        .html(`${F.fPct(AW)} still riding`);
+      this.overlay.select(`.${C.ANNOTATION}-${C.LABEL}.y`)
+        .style('transform', `translate(${width - M.right}px, ${yScale(AD[this.yKey])}px) translateX(-100%)`)
+        .html(`${format(AD[this.yKey])} ${median}`);
     }
+
     // VISIBILITY
     this.parent.selectAll('.x')
       .classed(C.VISIBLE, view >= V.SWARM);
@@ -254,9 +343,8 @@ export default class MovingMap {
   }
 
   getPctChange(station: StationData) {
-    // TODO: update this to grab specific year from state
     return this.swipeData.get(station.unit)
-      && this.swipeData.get(station.unit).summary.swipes_pct_chg;
+      && this.swipeData.get(station.unit).timeline.get(this.week).swipes_pct_chg;
   }
 
   getACS(station: StationData, field: string) {
