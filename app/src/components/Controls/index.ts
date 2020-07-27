@@ -4,6 +4,7 @@ import { State } from 'src/utils/types';
 import { select } from 'd3';
 import { CLASSES as C, VIEWS } from '../../utils/constants';
 import * as S from '../../redux/selectors';
+import * as A from '../../redux/actions/creators';
 import Input from '../Input';
 import TimelineFilter from '../TimelineFilter';
 
@@ -13,6 +14,8 @@ interface Props {
 
 export default class Controls {
   [x: string]: any;
+
+  store : Store<State>
 
   constructor({ store }:Props) {
     this.store = store;
@@ -47,6 +50,7 @@ export default class Controls {
       parent: this.el,
       timeline,
       initialWeek,
+      updateWeek: (week:string) => this.store.dispatch(A.setWeek(week)),
     });
   }
 

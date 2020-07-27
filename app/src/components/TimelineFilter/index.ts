@@ -19,11 +19,15 @@ export default class TimelineFilter {
 
   constructor({
     parent, customClass, timeline, initialWeek,
+    updateWeek,
   }:Props) {
     this.el = parent.append('div')
       .attr('class', `filter timeline ${customClass || ''}`);
-    this.initialWeek = initialWeek;
+    this.week = initialWeek;
     this.timeline = timeline;
+    this.updateWeek = updateWeek;
+
+    this.update = this.update.bind(this);
     this.init();
   }
 
@@ -40,18 +44,25 @@ export default class TimelineFilter {
       .data(this.timeline)
       .join('div')
       .attr('class', `${C.BAR}-${C.WRAPPER}`)
-      .classed(C.ACTIVE, (d) => F.pWeek(d.date) <= F.pWeek(this.initialWeek))
-      .classed('last', (d) => d.date === this.initialWeek);
+      .on('click', (d) => this.update(d.date));
 
     this.bars.append('div').attr('class', `${C.LABEL}`)
       .html((d) => `${F.fDayMonth(F.pWeek(d.date))}`);
 
     this.bars.append('div').attr('class', `${C.BAR}`)
       .style('height', (d) => `${this.y(d.swipes)}%`);
+
+    this.handleVisibility();
   }
 
+  handleVisibility() {
+    this.bars.classed(C.ACTIVE, (d) => F.pWeek(d.date) <= F.pWeek(this.week))
+      .classed('last', (d) => d.date === this.week);
+  }
 
   update(newWeek:string) {
-
+    this.week = newWeek;
+    this.updateWeek(newWeek); // dispatches action
+    this.handleVisibility();
   }
 }
