@@ -59,8 +59,7 @@ export default class BarTimeline {
     this.pctChg = swipes_pct_chg;
     this.c = S.getColorScheme(this.state);
 
-    this.timeline = [...timeline].map(([, val]) => val)
-      .sort((a, b) => ascending(F.pWeek(a.date), F.pWeek(b.date)))
+    this.timeline = timeline
       .filter((d) => F.pWeek(d.date) <= appConfig.endDate);
 
     this.getDateStopsMap();

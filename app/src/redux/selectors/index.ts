@@ -9,13 +9,13 @@ import {
   min,
   mean,
 } from 'd3-array';
-import { scaleSequential, geoContains } from 'd3';
+import { scaleSequential, geoContains, ascending } from 'd3';
 import { State } from '../../utils/types';
 import * as Helpers from '../../utils/helpers';
 import { processStations } from '../../utils/dataProcessing';
 import {
   KEYS as K, appConfig, colorInterpolator,
-  VIEWS as V,
+  VIEWS as V, FORMATTERS as F,
 } from '../../utils/constants';
 
 /** Basic Selectors */
@@ -34,7 +34,16 @@ export const getFilteredSwipeData = createSelector([
 
 export const getOverallTimeline = createSelector([
   getFilteredSwipeData,
-], (data) => data && processStations(data, true));
+], (data) => {
+  if (data) {
+    const obj = processStations(data, true);
+    return {
+      ...obj,
+      timeline: [...obj.timeline].map(([, val]) => val)
+        .sort((a, b) => ascending(F.pWeek(a.date), F.pWeek(b.date))),
+    };
+  }
+});
 
 export const getStationRollup = createSelector([
   getFilteredSwipeData,
