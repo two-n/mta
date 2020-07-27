@@ -1,0 +1,66 @@
+@import "../../styling/variables";
+
+.filter.timeline {
+  height: 80px; // TODO fix
+  position: relative;
+  width: 100%;
+
+  .timeline-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    padding-bottom: 1em;
+
+    .bar-wrapper {
+      position: relative;
+      margin: 1%;
+      width: 100%;
+      height: auto;
+
+      .label {
+        position: absolute;
+        transform: translate(-25%, -100%); // not sure why only 25% but looks good
+        opacity: 0;
+        white-space: nowrap;
+        padding-bottom: .5em;
+      }
+
+      .bar {
+        position: relative;
+        width: 100%;
+        border: 1px solid $colorBlack;
+        background-color: transparent;
+        border-radius: 3px;
+      }
+
+      &:hover,
+      &.active:hover {
+        .bar {
+          background-color: $colorYellow;
+        }
+        .label {
+          opacity: 1;
+        }
+      }
+
+      &.active {
+        .bar {
+          background-color: $colorBlack;
+        }
+
+        &.last{
+          .label{
+            opacity: 1;
+          }
+
+          .bar {
+            background-color: $colorYellow;
+          }
+        }
+      }
+    }
+  }
+}
