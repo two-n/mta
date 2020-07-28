@@ -97,6 +97,11 @@
       font-size: $fontSizeSmall;
       position: absolute;
       transition: transform $durationMovement;
+      max-width: 7em;
+
+      &.y{
+        text-align: right;
+      }
     }
   }
 
@@ -108,3 +113,4 @@
     }
   }
 }
+
