@@ -23,6 +23,7 @@ $colorLightGrey: #ccc;
 
 /** SPACING/MARGINS/PADDING */
 $maxTextWidth: 20rem;
+$controlBarHeight: 160px;
 
 /** TRANSITIONS */
 $durationOpacity: 500ms;
@@ -40,4 +41,5 @@ $durationMovement: 1000ms;
 :export {
   durationOpacity: $durationOpacity;
   durationMovement: $durationMovement;
+  controlBarHeight: $controlBarHeight;
 }

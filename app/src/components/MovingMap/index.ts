@@ -33,7 +33,10 @@ const M = {
 const R = 3;
 const duration = +styleVars.durationMovement.slice(0, -2);
 const geoPadding = {
-  top: 50, bottom: 100, left: 30, right: 100,
+  top: 50,
+  bottom: +styleVars.controlBarHeight.slice(0, -2), // make room for control bar
+  left: 30,
+  right: 100,
 };
 
 const FORMAT_MAP: { [key: string]: (d: number) => string } = {
@@ -383,30 +386,31 @@ export default class MovingMap {
    */
   handleStateChange() {
     this.state = this.store.getState();
-    const newView = S.getView(this.state);
-    const newWeek = S.getSelectedWeek(this.state);
+    this.view = S.getView(this.state);
+    this.week = S.getSelectedWeek(this.state);
     // const newLine = S.getSelectedWeek(this.state);
     // const newNTA = S.getSelectedWeek(this.state);
+    this.handleViewTransition();
+    // if (this.view !== newView) {
 
-    if (this.view !== newView) {
-      this.view = newView;
-      this.handleViewTransition();
-    }
+    //   this.view = newView;
+    //   this.handleViewTransition();
+    // }
 
-    if (this.week !== newWeek
-    // || this.line ~== newLine
-    // || this.nta ~== newNta
-    ) {
-      this.week = newWeek;
-      /** NOTE: if want to see swarm change, need to uncomment next two lines
-       *  issue with that is that
-       * (a) it's a heavy calculation and
-       * (b) the swarm doesn't look good when they are all concentrated in the same area
-      */
-      // this.calcNodePositions();
-      // this.setupStations(); // remaps data to elements
-      this.handleViewTransition();
-    }
+    // if (this.week !== newWeek
+    // // || this.line ~== newLine
+    // // || this.nta ~== newNta
+    // ) {
+    //   this.week = newWeek;
+    //   /** NOTE: if want to see swarm change, need to uncomment next two lines
+    //    *  issue with that is that
+    //    * (a) it's a heavy calculation and
+    //    * (b) the swarm doesn't look good when they are all concentrated in the same area
+    //   */
+    //   // this.calcNodePositions();
+    //   // this.setupStations(); // remaps data to elements
+    //   this.handleViewTransition();
+    // }
   }
 
   calcNodePositions() {

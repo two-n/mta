@@ -21,6 +21,9 @@ export default class Controls {
     this.store = store;
     this.state = store.getState();
     this.init();
+
+    this.toggleVisibility = this.toggleVisibility.bind(this);
+    this.store.subscribe(this.toggleVisibility);
   }
 
   init() {
@@ -57,6 +60,6 @@ export default class Controls {
   toggleVisibility() {
     const state = this.store.getState();
     const view = S.getView(state);
-    this.el.classed(C.VISIBLE, view >= VIEWS.SWARM);
+    this.el.classed(C.VISIBLE, view >= VIEWS.SCATTER);
   }
 }
