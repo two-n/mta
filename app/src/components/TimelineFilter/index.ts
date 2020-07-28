@@ -22,7 +22,7 @@ export default class TimelineFilter {
     updateWeek,
   }:Props) {
     this.el = parent.append('div')
-      .attr('class', `filter timeline ${customClass || ''}`);
+      .attr('class', `filterTimeline ${customClass || ''}`);
     this.week = initialWeek;
     this.timeline = timeline;
     this.updateWeek = updateWeek;
