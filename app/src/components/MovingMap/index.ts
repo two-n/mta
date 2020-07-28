@@ -14,6 +14,7 @@ import {
 import { getNameHash, calcSwarm } from '../../utils/helpers';
 import './style.scss';
 import styleVars from '../../styling/_variables.scss';
+import ColorLegend from '../ColorLegend';
 
 interface Props {
   store: Store<State>
@@ -121,6 +122,12 @@ export default class MovingMap {
     this.yAxisEl = this.el.append('g').attr('class', `${C.AXIS} y`);
     this.refLines = this.el.append('g').attr('class', C.ANNOTATIONS);
     this.overlay = this.parent.append('div').attr('class', C.OVERLAY);
+    this.legend = new ColorLegend({
+      parent: this.overlay,
+      title: '% Ridership',
+      scale: this.colorScale,
+      format: F.fPct,
+    });
 
     // Ref lines
     this.refLines

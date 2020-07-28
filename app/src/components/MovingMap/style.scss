@@ -85,7 +85,7 @@
 
   .annotations{
     .annotation{
-      stroke: $colorDarkGrey;
+      stroke: $colorMidGrey;
       transition: transform $durationMovement;
     }
   }
@@ -94,6 +94,7 @@
     position:absolute;
 
     .annotation-label{
+      color: $colorMidGrey;
       font-size: $fontSizeSmall;
       position: absolute;
       transition: transform $durationMovement;
@@ -102,6 +103,12 @@
       &.y{
         text-align: right;
       }
+    }
+
+    .color-legend{
+      position: absolute;
+      right: 0;
+      bottom: 0;
     }
   }
 
