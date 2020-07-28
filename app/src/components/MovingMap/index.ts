@@ -337,7 +337,7 @@ export default class MovingMap {
       .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`);
     this.overlay.select(`.${C.ANNOTATION}-${C.LABEL}.x`)
       .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`)
-      .html(`${F.fPct(AW)} still riding`);
+      .html(`average of ${F.fPct(AW)} still riding`);
 
     // VISIBILITY
     this.parent.selectAll('.x')
