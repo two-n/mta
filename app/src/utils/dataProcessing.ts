@@ -4,19 +4,19 @@ import {
   rollups,
   mean, sum,
 } from 'd3-array';
-import { TurnstileData, ProcessedStation, StationSummary } from './types';
+import { ProcessedStation, StationSummary, SwipeData } from './types';
 import { FORMATTERS as F, appConfig } from './constants';
 
-export const processStations = (data: TurnstileData[],
+export const processStations = (data: SwipeData[],
   isOverall = false):ProcessedStation => {
   // rollup total swipes by week
   type weeklySum = {WEEK: Date, TOTAL: number}
   const sumByWeek:weeklySum[] = rollups(data,
-    (v:TurnstileData[]) => ({
+    (v:SwipeData[]) => ({
       WEEK: v[0] && v[0].WEEK,
       TOTAL: sum(v, ({ TOTAL }) => TOTAL),
     }),
-    (({ WEEK }: TurnstileData) => F.fDate(WEEK)))
+    (({ WEEK }: SwipeData) => F.fDate(WEEK)))
     .map(([, sums]: [string, {WEEK: Date, TOTAL: number}]) => sums);
 
   // calculate average for each weekday

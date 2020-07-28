@@ -13,6 +13,7 @@ import {
 } from '../../utils/constants';
 import { getNameHash, calcSwarm } from '../../utils/helpers';
 import './style.scss';
+import styleVars from '../../styling/_variables.scss';
 
 interface Props {
   store: Store<State>
@@ -30,7 +31,7 @@ const M = {
   top: 10, bottom: 150, left: 30, right: 20,
 };
 const R = 3;
-const duration = 200;
+const duration = +styleVars.durationMovement.slice(0, -2);
 const geoPadding = {
   top: 50, bottom: 100, left: 30, right: 100,
 };
@@ -64,8 +65,12 @@ export default class MovingMap {
     this.acsMap = S.getStationToACSMap(this.state);
     this.bboxes = S.getNTAbboxes(this.state);
     this.selectedNTAFeatures = S.getSelectedNTAS(this.state);
+    this.view = S.getView(this.state);
+    this.week = S.getSelectedWeek(this.state);
 
     this.getPctChange = this.getPctChange.bind(this);
+    this.handleStateChange = this.handleStateChange.bind(this);
+    this.store.subscribe(this.handleStateChange);
   }
 
   init() {
@@ -136,10 +141,7 @@ export default class MovingMap {
     const [width, height] = this.dims;
     this.geoPath = geoPath().projection(this.proj);
     this.el.attr('viewBox', `0 0 ${width} ${height}`);
-    this.state = this.store.getState();
-    this.week = S.getSelectedWeek(this.state);
-    this.positionedStations = calcSwarm(this.stationsGISData,
-      this.getPctChange, this.xScale, R * 2);
+    this.calcNodePositions();
 
     this.setupGeographicElements();
     this.setupStations();
@@ -148,10 +150,8 @@ export default class MovingMap {
 
   handleViewTransition() {
     const [width, height] = this.dims;
-    this.state = this.store.getState();
-    this.week = S.getSelectedWeek(this.state); // TODO: maybe move into  `getPctChg` function
-    const view = S.getView(this.state);
-    const { extent: EW, average: AW } = S.getWeeklyDataExtent(this.state);
+    const { view, yKey, proj } = this;
+    const { extent: EW } = S.getWeeklyDataExtent(this.state);
     this.xScale.domain(EW); // update for new data
     // VISIBILITY
     // map
@@ -174,16 +174,19 @@ export default class MovingMap {
         case (V.SWARM):
           return `translate(${d.x}px,${height - M.bottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
         case (V.SCATTER): {
-          const yScale = this.yScales[this.yKey].scale; return `translate(
-            ${this.xScale(this.getPctChange(d))}px,${yScale(this.getACS(d, this.yKey))}px)`;
+          const yScale = this.yScales[yKey].scale;
+          return `translate(
+            ${this.xScale(this.getPctChange(d))}px,${yScale(this.getACS(d, yKey))}px)`;
         }
         default: {
-          const [x, y] = this.proj([d.long, d.lat]);
+          const [x, y] = proj([d.long, d.lat]);
           return `translate(${x}px, ${y}px)`;
         }
       }
     })
+      .attr('fill', (d) => (this.colorScale(this.getPctChange(d))))
       .classed('allow-pointer', view >= V.SWARM);
+    // TODO: add visibility flag for line/neighborhood
 
     // SCALE VIEWBOX
     this.el
@@ -192,7 +195,9 @@ export default class MovingMap {
       .attr('viewBox', () => { // [x, y, width, height]
         if (this.bboxes[view]) {
           const [xMin, yMin, xMax, yMax] = this.bboxes[view];
-          const [x0, y0, x1, y1] = [...this.proj([xMin, yMax]), ...this.proj([xMax, yMin])]; // swith yMin/Max b/c browser coordinate system
+          const [x0, y0, x1, y1] = [
+            ...proj([xMin, yMax]),
+            ...proj([xMax, yMin])]; // swith yMin/Max b/c browser coordinate system
           return [
             x0 - geoPadding.left,
             y0 - geoPadding.top,
@@ -255,8 +260,7 @@ export default class MovingMap {
     this.stations.selectAll('circle').data((d) => [d])
       .join('circle')
       .attr('r', R)
-      .attr('vector-effect', 'non-scaling-stroke')
-      .attr('fill', (d) => (this.colorScale(this.getPctChange(d))));
+      .attr('vector-effect', 'non-scaling-stroke');
 
     this.stations.selectAll('text').data((d) => [d])
       .join('text')
@@ -266,8 +270,6 @@ export default class MovingMap {
 
   setupAnnotations() {
     const [width, height] = this.dims;
-    const { averages: A } = S.getDemoDataExtents(this.state);
-    const { average: AW } = S.getWeeklyDataExtent(this.state);
     this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.x`)
       .data(['←', 'Higher percentage still riding→'])
       .join('div')
@@ -286,8 +288,10 @@ export default class MovingMap {
   }
 
   transitionAnnotations() {
+    const {
+      view, yKey, xAxis,
+    } = this;
     const [width, height] = this.dims;
-    const view = S.getView(this.state);
     const { averages: AD } = S.getDemoDataExtents(this.state);
     const { average: AW } = S.getWeeklyDataExtent(this.state);
     // AXES
@@ -295,12 +299,13 @@ export default class MovingMap {
       .transition()
       .duration(duration)
       .attr('transform', `translate(${0}, ${height - M.bottom})`)
-      .call(this.xAxis);
+      .call(xAxis);
 
-    if (this.yScales[this.yKey]) {
+    // handle all the scatter plots
+    if (this.yScales[yKey]) {
       const {
         scale: yScale, format, label, median,
-      } = this.yScales[this.yKey];
+      } = this.yScales[yKey];
       this.yAxis = axisLeft(yScale).tickFormat(format);
       this.yAxisEl
         .transition()
@@ -316,18 +321,20 @@ export default class MovingMap {
         .style('transform', 'translateY(-100%)')
         .html((d) => d);
 
-      // average lines and labesl
-      this.refLines.select(`.${C.ANNOTATION}.x`)
-        .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`);
+      // average lines and labels
       this.refLines.select(`.${C.ANNOTATION}.y`)
         .style('transform', `translate(0px, ${yScale(AD[this.yKey])}px)`);
-      this.overlay.select(`.${C.ANNOTATION}-${C.LABEL}.x`)
-        .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`)
-        .html(`${F.fPct(AW)} still riding`);
       this.overlay.select(`.${C.ANNOTATION}-${C.LABEL}.y`)
         .style('transform', `translate(${width - M.right}px, ${yScale(AD[this.yKey])}px) translateX(-100%)`)
         .html(`${format(AD[this.yKey])} ${median}`);
     }
+
+    // average lines and labels
+    this.refLines.select(`.${C.ANNOTATION}.x`)
+      .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`);
+    this.overlay.select(`.${C.ANNOTATION}-${C.LABEL}.x`)
+      .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`)
+      .html(`${F.fPct(AW)} still riding`);
 
     // VISIBILITY
     this.parent.selectAll('.x')
@@ -337,13 +344,13 @@ export default class MovingMap {
   }
 
   setView(view: V, key?: string) {
-    this.store.dispatch(A.setView(view));
     this.yKey = key;
-    this.handleViewTransition();
+    this.store.dispatch(A.setView(view));
   }
 
   getPctChange(station: StationData) {
     return this.swipeData.get(station.unit)
+      && this.swipeData.get(station.unit).timeline.get(this.week)
       && this.swipeData.get(station.unit).timeline.get(this.week).swipes_pct_chg;
   }
 
@@ -370,4 +377,47 @@ export default class MovingMap {
     Object.values(this.yScales).forEach((d) => d.scale.range([height - M.bottom - R, M.top]));
     this.draw();
   }
+
+  /** subscribe to state changes and update
+   * view as needed
+   */
+  handleStateChange() {
+    this.state = this.store.getState();
+    const newView = S.getView(this.state);
+    const newWeek = S.getSelectedWeek(this.state);
+    // const newLine = S.getSelectedWeek(this.state);
+    // const newNTA = S.getSelectedWeek(this.state);
+
+    if (this.view !== newView) {
+      this.view = newView;
+      this.handleViewTransition();
+    }
+
+    if (this.week !== newWeek
+    // || this.line ~== newLine
+    // || this.nta ~== newNta
+    ) {
+      this.week = newWeek;
+      /** NOTE: if want to see swarm change, need to uncomment next two lines
+       *  issue with that is that
+       * (a) it's a heavy calculation and
+       * (b) the swarm doesn't look good when they are all concentrated in the same area
+      */
+      // this.calcNodePositions();
+      // this.setupStations(); // remaps data to elements
+      this.handleViewTransition();
+    }
+  }
+
+  calcNodePositions() {
+    // recalculate swarm using new filter criteria
+    this.positionedStations = calcSwarm(this.stationsGISData,
+      this.getPctChange, this.xScale, R * 2);
+  }
+
+  // /** takes a timeline item and returns  */
+  // get highlightCriteria(d:StationData) {
+  //   (!this.line || d.line_name.includes(this.line))
+  //   && (!this.ntaCode || d.NTACode == this.ntaCode);
+  // }
 }
