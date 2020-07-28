@@ -131,7 +131,7 @@ export default class Section {
   // generic window resize listener event
   handleResize() {
     // 1. update height of step elements
-    const stepH = Math.floor(window.innerHeight) * 0.7;
+    const stepH = Math.floor(window.innerHeight) * 1.2;
     this.steps.style('height', `${stepH}px`);
 
     const figureHeight = window.innerHeight * 0.8;
