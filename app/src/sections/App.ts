@@ -48,6 +48,10 @@ export default class App {
       store: this.store,
     });
 
+    this.Naviation = new Navigation({
+      sections: sectionData,
+    });
+
     // polyfil for sticky positioning
     this.setupStickyfill();
 

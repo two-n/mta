@@ -5,6 +5,7 @@ import scrollama from 'scrollama';
 import { SectionDataType, State, StepDataType } from '../../utils/types';
 import './style.scss';
 import { CLASSES as C, SECTIONS as S } from '../../utils/constants';
+import { getSectionHash } from '../../utils/helpers';
 
 interface Props { data: SectionDataType,
   store: Store,
@@ -117,7 +118,7 @@ export default class Section {
       .selectAll(`.${C.STEP}`).data(data.steps)
       .join('div')
       .attr('class', C.STEP)
-      .attr('data-step', (d) => d.step_id);
+      .attr('data-step', (d) => getSectionHash(this.section, d.step_id));
 
     this.steps.append('h3')
       .attr('class', C.STEP_HEADER)
