@@ -2,7 +2,7 @@ import { Store } from 'redux';
 import {
   Selection, geoAlbersUsa, geoPath,
   scaleLinear, scaleBand,
-  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear,
+  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear, event,
 } from 'd3';
 import * as S from '../../redux/selectors/index';
 import * as A from '../../redux/actions/creators';
@@ -15,6 +15,7 @@ import { getNameHash, calcSwarm } from '../../utils/helpers';
 import './style.scss';
 import styleVars from '../../styling/_variables.scss';
 import ColorLegend from '../ColorLegend';
+import Tooltip from '../Tooltip';
 
 interface Props {
   store: Store<State>
@@ -73,6 +74,8 @@ export default class MovingMap {
     this.week = S.getSelectedWeek(this.state);
 
     this.getPctChange = this.getPctChange.bind(this);
+    this.onStationMouseover = this.onStationMouseover.bind(this);
+    this.onStationMouseout = this.onStationMouseout.bind(this);
     this.handleStateChange = this.handleStateChange.bind(this);
     this.store.subscribe(this.handleStateChange);
   }
@@ -128,6 +131,7 @@ export default class MovingMap {
       scale: this.colorScale,
       format: F.fPct,
     });
+    this.tooltip = new Tooltip({ parent: this.overlay });
 
     // Ref lines
     this.refLines
@@ -164,6 +168,7 @@ export default class MovingMap {
     const { extent: EW } = S.getWeeklyDataExtent(this.state);
     this.xScale.domain(EW); // update for new data
     // VISIBILITY
+    this.tooltip.makeInvisible();
     // map
     this.map
       .classed(C.VISIBLE, MAP_VISIBLE.includes(view));
@@ -265,17 +270,13 @@ export default class MovingMap {
       .data(this.positionedStations, (d) => d.station_code)
       .join('g')
       .attr('class', C.STATION)
-      .on('mouseover', function () { select(this).raise(); });
+      .on('mouseover', this.onStationMouseover)
+      .on('mouseout', this.onStationMouseout);
 
     this.stations.selectAll('circle').data((d) => [d])
       .join('circle')
       .attr('r', R)
       .attr('vector-effect', 'non-scaling-stroke');
-
-    this.stations.selectAll('text').data((d) => [d])
-      .join('text')
-      .attr('y', -R - 3)
-      .text((d) => getNameHash(d));
   }
 
   setupAnnotations() {
@@ -418,6 +419,16 @@ export default class MovingMap {
     //   // this.setupStations(); // remaps data to elements
     //   this.handleViewTransition();
     // }
+  }
+
+  onStationMouseover(d:StationData) {
+    const { target, offsetX: x, offsetY: y } = event;
+    select(target.parentNode).raise();
+    this.tooltip.update([x, y], d.station);
+  }
+
+  onStationMouseout() {
+    this.tooltip.makeInvisible();
   }
 
   calcNodePositions() {

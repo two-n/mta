@@ -47,16 +47,6 @@
     transition: transform $durationMovement;
     cursor: pointer;
 
-    text{
-      visibility: hidden;
-      text-anchor: middle;
-      pointer-events: none;
-      text-transform: uppercase;
-      font-size: $fontSizeSmall;
-      font-family: $fontRegular;
-      fill: $colorDarkGrey;
-    }
-
     circle{
       transition: transform $durationOpacity;
       stroke: white;
