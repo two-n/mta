@@ -9,6 +9,11 @@
     height: 100%;
     justify-content: center;
     position: relative;
+    opacity: 0;
+
+    &.visible{
+      opacity: 1;
+    }
 
       .bar-wrapper {
         display: flex;
@@ -21,9 +26,7 @@
           top: -1.5em;
           position: absolute; // so that the labels don't dictate width
           opacity: 0;
-          &.visible{
-            opacity: 1;
-          }
+
         }
 
         .bar {
@@ -39,7 +42,27 @@
           }
 
         }
+
+        &:first-child, &:nth-child(8) , &:last-child{
+          .label.visible{
+            opacity: 1;
+          }
+        }
       }
+  }
+
+  .dates{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: $colorMidGrey;
+    font-size: $fontSizeSmall;
+    opacity: 0;
+
+    &.visible{
+      opacity: 1;
+    }
   }
 
   .reference{

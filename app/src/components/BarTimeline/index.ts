@@ -20,7 +20,7 @@ const M = {
   top: 30, bottom: 30, left: 30, right: 60,
 };
 const PAD = 10;
-const DURATION = 500;
+const DURATION = 200;
 const DELAY = DURATION / 2;
 const W_THRESH = 10;
 
@@ -73,7 +73,8 @@ export default class BarTimeline {
       .domain(extent(this.timeline, ({ date }) => F.pWeek(date)));
 
     // elements
-    this.bars = this.el.append('div').attr('class', `${C.TIMELINE}-${C.WRAPPER}`)
+    this.timelineWrapper = this.el.append('div').attr('class', `${C.TIMELINE}-${C.WRAPPER}`);
+    this.bars = this.timelineWrapper
       .selectAll(`div.${C.BAR}-${C.WRAPPER}`)
       .data(this.timeline)
       .join('div')
@@ -88,6 +89,13 @@ export default class BarTimeline {
       .data((d) => [d])
       .join('div')
       .attr('class', C.BAR);
+
+    this.datesWrapper = this.el.append('div').attr('class', 'dates');
+    this.datesWrapper.selectAll('div.date')
+      .data(this.x.ticks(6))
+      .join('div')
+      .attr('class', 'date')
+      .html((d) => F.fMonth(d));
 
     this.refBoxes = this.el.append('div').attr('class', C.REFERENCE).selectAll('div.box')
       .data([swipes_avg_pre, swipes_avg_post])
@@ -118,18 +126,20 @@ export default class BarTimeline {
 
   handleTransition(element:any, index:number, direction: D) {
     const { tStopsMap } = this;
-    const [width, height] = this.dims;
+    const [, height] = this.dims;
     const stepData = select(element).data()[0] as StepDataType;
-    const isActive = (d) => (!!stepData.date
-      || (!stepData.date && stepData.step_id < tStopsMap.get(TS.FADE_BARS)));
+    const isBarVisible = (d) => (!!stepData.date
+      || (!stepData.date && stepData.step_id < tStopsMap.get(TS.FADE_BARS) && stepData.step_id > 3));
+
+    const isTimlineVisible = stepData.date || stepData.step_id < tStopsMap.get(TS.MOVE_REFS);
 
     this.bars.select(`.${C.LABEL}`)
-      .classed(C.VISIBLE, isActive)
+      .classed(C.VISIBLE, isBarVisible)
       .transition()
-      .duration(DURATION)
+      .duration(DURATION * 7)
       .delay((d, i) => (direction === D.DOWN ? i : 0) * DELAY)
       .tween('text', function (d) {
-        if (isActive(d)) {
+        if (isBarVisible(d)) {
           // initialize tracker
           this._currentNum = this._currentNum || 0;
           const i = interpolate(this._currentNum, d.swipes);
@@ -140,14 +150,17 @@ export default class BarTimeline {
       });
 
     this.bars.select(`.${C.BAR}`)
-      .classed(C.VISIBLE, isActive)
-      .style('max-height', (d) => (isActive(d) ? this.y(d.swipes) : 0))
-      .style('transition-duration', (d) => `${isActive(d)
+      .classed(C.VISIBLE, isBarVisible)
+      .style('max-height', (d) => (isBarVisible(d) ? this.y(d.swipes) : 0))
+      .style('transition-duration', (d) => `${isBarVisible(d)
         ? DURATION
         : DURATION * 2}ms`) // slower to fade down
-      .style('transition-delay', (d, i) => `${((direction === D.DOWN && isActive(d)) ? i : 0) * DELAY}ms`)
+      .style('transition-delay', (d, i) => `${((direction === D.DOWN && isBarVisible(d)) ? i : 0) * DELAY}ms`)
       .classed(C.ACTIVE, (d) => this.steps.get(stepData.step_id)
       && (d.date === this.steps.get(stepData.step_id).date)); // need to get closest date
+
+    this.timelineWrapper.classed(C.VISIBLE, isTimlineVisible);
+    this.datesWrapper.classed(C.VISIBLE, isTimlineVisible);
 
     this.refBoxes
       .classed(C.ACTIVE, stepData.step_id >= tStopsMap.get(TS.DRAW_BOXES))

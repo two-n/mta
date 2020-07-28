@@ -105,7 +105,7 @@ export const MTA_Colors = [
 ];
 
 export const FORMATTERS = {
-  fMonth: utcFormat('%B'),
+  fMonth: utcFormat('%b'),
   fDayMonth: utcFormat('%b-%d'),
   fMonthYr: utcFormat('%b-%Y'),
   fDay: utcFormat('%a'),
