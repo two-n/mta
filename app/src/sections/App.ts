@@ -6,6 +6,7 @@ import * as Stickyfill from 'stickyfill';
 import SectionTimeline from './SectionTimeline';
 import SectionMovingMap from './SectionMovingMap';
 import SectionIntro from './SectionIntro';
+import Controls from '../components/Controls';
 
 import * as S from '../redux/selectors';
 import { State } from '../utils/types';
@@ -43,6 +44,9 @@ export default class App {
       store: this.store,
     });
 
+    this.Controls = new Controls({
+      store: this.store,
+    });
 
     // polyfil for sticky positioning
     this.setupStickyfill();
