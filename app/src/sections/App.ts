@@ -7,6 +7,7 @@ import SectionTimeline from './SectionTimeline';
 import SectionMovingMap from './SectionMovingMap';
 import SectionIntro from './SectionIntro';
 import Controls from '../components/Controls';
+import Navigation from '../components/Navigation';
 
 import * as S from '../redux/selectors';
 import { State } from '../utils/types';
