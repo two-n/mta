@@ -1,63 +1,94 @@
 @import "../../styling/variables";
 
-.timeline{
+.timeline {
+  position: relative;
+  .timeline-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    justify-content: center;
+    position: relative;
 
-  svg{
-    .lines rect{
-      fill: $colorDarkGrey;
+      .bar-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        margin: 1%;
 
-      &.selected{
-        fill: $colorBlack;
+        .label{
+          top: -1.5em;
+          position: absolute; // so that the labels don't dictate width
+          opacity: 0;
+          &.visible{
+            opacity: 1;
+          }
+        }
+
+        .bar {
+          border: $colorDarkGrey 1px solid;
+          background-color: $colorLightGrey;
+          max-height: 0;
+          transition-property: max-height;
+          border-radius: 2px;
+          // opacity: 0;
+
+          &.active{
+            animation: fadeToOrange 750ms 1 forwards;
+          }
+
+        }
       }
-    }
+  }
 
-    .ref-lines .ref{
+  .reference{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    .box{
+      position: absolute;
+      border: $colorYellow 2px dashed;
       opacity: 0;
-      transition: opacity $durationOpacity, transform $durationMovement;
-      path{
-        stroke: $colorBlack;
-        stroke-width: 1px;
-      }
-      text.label{
-        text-anchor: middle;
+      top: 50%;
+      transform: translateY(-50%);
+      max-width: 0;
+      max-height:0;
+      transition: transform $durationMovement;
 
-      }
-      &.visible{
+      &.active{
+        animation: growOut 3s 1 forwards;
         opacity: 1;
       }
-    }
 
-    .gradient{
-      transition: opacity $durationOpacity;
-      opacity: 0;
-
-      &.visible{
-        opacity: 1;
+      &.gradient{
+        transition: background 1s;
+        background: linear-gradient(0deg, #3d696c 0%, #54b1b8 30%, #b87242 60%, #ffbd59 100%);
       }
     }
   }
+}
 
-  .overlay{
-    .annotations{
-      position: relative;
-      font-size: $fontSizeSmall;
+@keyframes fadeToOrange{
+  to{
+    background-color: $colorYellow;
+  }
+}
 
-      .annotation{
-        max-width: 6em;
-        position: absolute;
-        opacity: 0;
-        transition: opacity $durationOpacity;
-
-        &.visible{
-          opacity: 1;
-        }
-
-        &.faded:not(.hidden){
-          opacity: .7;
-        }
-
-      }
-    }
+@keyframes growOut{
+  0% {
+    max-height: 0;
+    max-width: 0;
   }
 
+  50%{
+    max-height: 100%;
+  }
+
+  100% {
+    max-width: 100%;
+    max-height: 100%;
+  }
 }
