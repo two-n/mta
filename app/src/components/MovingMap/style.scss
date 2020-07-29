@@ -95,6 +95,7 @@
       position: absolute;
       transition: transform $durationMovement;
       max-width: 7em;
+      padding-left: .5em;
 
       &.y{
         text-align: right;
