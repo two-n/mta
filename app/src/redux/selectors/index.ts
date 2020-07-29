@@ -9,8 +9,10 @@ import {
   min,
   mean,
 } from 'd3-array';
-import { scaleSequential, geoContains, ascending } from 'd3';
-import { State } from '../../utils/types';
+import {
+  scaleSequential, geoContains, ascending, line,
+} from 'd3';
+import { State, StationData } from '../../utils/types';
 import * as Helpers from '../../utils/helpers';
 import { processStations } from '../../utils/dataProcessing';
 import {
@@ -181,3 +183,19 @@ export const getNTAbboxes = createSelector([
 }));
 
 // UNIQUE VALUES
+export const getUniqueLines = createSelector([
+  getStationData,
+], (data) => data && [
+  ...new Set(data
+    .map((d:StationData) => d.line_name && d.line_name
+      .toString()
+      .split(''))
+    .flat()),
+].sort());
+
+export const getUniqueNTAs = createSelector([
+  getStationData,
+], (data) => data && [
+  ...new Map(data
+    .map((d:StationData) => ([d.NTACode, d.NTAName]))),
+].map(([key, content]) => ({ key, content })));
