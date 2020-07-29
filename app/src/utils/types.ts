@@ -68,8 +68,8 @@ export interface StationData {
   station: string;
   BoroCode: number;
   BoroName: number;
-  NTACode: number;
-  NTAName: number;
+  NTACode: string;
+  NTAName: string;
   GTFS_stop_id: string;
   line_name: string;
   ct2010: string;

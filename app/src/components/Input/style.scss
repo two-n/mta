@@ -5,4 +5,14 @@
   input{
     width: 100%;
   }
+
+  ul{
+    height: 50px;
+    overflow: scroll;
+
+    li{
+      display: flex;
+      align-items: center;
+    }
+  }
 }
