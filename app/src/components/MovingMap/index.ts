@@ -2,7 +2,7 @@ import { Store } from 'redux';
 import {
   Selection, geoAlbersUsa, geoPath,
   scaleLinear, scaleBand,
-  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear, event,
+  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear, event, geoCentroid,
 } from 'd3';
 import * as S from '../../redux/selectors/index';
 import * as A from '../../redux/actions/creators';
@@ -11,7 +11,7 @@ import {
   CLASSES as C, VIEWS as V,
   KEYS as K, FORMATTERS as F, MTA_Colors, SECTIONS,
 } from '../../utils/constants';
-import { getNameHash, calcSwarm } from '../../utils/helpers';
+import { calcSwarm } from '../../utils/helpers';
 import './style.scss';
 import styleVars from '../../styling/_variables.scss';
 import ColorLegend from '../ColorLegend';
@@ -30,11 +30,13 @@ interface ScaleObject {
 }
 
 const M = {
-  top: 40,
-  bottom: +styleVars.controlBarHeight.slice(0, -2), // make room for control bar
+  top: 30,
+  bottom: 50, // make room for control bar
   left: 30,
   right: 20,
+  swarmBottom: 125,
 };
+const CONTROL_HEIGHT = +styleVars.controlBarHeight.slice(0, -2);
 const R = 3;
 const duration = +styleVars.durationMovement.slice(0, -2);
 const geoPadding = { // distance from zoomed in shape
@@ -52,7 +54,8 @@ const FORMAT_MAP: { [key: string]: (d: number) => string } = {
   [K.SNAP_PCT]: F.fPctNoMult,
 };
 
-const MAP_VISIBLE = [V.MAP_OUTLINE, V.MAP_DOTS_LINES, V.MAP_DOTS_LINES_NTAS];
+const MAP_VISIBLE = [V.MAP_OUTLINE, V.MAP_DOTS_LINES,
+  V.MAP_DOTS_LINES_NTAS, V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE];
 export default class MovingMap {
   yScales: { [key: string]: ScaleObject }
 
@@ -67,7 +70,7 @@ export default class MovingMap {
     // SELECTORS
     this.mapOutline = S.getMapOutline(this.state);
     this.linesData = S.getLinesData(this.state);
-    this.ntasData = S.getNTAFeatures(this.state);
+    // this.ntasData = S.getNTAFeatures(this.state);
     this.stationsGISData = S.getStationData(this.state);
     this.swipeData = S.getStationRollup(this.state);
     this.acsMap = S.getStationToACSMap(this.state);
@@ -120,7 +123,7 @@ export default class MovingMap {
 
     // ELEMENTS
     this.map = this.el.append('g').attr('class', C.MAP);
-    this.ntas = this.el.append('g').attr('class', 'ntas');
+    // this.ntas = this.el.append('g').attr('class', 'ntas');
     this.selectedNtas = this.el.append('g').attr('class', 'selected-ntas');
     this.lines = this.el.append('g').attr('class', C.LINES);
     this.stationsG = this.el.append('g').attr('class', C.STATIONS);
@@ -177,8 +180,8 @@ export default class MovingMap {
       .classed(C.VISIBLE, MAP_VISIBLE.includes(view));
     this.lines
       .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES && view < V.SWARM);
-    this.ntas
-      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES_NTAS && view < V.SWARM);
+    // this.ntas
+    //   .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES_NTAS && view < V.SWARM);
 
     this.selectedNtas
       .classed(C.VISIBLE, view >= V.ZOOM_SOHO && view < V.SWARM);
@@ -190,7 +193,7 @@ export default class MovingMap {
     this.stations.style('transform', (d: StationData) => {
       switch (view) {
         case (V.SWARM):
-          return `translate(${d.x}px,${height - M.bottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
+          return `translate(${d.x}px,${height - M.swarmBottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
         case (V.SCATTER): {
           const yScale = this.yScales[yKey].scale;
           return `translate(
@@ -242,13 +245,13 @@ export default class MovingMap {
       .attr('vector-effect', 'non-scaling-stroke')
       .attr('d', this.geoPath);
 
-    // neighborhood outlines
-    this.ntas
-      .selectAll('path')
-      .data(this.ntasData.features)
-      .join('path')
-      .attr('vector-effect', 'non-scaling-stroke')
-      .attr('d', this.geoPath);
+    // // neighborhood outlines
+    // this.ntas
+    //   .selectAll('path')
+    //   .data(this.ntasData.features)
+    //   .join('path')
+    //   .attr('vector-effect', 'non-scaling-stroke')
+    //   .attr('d', this.geoPath);
 
     // selected neighborhood outlines
     this.selectedNtas
@@ -290,15 +293,20 @@ export default class MovingMap {
       .attr('class', `${C.AXIS}-${C.LABEL} ${C.NO_WRAP} x`)
       .style('left', (d, i) => i === 0 && `${M.left}px`)
       .style('right', (d, i) => i === 1 && `${M.right}px`)
-      .style('transform', `translateY(${height - M.bottom}px) translateY(100%)`)
       .html((d) => d);
 
     // Ref lines
     this.refLines.select(`g.${C.ANNOTATION}.y`)
       .select('path').attr('d', `M ${M.left} 0 H ${width - M.right}`);
 
-    this.refLines.select(`g.${C.ANNOTATION}.x`).select('path')
-      .attr('d', `M ${0} ${M.top} V ${height - M.bottom}`);
+    this.ntaAnnotations = this.overlay.selectAll('.nta-annotation')
+      .data(this.selectedNTAFeatures)
+      .join('div')
+      .attr('class', 'nta-annotation')
+      .html((d) => {
+        console.log('d', d);
+        return 'temp';
+      });
   }
 
   transitionAnnotations() {
@@ -308,12 +316,23 @@ export default class MovingMap {
     const [width, height] = this.dims;
     const { averages: AD } = S.getDemoDataExtents(this.state);
     const { average: AW } = S.getWeeklyDataExtent(this.state);
+    const chartbottom = height
+    - ((view === V.SWARM) // swarm ends higher than the scatterplot
+      ? M.swarmBottom
+      : M.bottom + CONTROL_HEIGHT);
+
     // AXES
     this.xAxisEl
       .transition()
       .duration(duration)
-      .attr('transform', `translate(${0}, ${height - M.bottom})`)
+      .attr('transform', `translate(${0}, ${chartbottom})`)
       .call(xAxis);
+
+    this.overlay.selectAll(`.${C.AXIS}-${C.LABEL}.x`)
+      .style('transform', `translateY(${chartbottom}px) translateY(100%)`);
+
+    this.refLines.select(`g.${C.ANNOTATION}.x`).select('path')
+      .attr('d', `M ${0} ${M.top} V ${chartbottom}`);
 
     // handle all the scatter plots
     if (this.yScales[yKey]) {
@@ -347,7 +366,7 @@ export default class MovingMap {
     this.refLines.select(`.${C.ANNOTATION}.x`)
       .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`);
     this.overlay.select(`.${C.ANNOTATION}-${C.LABEL}.x`)
-      .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`)
+      .style('transform', `translate(${this.xScale(AW)}px, ${M.top}px)`)
       .html(`average of ${F.fPct(AW)} still riding`);
 
     // VISIBILITY
@@ -376,6 +395,7 @@ export default class MovingMap {
   }
 
   handleResize() {
+    // TODO: figure out why height is too large in safari
     const { width, height } = this.parent.node().getBoundingClientRect();
     this.dims = [width, height];
     this.el
@@ -385,11 +405,11 @@ export default class MovingMap {
     this.overlay.style('width', `${width}px`).style('height', `${height}px`);
 
     // update scales
-    this.proj.fitSize([width, height], this.ntasData);
+    this.proj.fitSize([width, height], this.linesData);
     this.xScale.range([M.left, width - M.right]);
 
     // update yScale ranges
-    Object.values(this.yScales).forEach((d) => d.scale.range([height - M.bottom - R, M.top]));
+    Object.values(this.yScales).forEach((d) => d.scale.range([height - M.bottom - CONTROL_HEIGHT - R, M.top]));
     this.draw();
   }
 
@@ -400,29 +420,7 @@ export default class MovingMap {
     this.state = this.store.getState();
     this.view = S.getView(this.state);
     this.week = S.getSelectedWeek(this.state);
-    // const newLine = S.getSelectedWeek(this.state);
-    // const newNTA = S.getSelectedWeek(this.state);
     this.handleViewTransition();
-    // if (this.view !== newView) {
-
-    //   this.view = newView;
-    //   this.handleViewTransition();
-    // }
-
-    // if (this.week !== newWeek
-    // // || this.line ~== newLine
-    // // || this.nta ~== newNta
-    // ) {
-    //   this.week = newWeek;
-    //   /** NOTE: if want to see swarm change, need to uncomment next two lines
-    //    *  issue with that is that
-    //    * (a) it's a heavy calculation and
-    //    * (b) the swarm doesn't look good when they are all concentrated in the same area
-    //   */
-    //   // this.calcNodePositions();
-    //   // this.setupStations(); // remaps data to elements
-    //   this.handleViewTransition();
-    // }
   }
 
   onStationMouseover(d:StationData) {
