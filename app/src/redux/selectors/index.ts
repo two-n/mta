@@ -58,35 +58,21 @@ export const getMapOutline = createSelector([getMapData],
 export const getLinesData = createSelector([getMapData],
   (data) => topojson.feature(data, data.objects['subway-lines']));
 
-// filter out Staten Island
-const getFilteredACSData = createSelector([
-  getMapData,
-], (data) => ({
-  ...data,
-  objects: {
-    acs_nta: {
-      ...data.objects.acs_nta,
-      geometries: data.objects.acs_nta.geometries
-        .filter(({ properties }) => properties.BoroCode !== 5), // FIXME: want to keep in nta but still size view to central stations
-    },
-  },
-}));
-
 const getACSGeometries = createSelector([
-  getFilteredACSData,
+  getMapData,
 ], (data) => data.objects.acs_nta.geometries);
 
 export const getNTAFeatures = createSelector([
-  getFilteredACSData,
+  getMapData,
 ], (data) => topojson.feature(data, data.objects.acs_nta));
 
 export const getGeoMeshInterior = createSelector([
-  getFilteredACSData,
+  getMapData,
 ], (data) => topojson.mesh(data, data.objects.acs_nta,
   (a, b) => a !== b));
 
 export const getGeoMeshExterior = createSelector([
-  getFilteredACSData,
+  getMapData,
 ], (data) => topojson.mesh(data, data.objects.acs_nta,
   (a, b) => a === b));
 
@@ -193,3 +179,5 @@ export const getNTAbboxes = createSelector([
   [V.ZOOM_SOHO]: bbox(soho),
   [V.ZOOM_BROWNSVILLE]: bbox(brownsville),
 }));
+
+// UNIQUE VALUES
