@@ -83,6 +83,11 @@
 
   .overlay{
     position:absolute;
+    opacity: 0;
+
+    &.visible{
+      opacity: 1;
+    }
 
     .annotation-label{
       color: $colorMidGrey;

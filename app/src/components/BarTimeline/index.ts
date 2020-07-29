@@ -168,7 +168,6 @@ export default class BarTimeline {
             : `translate(-50%, ${((this.y(this.avgSwipesPre)) / 2 - (this.y(d)))}px)`;
         } return '';
       })
-
       .classed(C.GRADIENT, (d, i) => (stepData.step_id >= tStopsMap.get(TS.GRADIENT)
       && i === 0))
       .style('width', (d, i) => {

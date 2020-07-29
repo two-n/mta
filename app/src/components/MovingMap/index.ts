@@ -355,6 +355,7 @@ export default class MovingMap {
       .classed(C.VISIBLE, view >= V.SWARM);
     this.parent.selectAll('.y')
       .classed(C.VISIBLE, !!this.yKey);
+    this.overlay.classed(C.VISIBLE, view >= V.MAP_OUTLINE);
   }
 
   setView(view: V, key?: string) {
