@@ -7,26 +7,30 @@ section.section {
     position: sticky;
     display: flex;
     flex-direction: column;
-    padding: 0 .5em;
+    padding: 0 0.5em;
 
     .section-header {
       opacity: 0;
       transition: opacity $durationOpacity;
       width: 100%;
       font-family: $fontLight;
-      height: 6em;
       font-size: $fontSizeBase;
+      height: 4em;
+      flex-shrink: 0; // don't collapse when text empty
       font-weight: unset;
+      padding: 0 1em 1em 1em;
+      display: flex;
+      align-items: center;
 
       &.fade-in {
-        opacity:  1;
+        opacity: 1;
       }
-
     }
 
     .graphic {
       width: 100%;
       height: 100%;
+      // flex: 1;
       position: relative;
 
       .overlay {
@@ -40,18 +44,25 @@ section.section {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    //  margin: 0 auto; // uncomment to center
+    position: relative;
 
     .step {
       // border: $colorYellow 2px solid;
-      width: 10px;
-      max-width: $maxTextWidth;
-      position: relative;
-      min-height: 500px;
-      transition: opacity 500ms;
-      opacity: 0; // temporary in order to see the steps pass by
+      width: 100%;
       pointer-events: none;
-      margin-bottom: 50vh; // used to add some space for transitions between steps
+      min-height: 500px;
+      margin-bottom: 100vh; // used to add some space for transitions between steps
+
+      .text {
+        width: max-content;
+        max-width: 100%;
+        position: sticky;
+        top: 1em;
+        padding: 1em;
+        margin: 0 auto;
+        font-family: $fontLight;
+        font-size: $fontSizeBase;
+      }
 
       &.active {
         opacity: 1;

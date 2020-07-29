@@ -35,10 +35,16 @@ h2{
 }
 
 .axis{
+  color: $colorMidGrey;
+
   text.label{
     text-anchor: middle;
     fill: $colorBlack;
     text-transform: uppercase;
+  }
+  path, line{
+    stroke: $colorMidGrey;
+    stroke-width: .25px;
   }
 }
 // for annotations and axes labels
@@ -52,7 +58,7 @@ h2{
     top: 0;
     transform-origin: center;
     width: max-content;
-    padding: 2em 0;
+    padding-bottom: 1em;
     box-sizing: border-box;
 
     &.no-wrap{

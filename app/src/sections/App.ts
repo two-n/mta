@@ -30,6 +30,10 @@ export default class App {
     // TITLE
     this.Title = new Title({ data: sectionData[SECTIONS.S_TITLE] });
 
+    this.Naviation = new Navigation({
+      sections: sectionData,
+    });
+
     // INTRO
     this.SectionIntro = new SectionIntro({ data: sectionData[SECTIONS.S_INTRO] });
 
@@ -49,9 +53,6 @@ export default class App {
       store: this.store,
     });
 
-    this.Naviation = new Navigation({
-      sections: sectionData,
-    });
 
     // polyfil for sticky positioning
     this.setupStickyfill();

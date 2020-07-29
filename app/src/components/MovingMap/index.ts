@@ -30,15 +30,18 @@ interface ScaleObject {
 }
 
 const M = {
-  top: 10, bottom: 150, left: 30, right: 20,
+  top: 40,
+  bottom: +styleVars.controlBarHeight.slice(0, -2), // make room for control bar
+  left: 30,
+  right: 20,
 };
 const R = 3;
 const duration = +styleVars.durationMovement.slice(0, -2);
-const geoPadding = {
-  top: 50,
-  bottom: +styleVars.controlBarHeight.slice(0, -2), // make room for control bar
-  left: 30,
-  right: 100,
+const geoPadding = { // distance from zoomed in shape
+  top: 30,
+  bottom: 50,
+  left: 20,
+  right: 50,
 };
 
 const FORMAT_MAP: { [key: string]: (d: number) => string } = {
@@ -113,7 +116,7 @@ export default class MovingMap {
     this.xScale.tickFormat(null, F.sPct);
 
     // AXES
-    this.xAxis = axisBottom(this.xScale).tickFormat(F.fPct);
+    this.xAxis = axisBottom(this.xScale).tickFormat(F.fPct).ticks(4);
 
     // ELEMENTS
     this.map = this.el.append('g').attr('class', C.MAP);
@@ -287,7 +290,7 @@ export default class MovingMap {
       .attr('class', `${C.AXIS}-${C.LABEL} ${C.NO_WRAP} x`)
       .style('left', (d, i) => i === 0 && `${M.left}px`)
       .style('right', (d, i) => i === 1 && `${M.right}px`)
-      .style('transform', `translateY(${height - M.bottom}px)`)
+      .style('transform', `translateY(${height - M.bottom}px) translateY(100%)`)
       .html((d) => d);
 
     // Ref lines
@@ -317,7 +320,7 @@ export default class MovingMap {
       const {
         scale: yScale, format, label, median,
       } = this.yScales[yKey];
-      this.yAxis = axisLeft(yScale).tickFormat(format);
+      this.yAxis = axisLeft(yScale).tickFormat(format).ticks(4);
       this.yAxisEl
         .transition()
         .duration(duration)

@@ -2,14 +2,12 @@ import { Store } from 'redux';
 import {
   Selection, scaleLinear, max, scaleUtc, extent, bisector, select, interpolate,
 } from 'd3';
-import { ascending } from 'd3-array';
 import * as S from '../../redux/selectors';
 import { State, StationTimelineItem, StepDataType } from '../../utils/types';
 import {
   CLASSES as C, FORMATTERS as F, DIRECTIONS as D, SECTIONS, KEYS, appConfig,
 } from '../../utils/constants';
 import './style.scss';
-import styleVars from '../../styling/_variables.scss';
 
 interface Props {
   parent: Selection;
@@ -17,12 +15,10 @@ interface Props {
 }
 
 const M = {
-  top: 30, bottom: 30, left: 30, right: 60,
+  top: 30, bottom: 50, left: 30, right: 60,
 };
-const PAD = 10;
 const DURATION = 200;
 const DELAY = DURATION / 2;
-const W_THRESH = 10;
 
 // transition-stops -- step_ids
 const TS = {
@@ -46,7 +42,7 @@ export default class BarTimeline {
   constructor({ parent, store }: Props) {
     this.state = store.getState();
     this.parent = parent.classed(C.TIMELINE, true);
-    this.el = this.parent.append('div');
+    this.el = this.parent;
     this.handleTransition = this.handleTransition.bind(this);
   }
 
@@ -55,6 +51,7 @@ export default class BarTimeline {
       timeline,
       summary: { swipes_avg_pre, swipes_avg_post, swipes_pct_chg },
     } = S.getOverallTimeline(this.state);
+    this.avgSwipesPre = swipes_avg_pre; // to use in transition
     this.section = S.getSectionData(this.state)[SECTIONS.S_TIMELINE];
     this.pctChg = swipes_pct_chg;
     this.c = S.getColorScheme(this.state);
@@ -104,7 +101,7 @@ export default class BarTimeline {
   }
 
   draw() {
-    const [width, height] = this.dims;
+    const [width] = this.dims;
     this.barW = Math.max(((width - M.left - M.right) / this.timeline.length) * 0.7, 2);
 
     this.bars.select(`.${C.LABEL}`);
@@ -115,18 +112,18 @@ export default class BarTimeline {
 
     const threshold = this.timeline[this.bisect.left(this.timeline, appConfig.thresholdDate)];
     const middleBar = this.bars.filter((d) => d.date === threshold.date);
-    const middleX = middleBar.node().offsetLeft + this.barW;
+    this.middleX = middleBar.node().offsetLeft + this.barW;
 
     this.refBoxes
       .style('height', (d) => `${this.y(d)}px`)
-      .style('width', (d, i) => `${i === 0 ? middleX : width - middleX}px`)
-      .style('left', (d, i) => (i === 1) && `${middleX}px`)
-      .style('right', (d, i) => (i === 0) && `${width - middleX}px`);
+      .style('width', (d, i) => `${i === 0 ? this.middleX : width - this.middleX}px`)
+      .style('left', (d, i) => (i === 1) && `${this.middleX}px`)
+      .style('right', (d, i) => (i === 0) && `${width - this.middleX}px`);
   }
 
   handleTransition(element:any, index:number, direction: D) {
     const { tStopsMap } = this;
-    const [, height] = this.dims;
+    const [width, height] = this.dims;
     const stepData = select(element).data()[0] as StepDataType;
     const isBarVisible = (d) => (!!stepData.date
       || (!stepData.date && stepData.step_id < tStopsMap.get(TS.FADE_BARS) && stepData.step_id > 3));
@@ -164,14 +161,22 @@ export default class BarTimeline {
 
     this.refBoxes
       .classed(C.ACTIVE, stepData.step_id >= tStopsMap.get(TS.DRAW_BOXES))
-      .style('transform', (d, i) => (stepData.step_id >= tStopsMap.get(TS.MOVE_REFS)
-        ? `translate(${i === 0
-          ? '50%'
-          : '-50%'}, ${i === 0
-          ? '-50%'
-          : `${(height / 2 - (this.y(d) * 2))}px`})` : ''))
+      .style('transform', (d, i) => {
+        if (stepData.step_id >= tStopsMap.get(TS.MOVE_REFS)) {
+          return (i === 0)
+            ? 'translate(50%, -50%)'
+            : `translate(-50%, ${((this.y(this.avgSwipesPre)) / 2 - (this.y(d)))}px)`;
+        } return '';
+      })
+
       .classed(C.GRADIENT, (d, i) => (stepData.step_id >= tStopsMap.get(TS.GRADIENT)
-      && i === 0));
+      && i === 0))
+      .style('width', (d, i) => {
+        if (i === 0) return `${this.middleX}px`;
+        return stepData.step_id >= tStopsMap.get(TS.MOVE_REFS)
+          ? `${this.middleX}px`
+          : `${width - this.middleX}px`;
+      });
   }
 
   // finds the step index for each animation key
@@ -202,7 +207,6 @@ export default class BarTimeline {
   handleResize() {
     const { width, height } = this.parent.node().getBoundingClientRect();
     this.dims = [width, height];
-    this.el.style('width', `${width}px`).style('height', `${height}px`);
     // update scales
     this.y.range([0, height - M.bottom - M.top]);
     this.x.range([M.left, width - M.right]);
