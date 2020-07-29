@@ -97,7 +97,8 @@ export default class BarTimeline {
     this.refBoxes = this.el.append('div').attr('class', C.REFERENCE).selectAll('div.box')
       .data([swipes_avg_pre, swipes_avg_post])
       .join('div')
-      .attr('class', (d, i) => `box ${i === 0 ? 'pre' : 'post'}`);
+      .attr('class', (d, i) => `box ${i === 0 ? 'pre' : 'post'}`)
+      .attr('data-pct', F.fPct(swipes_pct_chg));
   }
 
   draw() {
@@ -168,8 +169,7 @@ export default class BarTimeline {
             : `translate(-50%, ${((this.y(this.avgSwipesPre)) / 2 - (this.y(d)))}px)`;
         } return '';
       })
-      .classed(C.GRADIENT, (d, i) => (stepData.step_id >= tStopsMap.get(TS.GRADIENT)
-      && i === 0))
+      .classed(C.GRADIENT, (d, i) => (stepData.step_id >= tStopsMap.get(TS.GRADIENT)))
       .style('width', (d, i) => {
         if (i === 0) return `${this.middleX}px`;
         return stepData.step_id >= tStopsMap.get(TS.MOVE_REFS)

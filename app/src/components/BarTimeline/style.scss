@@ -15,46 +15,46 @@
     opacity: 0;
     width: 100%;
 
-    &.visible{
+    &.visible {
       opacity: 1;
     }
 
-      .bar-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
+    .bar-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
 
-        .label{
-          top: -1.5em;
-          position: absolute; // so that the labels don't dictate width
-          opacity: 0;
+      .label {
+        top: -1.5em;
+        position: absolute; // so that the labels don't dictate width
+        opacity: 0;
+      }
 
-        }
+      .bar {
+        border: $colorDarkGrey 1px solid;
+        background-color: $colorLightGrey;
+        max-height: 0;
+        transition-property: max-height;
+        border-radius: 2px;
+        // opacity: 0;
 
-        .bar {
-          border: $colorDarkGrey 1px solid;
-          background-color: $colorLightGrey;
-          max-height: 0;
-          transition-property: max-height;
-          border-radius: 2px;
-          // opacity: 0;
-
-          &.active{
-            animation: fadeToOrange 750ms 1 forwards;
-          }
-
-        }
-
-        &:first-child, &:nth-child(8) , &:last-child{
-          .label.visible{
-            opacity: 1;
-          }
+        &.active {
+          animation: fadeToOrange 750ms 1 forwards;
         }
       }
+
+      &:first-child,
+      &:nth-child(8),
+      &:last-child {
+        .label.visible {
+          opacity: 1;
+        }
+      }
+    }
   }
 
-  .dates{
+  .dates {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -65,58 +65,76 @@
     font-size: $fontSizeSmall;
     opacity: 0;
 
-    &.visible{
+    &.visible {
       opacity: 1;
     }
   }
 
-  .reference{
+  .reference {
     position: absolute;
     top: 0;
     width: 100%;
     height: 100%;
 
-    .box{
+    .box {
       position: absolute;
       border: $colorYellow 2px dashed;
       opacity: 0;
       top: 50%;
       transform: translateY(-50%);
       max-width: 0;
-      max-height:0;
+      max-height: 0;
       transition: transform $durationMovement;
 
-      &.active{
+      &:after {
+        content: "";
+        position: absolute;
+      }
+
+      &.active {
         animation: growOut 3s 1 forwards;
         opacity: 1;
       }
 
-      &.gradient:after{
-        content: "";
-        position: absolute;
-        width: 100%;
-        height:100%;
-        bottom: 0;
-        animation: fillInGradient 1s ease-in 1 forwards;
-        background: linear-gradient(0deg, #3d696c 0%, #54b1b8 30%, #b87242 60%, #ffbd59 100%);
+      &.gradient {
+        border: none;
+
+        &.pre:after {
+          width: 100%;
+          height: 100%;
+          bottom: 0;
+          animation: fillInGradient 1s ease-in 1 forwards;
+          background: linear-gradient(0deg, #3d696c 0%, #54b1b8 30%, #b87242 60%, #ffbd59 100%);
+        }
+
+        &.post:after {
+          border-top: black 2px solid;
+          color: rgba($color: $colorBlack, $alpha: 0);
+          content: attr(data-pct);
+          position: absolute;
+          top: 0;
+          width: 0;
+          text-align: right;
+          animation: drawOutLine 1s 1s ease-in 1 forwards;
+        }
       }
     }
   }
 }
 
-@keyframes fadeToOrange{
-  to{
+@keyframes fadeToOrange {
+  to {
     background-color: $colorYellow;
   }
 }
 
-@keyframes growOut{
+@keyframes growOut {
   0% {
     max-height: 0;
     max-width: 0;
   }
 
-  50%{
+  50% {
     max-height: 100%;
   }
 
@@ -126,12 +144,27 @@
   }
 }
 
-@keyframes fillInGradient{
-  from{
+@keyframes fillInGradient {
+  from {
     max-height: 0;
   }
 
-  to{
+  to {
     max-height: 100%;
+  }
+}
+
+@keyframes drawOutLine {
+  0% {
+    width: 0;
+  }
+
+  50% {
+    width: calc(100% + 2.5em);
+  }
+
+  100% {
+    width: calc(100% + 2.5em);
+    color: rgba($color: $colorBlack, $alpha: 1);
   }
 }
