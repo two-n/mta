@@ -31,7 +31,7 @@ interface ScaleObject {
 
 const M = {
   top: 30,
-  bottom: 50, // make room for control bar
+  bottom: 20, // make room for control bar
   left: 30,
   right: 20,
   swarmBottom: 125,
@@ -208,12 +208,15 @@ export default class MovingMap {
     })
       .attr('fill', (d) => (this.colorScale(this.getPctChange(d))))
       .classed('allow-pointer', view >= V.SWARM);
-    // TODO: add visibility flag for line/neighborhood
+
+    const neighborhoodIndex = [V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE].includes(view)
+      ? [V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE].indexOf(view) : null;
+    this.ntaAnnotations.classed(C.VISIBLE, (d, i) => i === neighborhoodIndex);
 
     // SCALE VIEWBOX
     this.el
       .transition()
-      .duration(1000)
+      .duration(duration)
       .attr('viewBox', () => { // [x, y, width, height]
         if (this.bboxes[view]) {
           const [xMin, yMin, xMax, yMax] = this.bboxes[view];
@@ -230,7 +233,26 @@ export default class MovingMap {
         return [0, 0, width, height];
       }).on('end interrupt', () => {
         const matrix = this.el.node().getCTM();
+        // adjust circle positions
         this.stations.selectAll('circle').style('transform', `scale(${1 / matrix.a})`);
+
+        // if we are currently zoomed in on a neighborhood
+        // find zoomed position of matching polygon and move annotation next to it
+        if (neighborhoodIndex !== null && neighborhoodIndex > -1) {
+          const isLeft = neighborhoodIndex === 0;
+          const { x: offsetX, y: offsetY } = this.el.node().getBoundingClientRect();
+          const path = this.selectedNtas
+            .selectAll('path')
+            .filter((d, i) => i === neighborhoodIndex).node();
+          const { left, top, width: w } = path && path.getBoundingClientRect();
+          this.ntaAnnotations
+            .filter((d, i) => i === neighborhoodIndex)
+            .style('max-width', `${left - offsetX}px`)
+            .style('transform', (d, i) => (
+              isLeft
+                ? `translate(${left - offsetX}px, ${top - offsetY}px) translateX(-100%)`
+                : `translate(${left - offsetX + w}px, ${top - offsetY}px) translateY(50%)`));
+        }
       });
 
     this.transitionAnnotations();
