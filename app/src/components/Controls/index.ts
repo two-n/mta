@@ -39,7 +39,7 @@ export default class Controls {
       customClass: 'line',
       options: lineOptions,
       placeholderText: 'select line',
-      updateVal: (val) => console.log('update', val),
+      updateVal: (line) => this.store.dispatch(A.setLine(line)),
     });
 
     const ntaOptions = S.getUniqueNTAs(this.state);
@@ -48,7 +48,7 @@ export default class Controls {
       customClass: 'nta',
       options: ntaOptions,
       placeholderText: 'select neighborhood',
-      updateVal: (val) => console.log('update', val),
+      updateVal: (nta) => this.store.dispatch(A.setNTA(nta)),
     });
 
 

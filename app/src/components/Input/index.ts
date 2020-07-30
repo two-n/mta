@@ -16,7 +16,7 @@ export default class Input {
 
   constructor(props:Props) {
     const {
-      customClass, options, parent, placeholderText,
+      customClass, options, parent, placeholderText, updateVal,
     } = props;
     this.props = props; // save for later use
 
@@ -26,6 +26,19 @@ export default class Input {
     this.input = this.el.append('input')
       .attr('class', `${customClass}`);
 
+    this.display = this.el.append('div')
+      .attr('class', 'display');
+
+
+    this.close = this.el.append('div').attr('class', 'close')
+      .on('click', () => {
+        // reset value
+        this.display.html('');
+        this.input.node().value = '';
+        updateVal(null);
+      });
+
+    // configure 'autoComplete' component
     this.autocomplete = new autoComplete({
       data: {
         src: options,
@@ -33,6 +46,7 @@ export default class Input {
       },
       trigger: {
         event: ['input', 'focusin', 'focusout'],
+        // condition to trigger autocomplete search
         // open whenever element is in focus
         condition: () => document.activeElement === this.input.node(),
       },
@@ -45,13 +59,16 @@ export default class Input {
       },
       resultItem: {
         content: (data, source) => {
-          console.log('data, source', data, source);
           select(source).html(`${data.match} ${data.value.content || ''}`);
         },
         element: 'li',
       },
       onSelection: (feedback) => {
-        console.log('feedback', feedback);
+        // when hit enter
+        const { value: { content, name, key } } = feedback.selection;
+        this.display.html(content || name);
+        this.input.node().value = ' ';
+        if (key) updateVal(key);
       },
     });
   }

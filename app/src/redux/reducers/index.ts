@@ -29,9 +29,9 @@ export default function reducer(state = initialState, action: Action): State {
     case A.SET_WEEK:
       return { ...state, selectedWeek: action.week };
     case A.SET_LINE:
-      return { ...state, selectedWeek: action.line };
+      return { ...state, selectedLine: action.line };
     case A.SET_NTA:
-      return { ...state, selectedWeek: action.nta };
+      return { ...state, selectedNta: action.nta };
     default:
       return state;
   }
