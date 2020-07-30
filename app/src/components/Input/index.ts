@@ -53,6 +53,7 @@ export default class Input {
       highlight: true,
       placeHolder: placeholderText,
       searchEngine: 'loose',
+      maxResults: options.length,
       selector: `input.${customClass}`,
       resultsList: {
         render: true,

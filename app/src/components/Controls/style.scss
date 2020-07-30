@@ -27,7 +27,8 @@
   }
 
   .Input{
-    width: 40%;
+    width: calc(50% - 1em);
+    margin: 0 .5em;
   }
 
   .filterTimeline{
