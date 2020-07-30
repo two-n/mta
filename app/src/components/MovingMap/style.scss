@@ -1,159 +1,164 @@
 @import "../../styling/variables";
 
-.moving-map{
+.moving-map {
   position: relative;
 
-  svg{
+  svg {
     position: relative;
-  .map, .lines, .ntas{
-    opacity: 0;
-    transition: opacity $durationOpacity;
+    .map,
+    .lines,
+    .ntas {
+      opacity: 0;
+      transition: opacity $durationOpacity;
 
-    &.visible{
-      opacity: 1;
-    }
-    path{
-      fill: #eee;
-      // fill: transparent;
-      stroke: $colorLightGrey;
-      stroke-width: .5px;
-    }
-
-    &.outline path{
-      stroke-width: .25px;
-    }
-
-    &.lines{
-      path{
-        stroke: $colorBlack;
-        stroke-width: 1px;
-        fill: none;
+      &.visible {
+        opacity: 1;
       }
-    }
-  }
+      path {
+        fill: #eee;
+        // fill: transparent;
+        stroke: $colorLightGrey;
+        stroke-width: 0.5px;
+      }
 
-  .selected-ntas{
-    stroke: $colorBlack;
-    transition: opacity $durationOpacity;
-    opacity: 0;
+      &.outline path {
+        stroke-width: 0.25px;
+      }
 
-    &.visible{
-      opacity: 1;
-    }
-
-  }
-
-  .stations{
-  opacity: 0;
-  transition: opacity $durationOpacity;
-
-  .station{
-    transition: transform $durationMovement;
-    cursor: pointer;
-
-    circle{
-      transition: transform $durationOpacity;
-      stroke: white;
-      stroke-width: .5;
-    }
-
-    &:not(.allow-pointer){
-      pointer-events: none;
-    }
-
-    &:hover{
-      text{
-          visibility: visible;
-        }
-
-        circle{
-         stroke: $colorBlack;
+      &.lines {
+        path {
+          stroke: $colorBlack;
+          stroke-width: 1px;
+          fill: none;
         }
       }
     }
 
-    &.visible{
-      opacity: 1;
+    .selected-ntas {
+      stroke: $colorBlack;
+      transition: opacity $durationOpacity;
+      opacity: 0;
+
+      &.visible {
+        opacity: 1;
+      }
+    }
+
+    .stations {
+      transition: opacity $durationOpacity;
+
+      .station {
+        opacity: 0;
+        transition: transform $durationMovement;
+        cursor: pointer;
+
+        circle {
+          transition: transform $durationOpacity;
+          stroke: white;
+          stroke-width: 0.5;
+        }
+
+        &:not(.allow-pointer) {
+          pointer-events: none;
+        }
+
+        &:hover {
+          text {
+            visibility: visible;
+          }
+
+          circle {
+            stroke: $colorBlack;
+          }
+        }
+      }
+
+      &.visible {
+        .station {
+          opacity: 0.4;
+          &.highlight, &:hover {
+            opacity: 1;
+          }
+        }
+      }
     }
   }
-  }
-  .annotations{
-    .annotation{
+  .annotations {
+    .annotation {
       stroke: $colorMidGrey;
       transition: transform $durationMovement;
     }
   }
 
-  .overlay{
-    position:absolute;
+  .overlay {
+    position: absolute;
     opacity: 0;
     overflow: hidden;
 
-    &.visible{
+    &.visible {
       opacity: 1;
     }
 
-    .annotation-label{
+    .annotation-label {
       color: $colorMidGrey;
       font-size: $fontSizeSmall;
       position: absolute;
       transition: transform $durationMovement;
       max-width: 7em;
-      padding-left: .5em;
+      padding-left: 0.5em;
 
-      &.y{
+      &.y {
         text-align: right;
       }
     }
 
-    .color-legend{
+    .color-legend {
       position: absolute;
       right: 0;
       bottom: 2em;
     }
   }
 
-  .x, .y{
+  .x,
+  .y {
     opacity: 0;
     transition: opacity $durationOpacity;
-    &.visible{
+    &.visible {
       opacity: 1;
     }
   }
 
-  .nta-annotation{
+  .nta-annotation {
     position: absolute;
     width: 120px;
     padding: 1em;
     opacity: 0;
     transition: opacity 0 0;
 
-    &.visible{
+    &.visible {
       transition: opacity $durationOpacity $durationMovement;
       opacity: 1;
     }
 
-    .name{
+    .name {
       font-family: $fontExtraBold;
       font-size: $fontSizeBase;
     }
 
-    .stat{
+    .stat {
       font-size: $fontSizeSmall;
-      .key{
+      .key {
         font-family: $fontMedium;
       }
-      .value{
+      .value {
         font-family: $fontLight;
-
       }
     }
   }
 
-  .Tooltip{
-    .station-name{
+  .Tooltip {
+    .station-name {
       font-family: $fontBold;
     }
   }
 }
-

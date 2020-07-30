@@ -62,7 +62,8 @@ export enum CLASSES {
   GRADIENT = 'gradient',
   WRAPPER = 'wrapper',
   BAR = 'bar',
-  REFERENCE='reference'
+  REFERENCE='reference',
+  HIGHLIGHT = 'highlight',
 }
 
 export enum KEYS {
