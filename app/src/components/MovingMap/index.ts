@@ -83,6 +83,7 @@ export default class MovingMap {
     this.onStationMouseover = this.onStationMouseover.bind(this);
     this.onStationMouseout = this.onStationMouseout.bind(this);
     this.handleStateChange = this.handleStateChange.bind(this);
+    this.createStatBox = this.createStatBox.bind(this);
     this.store.subscribe(this.handleStateChange);
   }
 
@@ -303,10 +304,7 @@ export default class MovingMap {
       .data(this.selectedNTAFeatures)
       .join('div')
       .attr('class', 'nta-annotation')
-      .html((d) => {
-        console.log('d', d);
-        return 'temp';
-      });
+      .html(this.createStatBox);
   }
 
   transitionAnnotations() {
@@ -437,6 +435,17 @@ export default class MovingMap {
     // recalculate swarm using new filter criteria
     this.positionedStations = calcSwarm(this.stationsGISData,
       this.getPctChange, this.xScale, R * 2);
+  }
+
+  createStatBox({ properties: d }) {
+    const statSpan = (stat:string) => `<div class="stat">
+      <span class="key"> ${this.yScales[stat].median}: <span>
+      <span class="value">${FORMAT_MAP[stat](d[stat])} <span>
+    <div>`;
+
+    return `<div class="name"> ${d.NTAName} <div>
+    ${[K.WHITE, K.INCOME_PC].map(statSpan).join('')}
+    `;
   }
 
   // /** takes a timeline item and returns  */

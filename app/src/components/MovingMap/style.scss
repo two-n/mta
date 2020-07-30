@@ -116,5 +116,23 @@
       opacity: 1;
     }
   }
+
+  .nta-annotation{
+    .name{
+      font-family: $fontExtraBold;
+      font-size: $fontSizeBase;
+    }
+
+    .stat{
+      font-size: $fontSizeSmall;
+      .key{
+        font-family: $fontMedium;
+      }
+      .value{
+        font-family: $fontLight;
+
+      }
+    }
+  }
 }
 
