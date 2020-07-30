@@ -28,6 +28,8 @@ export const getStationData = (state: State) => state.stationData;
 export const getMapData = (state: State) => state.mapData;
 export const getView = (state: State) => state.view;
 export const getSelectedWeek = (state: State) => state.selectedWeek;
+export const getSelectedLine = (state: State) => state.selectedLine;
+export const getSelectedNta = (state: State) => state.selectedNta;
 
 /** Turnstile Manipulations */
 export const getFilteredSwipeData = createSelector([

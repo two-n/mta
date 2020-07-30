@@ -7,6 +7,8 @@ export interface State {
   mapData: null | MapData,
   view: VIEWS,
   selectedWeek: string,
+  selectedLine: string, // line_name
+  selectedNta: string, // ntaCode
 }
 
 export type AppDataType = {

@@ -27,3 +27,13 @@ export const setWeek = (week: string) => ({
   type: SET_WEEK,
   week,
 });
+export const SET_LINE = 'SET_LINE';
+export const setLine = (line: string) => ({
+  type: SET_LINE,
+  line,
+});
+export const SET_NTA = 'SET_NTA';
+export const setNTA = (nta: string) => ({
+  type: SET_NTA,
+  nta,
+});
