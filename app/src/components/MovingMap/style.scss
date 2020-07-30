@@ -24,6 +24,7 @@
       path{
         stroke: $colorBlack;
         stroke-width: 1px;
+        fill: none;
       }
     }
   }
@@ -46,16 +47,6 @@
   .station{
     transition: transform $durationMovement;
     cursor: pointer;
-
-    text{
-      visibility: hidden;
-      text-anchor: middle;
-      pointer-events: none;
-      text-transform: uppercase;
-      font-size: $fontSizeSmall;
-      font-family: $fontRegular;
-      fill: $colorDarkGrey;
-    }
 
     circle{
       transition: transform $durationOpacity;
@@ -85,23 +76,36 @@
 
   .annotations{
     .annotation{
-      stroke: $colorDarkGrey;
+      stroke: $colorMidGrey;
       transition: transform $durationMovement;
     }
   }
 
   .overlay{
     position:absolute;
+    opacity: 0;
+
+    &.visible{
+      opacity: 1;
+    }
 
     .annotation-label{
+      color: $colorMidGrey;
       font-size: $fontSizeSmall;
       position: absolute;
       transition: transform $durationMovement;
       max-width: 7em;
+      padding-left: .5em;
 
       &.y{
         text-align: right;
       }
+    }
+
+    .color-legend{
+      position: absolute;
+      right: 0;
+      bottom: 2em;
     }
   }
 

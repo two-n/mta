@@ -2,6 +2,7 @@ import { ScaleLinear } from 'd3';
 import { StationData, AppDataType } from './types';
 
 export const getNameHash = (d: StationData):string => `${d.station} - ${d.line_name}`;
+export const getSectionHash = (sectionName: string, stepId: number) => `${sectionName}-${stepId}`;
 
 export const getUnique = (data: any[],
   acc = (d:any) => d) => [...new Set(data.map(acc))];
@@ -40,7 +41,7 @@ export const calcSwarm = (
   let head:any = null;
   let tail = null;
 
-  // Returns true if circle ⟨x,y⟩ intersects with any circle in the queue.
+  // Returns true if circle âŸ¨x,yâŸ© intersects with any circle in the queue.
   function intersects(x, y) {
     let a = head;
     while (a) {
@@ -54,7 +55,7 @@ export const calcSwarm = (
 
   // Place each circle sequentially.
   for (const b of circles) {
-    // Remove circles from the queue that can’t intersect the new circle b.
+    // Remove circles from the queue that canâ€™t intersect the new circle b.
     while (head && head.x < b.x - radius2) head = head.next;
 
     // Choose the minimum non-intersecting tangent.

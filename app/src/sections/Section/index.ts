@@ -5,6 +5,7 @@ import scrollama from 'scrollama';
 import { SectionDataType, State, StepDataType } from '../../utils/types';
 import './style.scss';
 import { CLASSES as C, SECTIONS as S } from '../../utils/constants';
+import { getSectionHash } from '../../utils/helpers';
 
 interface Props { data: SectionDataType,
   store: Store,
@@ -68,15 +69,15 @@ export default class Section {
 
   onStepEnter({ element, index, direction }) {
     // console.log('enter: element, index, direction', element, index, direction);
-    const data = select(element).data()[0] as StepDataType;
+    // const data = select(element).data()[0] as StepDataType;
 
-    if (data) {
-      // console.log('data', data);
-      this.header
-        .html(data.text) // replace header text with current step data
-        .classed(C.FADE_IN, true);
-    }
-    // select(element).classed(C.ACTIVE, true);
+    // if (data) {
+    //   // console.log('data', data);
+    //   this.header
+    //     .html(data.text) // replace header text with current step data
+    //     .classed(C.FADE_IN, true);
+    // }
+    select(element).classed(C.ACTIVE, true);
   }
 
   onStepProgress({ element, index, progress }) {
@@ -87,8 +88,8 @@ export default class Section {
   onStepExit({ element, index, direction }) {
     // console.log('exit: element, index, direction', element, index, direction);
     select(element).classed(C.ACTIVE, false);
-    this.header
-      .classed(C.FADE_IN, false);// remove class to allow css animation to be re-triggered
+    // this.header
+    //   .classed(C.FADE_IN, false);// remove class to allow css animation to be re-triggered
   }
 
   setUpSection() {
@@ -117,11 +118,13 @@ export default class Section {
       .selectAll(`.${C.STEP}`).data(data.steps)
       .join('div')
       .attr('class', C.STEP)
-      .attr('data-step', (d) => d.step_id);
+      .attr('data-step', (d) => getSectionHash(this.section, d.step_id));
 
-    this.steps.append('h3')
-      .attr('class', C.STEP_HEADER)
-      .html((d) => d.header);
+    this.steps.selectAll('.text')
+      .data((d) => [d])
+      .join('div')
+      .attr('class', 'text')
+      .html((d) => d.text);
   }
 
   setUpGraphic() {
@@ -131,7 +134,7 @@ export default class Section {
   // generic window resize listener event
   handleResize() {
     // 1. update height of step elements
-    const stepH = Math.floor(window.innerHeight) * 1.2;
+    const stepH = Math.floor(window.innerHeight) * 0.7;
     this.steps.style('height', `${stepH}px`);
 
     const figureHeight = window.innerHeight * 0.8;

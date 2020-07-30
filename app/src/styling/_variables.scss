@@ -20,10 +20,12 @@ $colorBlack: #000;
 $colorYellow: #E5A139;
 $colorDarkGrey: #707070;
 $colorLightGrey: #ccc;
+$colorMidGrey: #777;
+$boxShadow: 0px 3px 6px -3px $colorLightGrey;
 
 /** SPACING/MARGINS/PADDING */
 $maxTextWidth: 20rem;
-$controlBarHeight: 160px;
+$controlBarHeight: 140px;
 
 /** TRANSITIONS */
 $durationOpacity: 500ms;

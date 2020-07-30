@@ -1,0 +1,27 @@
+
+@import "../../styling/variables";
+
+.Tooltip{
+  position: absolute;
+  top: 0;
+  transition: transform 500ms, opacity 500ms;
+  opacity: 0;
+  background-color: $colorBackground;
+  padding: .5em;
+  box-shadow: $boxShadow;
+  width: min-content;
+  border-radius: 5px;
+  pointer-events: none;
+  white-space: nowrap;
+  color: $colorMidGrey;
+  font-size: $fontSizeSmall;
+  z-index: 2;
+
+  &.no-transition{
+    transition: none;
+  }
+
+  &.visible{
+    opacity: 1;
+  }
+}

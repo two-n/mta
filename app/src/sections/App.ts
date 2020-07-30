@@ -7,6 +7,7 @@ import SectionTimeline from './SectionTimeline';
 import SectionMovingMap from './SectionMovingMap';
 import SectionIntro from './SectionIntro';
 import Controls from '../components/Controls';
+import Navigation from '../components/Navigation';
 
 import * as S from '../redux/selectors';
 import { State } from '../utils/types';
@@ -29,6 +30,10 @@ export default class App {
     // TITLE
     this.Title = new Title({ data: sectionData[SECTIONS.S_TITLE] });
 
+    this.Naviation = new Navigation({
+      sections: sectionData,
+    });
+
     // INTRO
     this.SectionIntro = new SectionIntro({ data: sectionData[SECTIONS.S_INTRO] });
 
@@ -47,6 +52,7 @@ export default class App {
     this.Controls = new Controls({
       store: this.store,
     });
+
 
     // polyfil for sticky positioning
     this.setupStickyfill();

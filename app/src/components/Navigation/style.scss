@@ -1,0 +1,28 @@
+@import "../../styling/variables";
+
+$nodeSize: 10px;
+
+.Navigation{
+  position: fixed;
+  top: 50%;
+  right: 0;
+  padding: 1em;
+  transform: translateY(-50%);
+  z-index: 1;
+
+  .section{
+    margin: 1.5em 0;
+
+    .node{
+      margin: 15% 0;
+      width: $nodeSize;
+      height: $nodeSize;
+      border-radius: 100%;
+      border: $colorYellow 1px solid;
+
+      &:hover{
+        background-color: $colorYellow;
+      }
+    }
+  }
+}
