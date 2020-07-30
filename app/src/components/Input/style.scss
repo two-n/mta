@@ -1,18 +1,34 @@
 @import "../../styling/variables";
 
 .Input{
-
+  position: relative;
   input{
     width: 100%;
   }
 
   ul{
-    height: 50px;
+    margin: 0;
+    padding: 0;
+    max-height: $controlBarHeight;
+    width: 100%;
     overflow: scroll;
-
+    position: absolute;
+    background-color: $colorBackground;
+    z-index: 2;
     li{
       display: flex;
+      flex-direction: row;
       align-items: center;
+      flex-wrap: wrap;
+      padding: .5em;
     }
+  }
+
+  .autoComplete_highlighted{
+    font-weight: bold;
+  }
+
+  .autoComplete_selected, li:hover{
+    background-color: $colorLightGrey;
   }
 }

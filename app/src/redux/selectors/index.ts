@@ -198,4 +198,4 @@ export const getUniqueNTAs = createSelector([
 ], (data) => data && [
   ...new Map(data
     .map((d:StationData) => ([d.NTACode, d.NTAName]))),
-].map(([key, content]) => ({ key, content })));
+].map(([key, name]) => ({ key, name })));

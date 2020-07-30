@@ -33,12 +33,12 @@ export default class Controls {
       .attr('id', 'controls');
 
     const lines = S.getUniqueLines(this.state);
-    const lineOptions = lines.map((l) => ({ key: l, content: `<span>${l} </span> ${LineSwatch(l)}</div>` }));
+    const lineOptions = lines.map((l) => ({ key: l, name: l, content: `${LineSwatch(l)}` }));
     this.LineInput = new Input({
       parent: this.el,
       customClass: 'line',
       options: lineOptions,
-      placeholderText: 'select neighborhood',
+      placeholderText: 'select line',
       updateVal: (val) => console.log('update', val),
     });
 
