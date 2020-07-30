@@ -7,6 +7,8 @@ export interface State {
   mapData: null | MapData,
   view: VIEWS,
   selectedWeek: string,
+  selectedLine: string, // line_name
+  selectedNta: string, // ntaCode
 }
 
 export type AppDataType = {
@@ -68,8 +70,8 @@ export interface StationData {
   station: string;
   BoroCode: number;
   BoroName: number;
-  NTACode: number;
-  NTAName: number;
+  NTACode: string;
+  NTAName: string;
   GTFS_stop_id: string;
   line_name: string;
   ct2010: string;

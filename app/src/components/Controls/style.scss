@@ -5,7 +5,8 @@
   bottom: 0;
   left: 50%;
   padding: 1em 2em;
-  width: 100%;
+  margin: 0 auto;
+  width: 90%;
   max-width: inherit;
   height: $controlBarHeight;
   display: flex;
@@ -13,19 +14,21 @@
   flex-wrap: wrap;
   justify-items: center;
   justify-content: space-between;
-  border-radius: 15px;
+  border-radius: 6px;
   box-shadow: 0px 1px 9px 1px $colorLightGrey ;
   background-color: $colorBackground;
   transform: translateY(100%) translateX(-50%); // take out of view
+  // transform: translateX(-50%); // take out of view
   transition: transform $durationMovement;
 
   &.visible{
-    transform: translateY(0) translateX(-50%); // take out of view
+    transform: translateY(-1em) translateX(-50%); // take out of view
 
   }
 
   .Input{
-    width: 40%;
+    width: calc(50% - 1em);
+    margin: 0 .5em;
   }
 
   .filterTimeline{

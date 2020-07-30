@@ -7,6 +7,7 @@ import * as S from '../../redux/selectors';
 import * as A from '../../redux/actions/creators';
 import Input from '../Input';
 import TimelineFilter from '../TimelineFilter';
+import { LineSwatch } from '../LineSwatch';
 
 interface Props {
   store: Store<State>
@@ -31,19 +32,23 @@ export default class Controls {
       .append('div')
       .attr('id', 'controls');
 
-    // TODO: pull selector for distinct list of lines
-    // TODO: write function to create swatches
-    // TODO: create array of {key: lineName, content: createSwatch(lineName)}
+    const lines = S.getUniqueLines(this.state);
+    const lineOptions = lines.map((l) => ({ key: l, name: l, content: `${LineSwatch(l)}` }));
     this.LineInput = new Input({
       parent: this.el,
       customClass: 'line',
+      options: lineOptions,
+      placeholderText: 'select line',
+      updateVal: (line) => this.store.dispatch(A.setLine(line)),
     });
 
-    // TODO: create selector for unique NTAs
-    // TODO: create array of {key: ntaCode, content: NTAName}
+    const ntaOptions = S.getUniqueNTAs(this.state);
     this.NTAInput = new Input({
       parent: this.el,
       customClass: 'nta',
+      options: ntaOptions,
+      placeholderText: 'select neighborhood',
+      updateVal: (nta) => this.store.dispatch(A.setNTA(nta)),
     });
 
 

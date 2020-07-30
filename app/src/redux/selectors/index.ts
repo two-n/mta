@@ -9,8 +9,10 @@ import {
   min,
   mean,
 } from 'd3-array';
-import { scaleSequential, geoContains, ascending } from 'd3';
-import { State } from '../../utils/types';
+import {
+  scaleSequential, geoContains, ascending, line,
+} from 'd3';
+import { State, StationData } from '../../utils/types';
 import * as Helpers from '../../utils/helpers';
 import { processStations } from '../../utils/dataProcessing';
 import {
@@ -26,6 +28,8 @@ export const getStationData = (state: State) => state.stationData;
 export const getMapData = (state: State) => state.mapData;
 export const getView = (state: State) => state.view;
 export const getSelectedWeek = (state: State) => state.selectedWeek;
+export const getSelectedLine = (state: State) => state.selectedLine;
+export const getSelectedNta = (state: State) => state.selectedNta;
 
 /** Turnstile Manipulations */
 export const getFilteredSwipeData = createSelector([
@@ -58,35 +62,21 @@ export const getMapOutline = createSelector([getMapData],
 export const getLinesData = createSelector([getMapData],
   (data) => topojson.feature(data, data.objects['subway-lines']));
 
-// filter out Staten Island
-const getFilteredACSData = createSelector([
-  getMapData,
-], (data) => ({
-  ...data,
-  objects: {
-    acs_nta: {
-      ...data.objects.acs_nta,
-      geometries: data.objects.acs_nta.geometries
-        .filter(({ properties }) => properties.BoroCode !== 5), // FIXME: want to keep in nta but still size view to central stations
-    },
-  },
-}));
-
 const getACSGeometries = createSelector([
-  getFilteredACSData,
+  getMapData,
 ], (data) => data.objects.acs_nta.geometries);
 
 export const getNTAFeatures = createSelector([
-  getFilteredACSData,
+  getMapData,
 ], (data) => topojson.feature(data, data.objects.acs_nta));
 
 export const getGeoMeshInterior = createSelector([
-  getFilteredACSData,
+  getMapData,
 ], (data) => topojson.mesh(data, data.objects.acs_nta,
   (a, b) => a !== b));
 
 export const getGeoMeshExterior = createSelector([
-  getFilteredACSData,
+  getMapData,
 ], (data) => topojson.mesh(data, data.objects.acs_nta,
   (a, b) => a === b));
 
@@ -193,3 +183,21 @@ export const getNTAbboxes = createSelector([
   [V.ZOOM_SOHO]: bbox(soho),
   [V.ZOOM_BROWNSVILLE]: bbox(brownsville),
 }));
+
+// UNIQUE VALUES
+export const getUniqueLines = createSelector([
+  getStationData,
+], (data) => data && [
+  ...new Set(data
+    .map((d:StationData) => d.line_name && d.line_name
+      .toString()
+      .split(''))
+    .flat()),
+].sort());
+
+export const getUniqueNTAs = createSelector([
+  getStationData,
+], (data) => data && [
+  ...new Map(data
+    .map((d:StationData) => ([d.NTACode, d.NTAName]))),
+].map(([key, name]) => ({ key, name })));
