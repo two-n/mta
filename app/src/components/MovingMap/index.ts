@@ -16,6 +16,7 @@ import './style.scss';
 import styleVars from '../../styling/_variables.scss';
 import ColorLegend from '../ColorLegend';
 import Tooltip from '../Tooltip';
+import LineSwatch from '../LineSwatch';
 
 interface Props {
   store: Store<State>
@@ -446,7 +447,7 @@ export default class MovingMap {
   onStationMouseover(d:StationData) {
     const { target, offsetX: x, offsetY: y } = event;
     select(target.parentNode).raise();
-    this.tooltip.update([x, y], d.station);
+    this.tooltip.update([x, y], this.createTooltip(d));
   }
 
   onStationMouseout() {
@@ -468,6 +469,17 @@ export default class MovingMap {
     return `<div class="name"> ${d.NTAName} <div>
     ${[K.WHITE, K.INCOME_PC].map(statSpan).join('')}
     `;
+  }
+
+  createTooltip(d:StationData) {
+    const lineSwatches = d.line_name.toString().split('').map(LineSwatch).join('');
+
+    return `<div>
+    <div class="station-name">${d.station}</div>
+    <div class="week">week of: ${F.fDayMonth(F.pWeek(this.week))}</div>
+    <div class="stat">% still riding: ${F.fPct(this.getPctChange(d))}</div>
+    ${lineSwatches}
+    </div>`;
   }
 
   // /** takes a timeline item and returns  */
