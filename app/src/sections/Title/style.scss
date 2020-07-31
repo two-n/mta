@@ -6,15 +6,46 @@ section#section-title{
   flex-direction: column;
   justify-content: center;
   font-size: 17vmin; // dynamic with the width of the screen
+  cursor: default;
+  color: $colorBackground;
 
-  h1{
+  .title{
+    cursor: default;
     margin: 0;
     font-size: inherit; // dynamic with the width of the screen
     line-height: 1em;
+    z-index: 2;
+    mix-blend-mode: exclusion;
   }
 
   h3{
+    cursor: default;
     font-size: .3em;
     line-height: 1em;
+    z-index: 2;
+    mix-blend-mode: initial;
+  }
+
+  video{
+    position: absolute;
+    width: 200%;
+    top: 50%;
+    left: 0;
+    transform: translate(-25%, -50%);
+    z-index: -1;
+  }
+
+  .overlay{
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transform: translate(-25%, -101%);
+    opacity: .5;
+    background-color: $colorYellow;
+    z-index: 1;
+    mix-blend-mode: screen;
+    border-bottom: 2px black solid;
   }
 }
