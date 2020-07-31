@@ -8,6 +8,7 @@ export enum SECTIONS {
   S_TIMELINE = 'section-timeline',
   S_PCT_CHNG = 'section-pct-change',
   S_MOVING_MAP = 'section-map',
+  S_METHODOLOGY ='section-methodology'
 }
 
 export enum DIRECTIONS {
@@ -62,7 +63,7 @@ export enum CLASSES {
   GRADIENT = 'gradient',
   WRAPPER = 'wrapper',
   BAR = 'bar',
-  REFERENCE='reference',
+  REFERENCE = 'reference',
   HIGHLIGHT = 'highlight',
 }
 

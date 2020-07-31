@@ -13,6 +13,7 @@ import * as S from '../redux/selectors';
 import { State } from '../utils/types';
 import { SECTIONS, CLASSES as C } from '../utils/constants';
 import Title from './Title';
+import Methodology from './Methodology';
 
 export default class App {
   [x: string]: any;
@@ -51,6 +52,10 @@ export default class App {
 
     this.Controls = new Controls({
       store: this.store,
+    });
+
+    this.Methodology = new Methodology({
+      data: sectionData[SECTIONS.S_METHODOLOGY],
     });
 
 
