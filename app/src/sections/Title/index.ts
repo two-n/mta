@@ -25,21 +25,21 @@ export default class Title {
     this.el.append('h1').attr('class', C.TITLE).text(this.data.title);
     this.el.append('h3').attr('class', C.SUBTITLE).text(this.data.subtitle);
 
-    this.video = this.el.append('video')
-      .attr('class', 'title-video')
+    // create outside of app to take up full screen
+    this.videoWrapper = select('body').append('div')
+      .attr('class', 'title-video');
+
+    this.video = this.videoWrapper.append('video')
       .attr('autoplay', true);
     // .attr('loop', true);
 
     this.video.append('source')
       .attr('src', video);
 
-    // speed up video a bit
-    // this.video.node().playbackRate = 1.2;
-
-    this.overlay = this.el.append('div')
+    this.overlay = this.videoWrapper.append('div')
       .attr('class', 'overlay');
 
-    this.el.on('mousemove', () => {
+    this.videoWrapper.on('mousemove', () => {
       const { y } = event;
       this.overlay.style('transform', `translate(-25%, ${y - 10}px) translateY(-100%)`);
     });
