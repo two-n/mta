@@ -32,7 +32,7 @@ interface ScaleObject {
 
 const M = {
   top: 30,
-  bottom: 20, // make room for control bar
+  bottom: 30, // make room for control bar
   left: 30,
   right: 20,
   swarmBottom: 125,

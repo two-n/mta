@@ -55,14 +55,19 @@ section.section {
       margin-bottom: 100vh; // used to add some space for transitions between steps
 
       .text {
-        width: max-content;
+        width: 100%;
         max-width: 100%;
         position: sticky;
         top: 1em;
         padding: 1em;
         margin: 0 auto;
-        font-family: $fontLight;
+        font-family: $fontBold;
         font-size: $fontSizeBase;
+
+        &:not(.empty) {
+          border-top: $thickBorderWidth solid black;
+          background-color: $colorBackground;
+        }
       }
 
       &.active {

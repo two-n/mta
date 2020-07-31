@@ -124,6 +124,7 @@ export default class Section {
       .data((d) => [d])
       .join('div')
       .attr('class', 'text')
+      .classed('empty', (d) => !d.text)
       .html((d) => d.text);
   }
 
