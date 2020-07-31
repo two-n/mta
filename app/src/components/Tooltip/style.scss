@@ -6,16 +6,25 @@
   top: 0;
   transition: transform 500ms, opacity 500ms;
   opacity: 0;
-  background-color: $colorBackground;
-  padding: .5em;
-  box-shadow: $boxShadow;
-  width: min-content;
-  border-radius: 5px;
-  pointer-events: none;
-  white-space: nowrap;
-  color: $colorMidGrey;
-  font-size: $fontSizeSmall;
   z-index: 2;
+  pointer-events: none;
+  width: min-content;
+
+  svg.tail{
+    position: absolute;
+    top:0;
+    fill: white;
+  }
+
+  .content{
+    padding: .5em;
+    box-shadow: $boxShadow;
+    border-radius: 5px;
+    white-space: nowrap;
+    color: $colorMidGrey;
+    font-size: $fontSizeSmall;
+    background-color: white;
+  }
 
   &.no-transition{
     transition: none;
