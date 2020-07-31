@@ -209,7 +209,7 @@ export default class MovingMap {
       }
     })
       .attr('fill', (d) => (this.colorScale(this.getPctChange(d))))
-      .classed('allow-pointer', view >= V.SWARM)
+      .classed('allow-pointer', ![V.ZOOM_SOHO, V.ZOOM_SOHO].includes(view))
       .classed(C.HIGHLIGHT, this.isHighlighted);
 
     const neighborhoodIndex = [V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE].includes(view)
@@ -254,7 +254,7 @@ export default class MovingMap {
             .style('transform', (d, i) => (
               isLeft
                 ? `translate(${left - offsetX}px, ${top - offsetY}px) translateX(-100%)`
-                : `translate(${left - offsetX + w}px, ${top - offsetY}px) translateY(50%)`));
+                : `translate(${left - offsetX + w}px, ${top - offsetY}px)`));
         }
       });
 
@@ -449,9 +449,10 @@ export default class MovingMap {
   }
 
   onStationMouseover(d:StationData) {
+    const [width, height] = this.dims;
     const { target, offsetX: x, offsetY: y } = event;
     select(target.parentNode).raise();
-    this.tooltip.update([x, y], this.createTooltip(d));
+    this.tooltip.update([x, y], this.createTooltip(d), y > height * 0.2, x > width * 0.7);
   }
 
   onStationMouseout() {
@@ -477,17 +478,20 @@ export default class MovingMap {
 
   createTooltip(d:StationData) {
     const lineSwatches = d.line_name.toString().split('').map(LineSwatch).join('');
-
+    const yVal = this.yKey && this.yScales[this.yKey] && this.yScales[this.yKey];
     return `<div>
     <div class="station-name">${d.station}</div>
+    <div class="neighborhood"> ${d.NTAName}</div>
     <div class="week">week of: ${F.fDayMonth(F.pWeek(this.week))}</div>
     <div class="stat">% still riding: ${F.fPct(this.getPctChange(d))}</div>
+   ${yVal
+    ? `<div class="stat">${yVal.median}: ${yVal.format(this.getACS(d, this.yKey))}</div>`
+    : ''}
     ${lineSwatches}
     </div>`;
   }
 
   isHighlighted(d:StationData) {
-    console.log('this.line, this.nta', this.line, this.nta);
     return (!this.nta || d.NTACode === this.nta)
     && (!this.line || d.line_name.toString().includes(this.line));
   }
