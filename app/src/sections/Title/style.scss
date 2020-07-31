@@ -22,7 +22,29 @@ section#section-title{
     cursor: default;
     font-size: .3em;
     line-height: 1em;
+    margin: 0.25em 0;
+  }
 
+  .by-line{
+    display: inline;
+    font-size: $fontSizeBase;
+    z-index: 2;
+
+    a{
+      color: inherit;
+      font-family: $fontBold;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .two-n{
+      position: relative;
+      transform: translateY(25%);
+      display: inline-flex;
+      width: 2em;
+      height: 2em;
+      background: no-repeat center/contain url("../../assets/logo.png");
+    }
   }
 
 }

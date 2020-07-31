@@ -5,6 +5,7 @@ import './style.scss';
 import { CLASSES as C, SECTIONS } from '../../utils/constants';
 
 import video from '../../assets/subway.mp4';
+// import
 
 interface Props{
   data: SectionDataType;
@@ -24,6 +25,11 @@ export default class Title {
 
     this.el.append('h1').attr('class', C.TITLE).text(this.data.title);
     this.el.append('h3').attr('class', C.SUBTITLE).text(this.data.subtitle);
+
+    this.byLine = this.el.append('div').attr('class', 'by-line')
+      .html(`By
+      <a href=${'https://www.aucherserr.com/'}>Aucher Serr</a>,
+      <a href="http://two-n.com/">Two-N <span class="two-n"></span></a>`);
 
     // create outside of app to take up full screen
     this.videoWrapper = select('body').append('div')
