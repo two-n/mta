@@ -11,11 +11,12 @@ import {
   CLASSES as C, VIEWS as V,
   KEYS as K, FORMATTERS as F, MTA_Colors, SECTIONS,
 } from '../../utils/constants';
-import { calcSwarm } from '../../utils/helpers';
+import { calcSwarm, isMobile } from '../../utils/helpers';
 import './style.scss';
 import styleVars from '../../styling/_variables.scss';
 import ColorLegend from '../ColorLegend';
 import Tooltip from '../Tooltip';
+import LineSwatch from '../LineSwatch';
 
 interface Props {
   store: Store<State>
@@ -31,13 +32,13 @@ interface ScaleObject {
 
 const M = {
   top: 30,
-  bottom: 20, // make room for control bar
+  bottom: 30, // make room for control bar
   left: 30,
   right: 20,
   swarmBottom: 125,
 };
 const CONTROL_HEIGHT = +styleVars.controlBarHeight.slice(0, -2);
-const R = 3;
+const R = isMobile() ? 3 : 4;
 const duration = +styleVars.durationMovement.slice(0, -2);
 const geoPadding = { // distance from zoomed in shape
   top: 30,
@@ -84,6 +85,7 @@ export default class MovingMap {
     this.onStationMouseout = this.onStationMouseout.bind(this);
     this.handleStateChange = this.handleStateChange.bind(this);
     this.createStatBox = this.createStatBox.bind(this);
+    this.isHighlighted = this.isHighlighted.bind(this);
     this.store.subscribe(this.handleStateChange);
   }
 
@@ -206,11 +208,13 @@ export default class MovingMap {
         }
       }
     })
-      .attr('fill', (d) => (this.colorScale(this.getPctChange(d))))
-      .classed('allow-pointer', view >= V.SWARM);
+      .style('fill', (d) => (this.isHighlighted(d)
+        ? (this.colorScale(this.getPctChange(d)))
+        : null))
+      .classed('allow-pointer', ![V.ZOOM_SOHO, V.ZOOM_SOHO].includes(view))
+      .classed(C.HIGHLIGHT, this.isHighlighted);
 
-    const neighborhoodIndex = [V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE].includes(view)
-      ? [V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE].indexOf(view) : null;
+    const neighborhoodIndex = [V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE].indexOf(view);
     this.ntaAnnotations.classed(C.VISIBLE, (d, i) => i === neighborhoodIndex);
 
     // SCALE VIEWBOX
@@ -238,7 +242,7 @@ export default class MovingMap {
 
         // if we are currently zoomed in on a neighborhood
         // find zoomed position of matching polygon and move annotation next to it
-        if (neighborhoodIndex !== null && neighborhoodIndex > -1) {
+        if (neighborhoodIndex > -1) {
           const isLeft = neighborhoodIndex === 0;
           const { x: offsetX, y: offsetY } = this.el.node().getBoundingClientRect();
           const path = this.selectedNtas
@@ -251,7 +255,7 @@ export default class MovingMap {
             .style('transform', (d, i) => (
               isLeft
                 ? `translate(${left - offsetX}px, ${top - offsetY}px) translateX(-100%)`
-                : `translate(${left - offsetX + w}px, ${top - offsetY}px) translateY(50%)`));
+                : `translate(${left - offsetX + w}px, ${top - offsetY}px)`));
         }
       });
 
@@ -440,13 +444,16 @@ export default class MovingMap {
     this.state = this.store.getState();
     this.view = S.getView(this.state);
     this.week = S.getSelectedWeek(this.state);
+    this.line = S.getSelectedLine(this.state);
+    this.nta = S.getSelectedNta(this.state);
     this.handleViewTransition();
   }
 
   onStationMouseover(d:StationData) {
+    const [width, height] = this.dims;
     const { target, offsetX: x, offsetY: y } = event;
     select(target.parentNode).raise();
-    this.tooltip.update([x, y], d.station);
+    this.tooltip.update([x, y], this.createTooltip(d), y > height * 0.2, x > width * 0.7);
   }
 
   onStationMouseout() {
@@ -470,9 +477,23 @@ export default class MovingMap {
     `;
   }
 
-  // /** takes a timeline item and returns  */
-  // get highlightCriteria(d:StationData) {
-  //   (!this.line || d.line_name.includes(this.line))
-  //   && (!this.ntaCode || d.NTACode == this.ntaCode);
-  // }
+  createTooltip(d:StationData) {
+    const lineSwatches = d.line_name.toString().split('').map(LineSwatch).join('');
+    const yVal = this.yKey && this.yScales[this.yKey] && this.yScales[this.yKey];
+    return `<div>
+    <div class="station-name">${d.station}</div>
+    <div class="neighborhood"> ${d.NTAName}</div>
+    <div class="week">week of: ${F.fDayMonth(F.pWeek(this.week))}</div>
+    <div class="stat">% still riding: ${F.fPct(this.getPctChange(d))}</div>
+   ${yVal
+    ? `<div class="stat">${yVal.median}: ${yVal.format(this.getACS(d, this.yKey))}</div>`
+    : ''}
+    ${lineSwatches}
+    </div>`;
+  }
+
+  isHighlighted(d:StationData) {
+    return (!this.nta || d.NTACode === this.nta)
+    && (!this.line || d.line_name.toString().includes(this.line));
+  }
 }

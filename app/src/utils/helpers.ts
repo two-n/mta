@@ -1,6 +1,7 @@
-import { ScaleLinear } from 'd3';
+import { ScaleLinear, window } from 'd3';
 import { StationData, AppDataType } from './types';
 
+export const isMobile = () => window.innerWidth < 500;
 export const getNameHash = (d: StationData):string => `${d.station} - ${d.line_name}`;
 export const getSectionHash = (sectionName: string, stepId: number) => `${sectionName}-${stepId}`;
 

@@ -27,12 +27,11 @@ $rowHeight: 1.5rem;
       position: relative;
       width: 100%;
       padding: inherit;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
+      display: block;
       height: $rowHeight;
       white-space: nowrap;
       text-overflow: ellipsis;
+      overflow: hidden;
     }
   }
 
