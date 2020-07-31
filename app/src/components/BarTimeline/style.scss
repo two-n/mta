@@ -80,7 +80,7 @@
 
     .box {
       position: absolute;
-      border: $colorYellow 4px dashed;
+      border: $colorYellow calc(#{$thickBorderWidth}/2) dashed;
       opacity: 0;
       top: 50%;
       transform: translateY(-50%);
@@ -111,6 +111,7 @@
           font-family: $fontBold;
           position: absolute;
           top: -$thickBorderWidth;
+          left: -$thickBorderWidth/2;
           width: 0;
           text-align: right;
           animation: drawOutLine 1.5s 1 forwards;
@@ -148,11 +149,11 @@
   }
 
   50% {
-    width: calc(100% + 2.5em);
+    width: calc(100% + 3em);
   }
 
   100% {
-    width: calc(100% + 2.5em);
+    width: calc(100% + 3em);
     color: rgba($color: $colorBlack, $alpha: 1);
   }
 }
