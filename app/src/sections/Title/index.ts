@@ -30,11 +30,12 @@ export default class Title {
       .attr('class', 'title-video');
 
     this.video = this.videoWrapper.append('video')
-      .attr('autoplay', true);
-    // .attr('loop', true);
+      .attr('autoplay', true)
+      .attr('src', video); // chrome needs the source here
 
     this.video.append('source')
-      .attr('src', video);
+      .attr('type', 'video/mp4')
+      .attr('src', video); // chrome needs the source here
 
     this.overlay = this.videoWrapper.append('div')
       .attr('class', 'overlay');
