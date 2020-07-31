@@ -11,7 +11,7 @@ import {
   CLASSES as C, VIEWS as V,
   KEYS as K, FORMATTERS as F, MTA_Colors, SECTIONS,
 } from '../../utils/constants';
-import { calcSwarm } from '../../utils/helpers';
+import { calcSwarm, isMobile } from '../../utils/helpers';
 import './style.scss';
 import styleVars from '../../styling/_variables.scss';
 import ColorLegend from '../ColorLegend';
@@ -38,7 +38,7 @@ const M = {
   swarmBottom: 125,
 };
 const CONTROL_HEIGHT = +styleVars.controlBarHeight.slice(0, -2);
-const R = 3;
+const R = isMobile() ? 3 : 4;
 const duration = +styleVars.durationMovement.slice(0, -2);
 const geoPadding = { // distance from zoomed in shape
   top: 30,
@@ -208,7 +208,9 @@ export default class MovingMap {
         }
       }
     })
-      .attr('fill', (d) => (this.colorScale(this.getPctChange(d))))
+      .style('fill', (d) => (this.isHighlighted(d)
+        ? (this.colorScale(this.getPctChange(d)))
+        : null))
       .classed('allow-pointer', ![V.ZOOM_SOHO, V.ZOOM_SOHO].includes(view))
       .classed(C.HIGHLIGHT, this.isHighlighted);
 

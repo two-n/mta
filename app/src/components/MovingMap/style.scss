@@ -74,10 +74,16 @@
 
       &.visible {
         .station {
-          opacity: 0.4;
+          &:not(.highlight){
+            opacity: 0.4;
+            fill: $colorLightGrey;
+            pointer-events: none;
+          }
+
           &.highlight, &:hover {
             opacity: 1;
           }
+
         }
       }
     }
