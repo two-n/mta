@@ -1,7 +1,10 @@
 @import "../../styling/variables";
 
 .moving-map{
+  position: relative;
 
+  svg{
+    position: relative;
   .map, .lines, .ntas{
     opacity: 0;
     transition: opacity $durationOpacity;
@@ -73,7 +76,7 @@
       opacity: 1;
     }
   }
-
+  }
   .annotations{
     .annotation{
       stroke: $colorMidGrey;
@@ -84,6 +87,7 @@
   .overlay{
     position:absolute;
     opacity: 0;
+    overflow: hidden;
 
     &.visible{
       opacity: 1;
@@ -114,6 +118,35 @@
     transition: opacity $durationOpacity;
     &.visible{
       opacity: 1;
+    }
+  }
+
+  .nta-annotation{
+    position: absolute;
+    width: 120px;
+    padding: 1em;
+    opacity: 0;
+    transition: opacity 0 0;
+
+    &.visible{
+      transition: opacity $durationOpacity $durationMovement;
+      opacity: 1;
+    }
+
+    .name{
+      font-family: $fontExtraBold;
+      font-size: $fontSizeBase;
+    }
+
+    .stat{
+      font-size: $fontSizeSmall;
+      .key{
+        font-family: $fontMedium;
+      }
+      .value{
+        font-family: $fontLight;
+
+      }
     }
   }
 }
