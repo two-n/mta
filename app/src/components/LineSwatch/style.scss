@@ -1,16 +1,18 @@
 @import "../../styling/variables";
 
 .swatch{
-  width: 1.25em;
-  height: 1.25em;
+  width: 1.5em;
+  height: 1.5em;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  line-height: 0;
   border-radius: 100%;
   color: white;
   padding: .25em;
   margin: .25em;
   font-size: $fontSizeSmall;
+  font-family: $fontBold;
 
   &.blue{
     background-color: #0039A6;
@@ -29,6 +31,7 @@
   }
   &.yellow{
     background-color: #FCCC0A;
+    color: $colorBlack;
   }
   &.darkGrey{
     background-color: #808183;
