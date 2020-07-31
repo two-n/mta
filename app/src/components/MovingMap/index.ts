@@ -212,8 +212,7 @@ export default class MovingMap {
       .classed('allow-pointer', ![V.ZOOM_SOHO, V.ZOOM_SOHO].includes(view))
       .classed(C.HIGHLIGHT, this.isHighlighted);
 
-    const neighborhoodIndex = [V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE].includes(view)
-      ? [V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE].indexOf(view) : null;
+    const neighborhoodIndex = [V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE].indexOf(view);
     this.ntaAnnotations.classed(C.VISIBLE, (d, i) => i === neighborhoodIndex);
 
     // SCALE VIEWBOX
@@ -241,7 +240,7 @@ export default class MovingMap {
 
         // if we are currently zoomed in on a neighborhood
         // find zoomed position of matching polygon and move annotation next to it
-        if (neighborhoodIndex !== null && neighborhoodIndex > -1) {
+        if (neighborhoodIndex > -1) {
           const isLeft = neighborhoodIndex === 0;
           const { x: offsetX, y: offsetY } = this.el.node().getBoundingClientRect();
           const path = this.selectedNtas
