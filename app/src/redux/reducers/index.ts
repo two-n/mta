@@ -13,6 +13,7 @@ const initialState: State = {
   stationData: null,
   mapData: null,
   view: VIEWS.BLANK,
+  yKey: null,
   selectedWeek: F.fWeek(appConfig.endDate), // beginning with the end of phase 1
   selectedLine: null,
   selectedNta: null,
@@ -30,6 +31,7 @@ export default function reducer(state = initialState, action: Action): State {
       return {
         ...state,
         view: action.view,
+        yKey: action.yKey || null,
         ...action.view < V.SCATTER // reset selction values for anything before controls show up
           ? { selectedLine: null, selectedNta: null, selectedWeek: initialState.selectedWeek }
           : {},

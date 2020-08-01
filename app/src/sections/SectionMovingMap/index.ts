@@ -1,5 +1,6 @@
 import { Store } from 'redux';
 import { select } from 'd3';
+import * as A from '../../redux/actions/creators';
 import Section from '../Section/index';
 import { SectionDataType, StepDataType } from '../../utils/types';
 import {
@@ -15,22 +16,24 @@ export default class SectionMovingMap extends Section {
   constructor({ data, store }: Props) {
     super({ data, store, sectionName: S.S_MOVING_MAP });
     this.onStepEnter = this.onStepEnter.bind(this);
+    this.onStepExit = this.onStepExit.bind(this);
     this.controller = {
-      0: () => this.movingMap.setView(V.BLANK),
-      1: () => this.movingMap.setView(V.MAP_OUTLINE),
-      2: () => this.movingMap.setView(V.MAP_DOTS_LINES),
-      3: () => this.movingMap.setView(V.MAP_DOTS_LINES_NTAS),
-      6: () => this.movingMap.setView(V.ZOOM_SOHO),
-      7: () => this.movingMap.setView(V.ZOOM_SOHO),
-      8: () => this.movingMap.setView(V.ZOOM_BROWNSVILLE),
-      9: () => this.movingMap.setView(V.ZOOM_BROWNSVILLE),
-      10: () => this.movingMap.setView(V.MAP_DOTS_LINES),
-      11: () => this.movingMap.setView(V.SWARM),
-      12: (key:string) => this.movingMap.setView(V.SCATTER, key),
-      13: (key:string) => this.movingMap.setView(V.SCATTER, key),
-      14: (key:string) => this.movingMap.setView(V.SCATTER, key),
-      15: (key:string) => this.movingMap.setView(V.SCATTER, key),
-      16: (key:string) => this.movingMap.setView(V.SCATTER, key),
+      0: () => store.dispatch(A.setView(V.BLANK)),
+      1: () => store.dispatch(A.setView(V.MAP_OUTLINE)),
+      2: () => store.dispatch(A.setView(V.MAP_DOTS_LINES)),
+      3: () => store.dispatch(A.setView(V.MAP_DOTS_LINES_NTAS)),
+      6: () => store.dispatch(A.setView(V.ZOOM_SOHO)),
+      7: () => store.dispatch(A.setView(V.ZOOM_SOHO)),
+      8: () => store.dispatch(A.setView(V.ZOOM_BROWNSVILLE)),
+      9: () => store.dispatch(A.setView(V.ZOOM_BROWNSVILLE)),
+      10: () => store.dispatch(A.setView(V.MAP_DOTS_LINES)),
+      11: () => store.dispatch(A.setView(V.SWARM)),
+      12: (key:string) => store.dispatch(A.setView(V.SCATTER, key)),
+      13: (key:string) => store.dispatch(A.setView(V.SCATTER, key)),
+      14: (key:string) => store.dispatch(A.setView(V.SCATTER, key)),
+      15: (key:string) => store.dispatch(A.setView(V.SCATTER, key)),
+      16: (key:string) => store.dispatch(A.setView(V.SCATTER, key)),
+      17: () => store.dispatch(A.setView(V.MAP_WITH_CONTROLS)),
     };
     this.init();
   }
@@ -51,6 +54,13 @@ export default class SectionMovingMap extends Section {
         this.controller[index](data[KEYS.DOT_POSITION][KEYS.Y_KEY]);
       } else this.controller[index]();
     }
+  }
+
+  onStepExit({ element, index, direction }) {
+    super.onStepExit({ element, index, direction });
+    // set view on exit - used to remove controls
+    if (direction === D.DOWN
+      && index === this.data.steps.length - 1) { this.store.dispatch(A.setView(V.METHODOLOGY)); }
   }
 
   handleResize() {

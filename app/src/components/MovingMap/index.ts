@@ -2,10 +2,9 @@ import { Store } from 'redux';
 import {
   Selection, geoAlbersUsa, geoPath,
   scaleLinear, scaleBand,
-  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear, event, geoCentroid,
+  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear, event,
 } from 'd3';
 import * as S from '../../redux/selectors/index';
-import * as A from '../../redux/actions/creators';
 import { State, StationData } from '../../utils/types';
 import {
   CLASSES as C, VIEWS as V,
@@ -79,6 +78,7 @@ export default class MovingMap {
     this.bboxes = S.getNTAbboxes(this.state);
     this.selectedNTAFeatures = S.getSelectedNTAS(this.state);
     this.view = S.getView(this.state);
+    this.yKey = S.getYKey(this.state);
     this.week = S.getSelectedWeek(this.state);
 
     this.getPctChange = this.getPctChange.bind(this);
@@ -401,11 +401,6 @@ export default class MovingMap {
     this.overlay.classed(C.VISIBLE, view >= V.MAP_OUTLINE);
   }
 
-  setView(view: V, key?: string) {
-    this.yKey = key;
-    this.store.dispatch(A.setView(view));
-  }
-
   getPctChange(station: StationData) {
     return this.swipeData.get(station.unit)
       && this.swipeData.get(station.unit).timeline.get(this.week)
@@ -443,6 +438,7 @@ export default class MovingMap {
   handleStateChange() {
     this.state = this.store.getState();
     this.view = S.getView(this.state);
+    this.yKey = S.getYKey(this.state);
     this.week = S.getSelectedWeek(this.state);
     this.line = S.getSelectedLine(this.state);
     this.nta = S.getSelectedNta(this.state);

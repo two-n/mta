@@ -24,7 +24,8 @@ export enum VIEWS {
   ZOOM_BROWNSVILLE,
   SWARM,
   SCATTER,
-  MAP_WITH_CONTROLS // return to map with control options
+  MAP_WITH_CONTROLS, // return to map with control options
+  METHODOLOGY
 }
 
 export enum CLASSES {
