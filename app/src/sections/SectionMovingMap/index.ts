@@ -16,7 +16,6 @@ export default class SectionMovingMap extends Section {
   constructor({ data, store }: Props) {
     super({ data, store, sectionName: S.S_MOVING_MAP });
     this.onStepEnter = this.onStepEnter.bind(this);
-    this.onStepExit = this.onStepExit.bind(this);
     this.controller = {
       0: () => store.dispatch(A.setView(V.BLANK)),
       1: () => store.dispatch(A.setView(V.MAP_OUTLINE)),
@@ -54,13 +53,6 @@ export default class SectionMovingMap extends Section {
         this.controller[index](data[KEYS.DOT_POSITION][KEYS.Y_KEY]);
       } else this.controller[index]();
     }
-  }
-
-  onStepExit({ element, index, direction }) {
-    super.onStepExit({ element, index, direction });
-    // set view on exit - used to remove controls
-    if (direction === D.DOWN
-      && index === this.data.steps.length - 1) { this.store.dispatch(A.setView(V.METHODOLOGY)); }
   }
 
   handleResize() {

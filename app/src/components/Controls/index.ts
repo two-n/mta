@@ -66,8 +66,8 @@ export default class Controls {
     const state = this.store.getState();
     const view = S.getView(state);
     const newWeek = S.getSelectedWeek(state);
-    this.el.classed(C.VISIBLE, view >= VIEWS.SCATTER);
-    this.el.classed('top', view === VIEWS.MAP_WITH_CONTROLS);
+    this.el.classed(C.VISIBLE, view >= VIEWS.SCATTER && view < VIEWS.METHODOLOGY);
+    this.el.classed('top', view >= VIEWS.MAP_WITH_CONTROLS);
     this.timelineFilter.updateVisibility(newWeek);
   }
 }
