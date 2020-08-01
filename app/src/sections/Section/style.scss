@@ -64,9 +64,21 @@ section.section {
         font-family: $fontBold;
         font-size: $fontSizeBase;
 
+        &.vertical-center{
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 1.3em;
+        }
+
         &:not(.empty) {
           border-top: $thickBorderWidth solid black;
           background-color: $colorBackground;
+        }
+
+        .subtitle{
+          font-size: $fontSizeSmall;
+          font-family: $fontLight;
+          line-height: 1.5rem;
         }
       }
 

@@ -125,7 +125,14 @@ export default class Section {
       .join('div')
       .attr('class', 'text')
       .classed('empty', (d) => !d.text)
-      .html((d) => d.text);
+      .classed('vertical-center', (d) => d.isMiddle) // for headings that should be in the middle
+      .html((d) => d.text)
+      .filter((d) => d.subtitle)
+      .selectAll(C.SUBTITLE)
+      .data((d) => [d.subtitle])
+      .join('div')
+      .attr('class', C.SUBTITLE)
+      .html((d) => d);
   }
 
   setUpGraphic() {
