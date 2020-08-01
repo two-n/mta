@@ -176,7 +176,7 @@ export default class MovingMap {
     const [width, height] = this.dims;
     const { view, yKey, proj } = this;
     const { extent: EW } = S.getWeeklyDataExtent(this.state);
-    this.xScale.domain(EW); // update for new data
+    this.xScale.domain(EW).clamp(true); // update for new data
     // VISIBILITY
     this.tooltip.makeInvisible();
     // map
