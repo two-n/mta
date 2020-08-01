@@ -2,7 +2,7 @@ import { Store } from 'redux';
 import {
   Selection, geoAlbersUsa, geoPath,
   scaleLinear, scaleBand,
-  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear, event,
+  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear, event, zoom,
 } from 'd3';
 import * as S from '../../redux/selectors/index';
 import { State, StationData } from '../../utils/types';
@@ -87,6 +87,7 @@ export default class MovingMap {
     this.handleStateChange = this.handleStateChange.bind(this);
     this.createStatBox = this.createStatBox.bind(this);
     this.isHighlighted = this.isHighlighted.bind(this);
+    this.zoomed = this.zoomed.bind(this);
     this.store.subscribe(this.handleStateChange);
   }
 
@@ -126,10 +127,11 @@ export default class MovingMap {
     this.xAxis = axisBottom(this.xScale).tickFormat(F.fPct).ticks(4);
 
     // ELEMENTS
-    this.map = this.el.append('g').attr('class', C.MAP);
-    this.ntas = this.el.append('g').attr('class', 'ntas');
-    this.selectedNtas = this.el.append('g').attr('class', 'selected-ntas');
-    this.lines = this.el.append('g').attr('class', C.LINES);
+    this.geoEls = this.el.append('g').attr('class', 'geo-wrapper');
+    this.map = this.geoEls.append('g').attr('class', C.MAP);
+    this.ntas = this.geoEls.append('g').attr('class', 'ntas');
+    this.selectedNtas = this.geoEls.append('g').attr('class', 'selected-ntas');
+    this.lines = this.geoEls.append('g').attr('class', C.LINES);
     this.stationsG = this.el.append('g').attr('class', C.STATIONS);
     this.xAxisEl = this.el.append('g').attr('class', `${C.AXIS} x`);
     this.yAxisEl = this.el.append('g').attr('class', `${C.AXIS} y`);
@@ -164,6 +166,10 @@ export default class MovingMap {
   draw() {
     const [width, height] = this.dims;
     this.geoPath = geoPath().projection(this.proj);
+    this.zoomBehavior = zoom()
+      .scaleExtent([1, 8])
+      .extent([[0, 0], [width, height]])
+      .on('zoom', this.zoomed);
     this.el.attr('viewBox', `0 0 ${width} ${height}`);
     this.calcNodePositions();
 
@@ -177,14 +183,16 @@ export default class MovingMap {
     const { view, yKey, proj } = this;
     const { extent: EW } = S.getWeeklyDataExtent(this.state);
     this.xScale.domain(EW).clamp(true); // update for new data
+
     // VISIBILITY
     this.tooltip.makeInvisible();
     // map
     this.map
       .classed(C.VISIBLE, MAP_VISIBLE.includes(view));
+
     this.lines
       .classed(C.VISIBLE, [V.MAP_DOTS_LINES,
-        V.MAP_DOTS_LINES_NTAS,
+        V.MAP_DOTS_LINES_NTAS, V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE,
         V.MAP_WITH_CONTROLS].includes(view));
 
     this.ntas
@@ -241,9 +249,7 @@ export default class MovingMap {
         }
         return [0, 0, width, height];
       }).on('end interrupt', () => {
-        const matrix = this.el.node().getCTM();
-        // adjust circle positions
-        this.stations.selectAll('circle').style('transform', `scale(${1 / matrix.a})`);
+        this.rescaleNodes();
 
         // if we are currently zoomed in on a neighborhood
         // find zoomed position of matching polygon and move annotation next to it
@@ -265,6 +271,14 @@ export default class MovingMap {
       });
 
     this.transitionAnnotations();
+
+    // ZOOM
+    if (view === V.MAP_WITH_CONTROLS) { // only time zoom is enabled
+      this.el
+        .call(this.zoomBehavior);
+    } else {
+      this.el.on('.zoom', null); // disable otherwise
+    }
   }
 
   setupGeographicElements() {
@@ -447,6 +461,7 @@ export default class MovingMap {
     this.week = S.getSelectedWeek(this.state);
     this.line = S.getSelectedLine(this.state);
     this.nta = S.getSelectedNta(this.state);
+    if (this.view !== V.MAP_WITH_CONTROLS) this.resetZoom();
     this.handleViewTransition();
   }
 
@@ -496,5 +511,24 @@ export default class MovingMap {
   isHighlighted(d:StationData) {
     return (!this.nta || d.NTACode === this.nta)
     && (!this.line || d.line_name.toString().includes(this.line));
+  }
+
+  zoomed() {
+    if (this.view === V.MAP_WITH_CONTROLS) {
+      this.geoEls.attr('transform', event.transform);
+      this.stationsG.attr('transform', event.transform);
+      this.rescaleNodes();
+    }
+  }
+
+  resetZoom() {
+    this.geoEls.attr('transform', null);
+    this.stationsG.attr('transform', null);
+  }
+
+  rescaleNodes() {
+    const matrix = this.geoEls.node().getCTM();
+    // adjust circle positions
+    this.stations.selectAll('circle').style('transform', `scale(${1 / matrix.a})`);
   }
 }
