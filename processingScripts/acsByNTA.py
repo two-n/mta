@@ -31,7 +31,7 @@ columnsToKeepEcon= [
     # Income and benefits
     "mdhhincE", # median household income ($)
     "mnhhincE", # mean household income ($)
-    "inc_snapE", # % with Food Stamps/SNAP benefits in last 12 months
+    "inc_snapP", # % with Food Stamps/SNAP benefits in last 12 months
     "percapincE", # per capita income ($)
 
     # Health Insurance
@@ -70,6 +70,7 @@ def pullInACSGeoJson():
   demoPath = "data/Neighborhood Tabulation Areas (NTA)/ACS/nta_with_acs.geojson"
   demoDf = geopandas.read_file(demoPath)
   demoDf = demoDf[columnsToKeepDemo]
+  demoDf["pct_nonwhite"] = 100 - demoDf["wtnhP"]
 
   return  econDf.set_index("NTACode").join(demoDf.set_index("NTACode")).reset_index()
 

@@ -105,6 +105,7 @@ export const getDemoDataExtents = createSelector([
     [K.UNINSURED]: [0, quantile(acs.map(({ properties }) => +properties[K.UNINSURED]), 0.99)],
     [K.SNAP_PCT]: [0, quantile(acs.map(({ properties }) => +properties[K.SNAP_PCT]), 0.99)],
     [K.WHITE]: [0, quantile(acs.map(({ properties }) => +properties[K.WHITE]), 0.99)],
+    [K.NON_WHITE]: [0, quantile(acs.map(({ properties }) => +properties[K.NON_WHITE]), 0.99)],
   },
   averages: {
     [K.ED_HEALTH_PCT]: mean(acs, ({ properties }) => +properties[K.ED_HEALTH_PCT]),
@@ -112,6 +113,7 @@ export const getDemoDataExtents = createSelector([
     [K.UNINSURED]: mean(acs, ({ properties }) => +properties[K.UNINSURED]),
     [K.SNAP_PCT]: mean(acs, ({ properties }) => +properties[K.SNAP_PCT]),
     [K.WHITE]: mean(acs, ({ properties }) => +properties[K.WHITE]),
+    [K.NON_WHITE]: mean(acs, ({ properties }) => +properties[K.NON_WHITE]),
   },
 }));
 
