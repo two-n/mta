@@ -16,9 +16,13 @@
       }
       path {
         fill: #eee;
-        // fill: transparent;
         stroke: $colorLightGrey;
         stroke-width: 0.5px;
+
+        &.active{
+          stroke: black;
+          stroke-width: 3px;
+        }
       }
 
       &.outline path {

@@ -56,7 +56,7 @@ const FORMAT_MAP: { [key: string]: (d: number) => string } = {
 };
 
 const MAP_VISIBLE = [V.MAP_OUTLINE, V.MAP_DOTS_LINES,
-  V.MAP_DOTS_LINES_NTAS, V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE];
+  V.MAP_DOTS_LINES_NTAS, V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE, V.MAP_WITH_CONTROLS];
 export default class MovingMap {
   yScales: { [key: string]: ScaleObject }
 
@@ -71,7 +71,7 @@ export default class MovingMap {
     // SELECTORS
     this.mapOutline = S.getMapOutline(this.state);
     this.linesData = S.getLinesData(this.state);
-    // this.ntasData = S.getNTAFeatures(this.state);
+    this.ntasData = S.getNTAFeatures(this.state);
     this.stationsGISData = S.getStationData(this.state);
     this.swipeData = S.getStationRollup(this.state);
     this.acsMap = S.getStationToACSMap(this.state);
@@ -127,7 +127,7 @@ export default class MovingMap {
 
     // ELEMENTS
     this.map = this.el.append('g').attr('class', C.MAP);
-    // this.ntas = this.el.append('g').attr('class', 'ntas');
+    this.ntas = this.el.append('g').attr('class', 'ntas');
     this.selectedNtas = this.el.append('g').attr('class', 'selected-ntas');
     this.lines = this.el.append('g').attr('class', C.LINES);
     this.stationsG = this.el.append('g').attr('class', C.STATIONS);
@@ -183,9 +183,14 @@ export default class MovingMap {
     this.map
       .classed(C.VISIBLE, MAP_VISIBLE.includes(view));
     this.lines
-      .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES && view < V.SWARM);
-    // this.ntas
-    //   .classed(C.VISIBLE, view >= V.MAP_DOTS_LINES_NTAS && view < V.SWARM);
+      .classed(C.VISIBLE, [V.MAP_DOTS_LINES,
+        V.MAP_DOTS_LINES_NTAS,
+        V.MAP_WITH_CONTROLS].includes(view));
+
+    this.ntas
+      .classed(C.VISIBLE, view >= V.MAP_WITH_CONTROLS)
+      .selectAll('path')
+      .classed(C.ACTIVE, ({ properties }) => this.nta && this.nta === properties.NTACode);
 
     this.selectedNtas
       .classed(C.VISIBLE, view >= V.ZOOM_SOHO && view < V.SWARM);
@@ -272,13 +277,13 @@ export default class MovingMap {
       .attr('vector-effect', 'non-scaling-stroke')
       .attr('d', this.geoPath);
 
-    // // neighborhood outlines
-    // this.ntas
-    //   .selectAll('path')
-    //   .data(this.ntasData.features)
-    //   .join('path')
-    //   .attr('vector-effect', 'non-scaling-stroke')
-    //   .attr('d', this.geoPath);
+    // neighborhood outlines
+    this.ntas
+      .selectAll('path')
+      .data(this.ntasData.features)
+      .join('path')
+      .attr('vector-effect', 'non-scaling-stroke')
+      .attr('d', this.geoPath);
 
     // selected neighborhood outlines
     this.selectedNtas
@@ -395,7 +400,7 @@ export default class MovingMap {
 
     // VISIBILITY
     this.parent.selectAll('.x')
-      .classed(C.VISIBLE, view >= V.SWARM);
+      .classed(C.VISIBLE, [V.SWARM, V.SCATTER].includes(view));
     this.parent.selectAll('.y')
       .classed(C.VISIBLE, !!this.yKey);
     this.overlay.classed(C.VISIBLE, view >= V.MAP_OUTLINE);
