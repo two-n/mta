@@ -80,6 +80,17 @@ section.section {
           font-family: $fontLight;
           line-height: 1.5rem;
         }
+
+        a{
+          text-decoration: underline;
+          color: $colorDarkGrey;
+          cursor: pointer;
+          pointer-events: all;
+
+          &:hover{
+            text-decoration: none;
+          }
+        }
       }
 
       &.active {

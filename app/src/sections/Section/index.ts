@@ -70,7 +70,8 @@ export default class Section {
   onStepEnter({ element, index, direction }) {
     // console.log('enter: element, index, direction', element, index, direction);
     // const data = select(element).data()[0] as StepDataType;
-
+    this.steps.classed(C.ACTIVE, false);
+    select(element).classed(C.ACTIVE, true);
     // if (data) {
     //   // console.log('data', data);
     //   this.header
@@ -82,12 +83,12 @@ export default class Section {
 
   onStepProgress({ element, index, progress }) {
     // console.log('progress: element, index, progress', element, index, progress);
-    select(element).classed(C.ACTIVE, progress < fadeOutThreshold && progress > fadeInThreshold);
+    // select(element).classed(C.ACTIVE, progress < fadeOutThreshold && progress > fadeInThreshold);
   }
 
   onStepExit({ element, index, direction }) {
     // console.log('exit: element, index, direction', element, index, direction);
-    select(element).classed(C.ACTIVE, false);
+    // select(element).classed(C.ACTIVE, false);
     // this.header
     //   .classed(C.FADE_IN, false);// remove class to allow css animation to be re-triggered
   }

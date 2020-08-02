@@ -72,6 +72,16 @@ h2{
   font-family: $fontLight;
 }
 
+.active em{ // emphasis
+  animation: fadeToYellow $durationMovement  $durationOpacity 1 forwards;
+}
+
+@keyframes fadeToYellow{
+  to{
+    color: $colorYellow;
+  }
+}
+
 @media (max-width: 480px) {
 
 }
