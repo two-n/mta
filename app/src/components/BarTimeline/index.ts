@@ -126,13 +126,12 @@ export default class BarTimeline {
     const { tStopsMap } = this;
     const [width, height] = this.dims;
     const stepData = select(element).data()[0] as StepDataType;
-    const isBarVisible = (d) => (!!stepData.date
-      || (!stepData.date && stepData.step_id < tStopsMap.get(TS.FADE_BARS) && stepData.step_id > 3));
+    const isBarVisible = (d) => (stepData.date || (!stepData.date && stepData.step_id < tStopsMap.get(TS.FADE_BARS)));
 
-    const isTimlineVisible = stepData.date || stepData.step_id < tStopsMap.get(TS.MOVE_REFS);
+    const isTimlineVisible = stepData.step_id < tStopsMap.get(TS.MOVE_REFS);
 
     this.bars.select(`.${C.LABEL}`)
-      .classed(C.VISIBLE, isBarVisible)
+      .classed(C.VISIBLE, (d) => isBarVisible(d) && this.availableDates.includes(d.date))
       .transition()
       .duration(DURATION * 7)
       .delay((d, i) => (direction === D.DOWN ? i : 0) * DELAY)
@@ -201,6 +200,9 @@ export default class BarTimeline {
           swipes: this.timeline[closestIndex].swipes,
         }];
       }));
+
+    // get list of all dates to highlight
+    this.availableDates = [...this.steps].map(([, { date }]) => date);
   }
 
   handleResize() {

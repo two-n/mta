@@ -45,13 +45,10 @@
         }
       }
 
-      &:first-child,
-      &:nth-child(8),
-      &:last-child {
+
         .label.visible {
           opacity: 1;
         }
-      }
     }
   }
 
