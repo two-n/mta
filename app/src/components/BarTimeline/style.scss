@@ -84,6 +84,20 @@
       max-width: 0;
       max-height: 0;
       transition: transform $durationMovement;
+      font-family: $fontBold;
+
+      &:before{
+        position: absolute;
+        content: attr(data-swipes);
+        top: -2em;
+        right: 0;
+        font-size: $fontSizeSmall;
+        opacity: 0
+
+      }
+      &.active-label:before{
+        opacity: 1;
+      }
 
       &:after {
         content: "";
@@ -105,7 +119,6 @@
           color: rgba($color: $colorBlack, $alpha: 0);
           content: attr(data-pct);
           color: $colorBlack;
-          font-family: $fontBold;
           position: absolute;
           top: -$thickBorderWidth;
           left: -$thickBorderWidth/2;

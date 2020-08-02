@@ -98,7 +98,8 @@ export default class BarTimeline {
       .data([swipes_avg_pre, swipes_avg_post])
       .join('div')
       .attr('class', (d, i) => `box ${i === 0 ? 'pre' : 'post'}`)
-      .attr('data-pct', F.fPct(swipes_pct_chg));
+      .attr('data-pct', F.fPct(swipes_pct_chg))
+      .attr('data-swipes', (d) => F.fSNum(d));
   }
 
   draw() {
@@ -161,6 +162,7 @@ export default class BarTimeline {
 
     this.refBoxes
       .classed(C.ACTIVE, stepData.step_id >= tStopsMap.get(TS.DRAW_BOXES))
+      .classed(`${C.ACTIVE}-${C.LABEL}`, stepData.step_id >= tStopsMap.get(TS.FADE_BARS))
       .style('transform', (d, i) => {
         if (stepData.step_id >= tStopsMap.get(TS.MOVE_REFS)) {
           return (i === 0)
