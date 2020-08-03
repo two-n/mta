@@ -139,6 +139,7 @@
     padding: 1em;
     opacity: 0;
     transition: opacity 0 0;
+    text-transform: capitalize;
 
     &.visible {
       transition: opacity $durationOpacity $durationMovement;

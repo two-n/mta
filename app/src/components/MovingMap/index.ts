@@ -8,7 +8,7 @@ import * as S from '../../redux/selectors/index';
 import { State, StationData } from '../../utils/types';
 import {
   CLASSES as C, VIEWS as V,
-  KEYS as K, FORMATTERS as F, MTA_Colors, SECTIONS,
+  KEYS as K, FORMATTERS as F, MTA_Colors, SECTIONS, censusFieldMapping,
 } from '../../utils/constants';
 import { calcSwarm, isMobile } from '../../utils/helpers';
 import './style.scss';
@@ -53,6 +53,9 @@ const FORMAT_MAP: { [key: string]: (d: number) => string } = {
   [K.ED_HEALTH_PCT]: F.fPctNoMult,
   [K.UNINSURED]: F.fPctNoMult,
   [K.SNAP_PCT]: F.fPctNoMult,
+  [K.COMMUTE]: F.fPctNoMult,
+  [K.SERVICE_SECTOR]: F.fPctNoMult,
+  [K.POVERTY]: F.fPctNoMult,
 };
 
 const MAP_VISIBLE = [V.MAP_OUTLINE, V.MAP_DOTS_LINES,
@@ -493,12 +496,12 @@ export default class MovingMap {
 
   createStatBox({ properties: d }) {
     const statSpan = (stat:string) => `<div class="stat">
-      <span class="key"> ${this.yScales[stat].median}: <span>
+      <span class="key"> ${censusFieldMapping[stat] || this.yScales[stat].median}: <span>
       <span class="value">${FORMAT_MAP[stat](d[stat])} <span>
     <div>`;
 
     return `<div class="name"> ${d.NTAName} <div>
-    ${Object.keys(this.yScales).map(statSpan).join('')}
+    ${[K.NON_WHITE, K.INCOME_PC, K.POVERTY, K.SERVICE_SECTOR, K.COMMUTE].map(statSpan).join('')}
     `;
   }
 

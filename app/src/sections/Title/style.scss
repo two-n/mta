@@ -22,7 +22,7 @@ section#section-title{
     cursor: default;
     font-size: .3em;
     line-height: 1em;
-    margin: 0.25em 0;
+    margin: 0.25em;
   }
 
   .by-line{
@@ -76,7 +76,7 @@ section#section-title{
     opacity: .5;
     background-color: $colorYellow;
     z-index: 1;
-    mix-blend-mode: overlay;
+    mix-blend-mode: color-dodge;
     border-bottom: 2px black solid;
   }
 }

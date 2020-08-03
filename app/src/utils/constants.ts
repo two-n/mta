@@ -83,6 +83,9 @@ export enum KEYS {
   UNINSURED = 'nhinsP', // "Percent with No Health Insurance Coverage (%)"
   WHITE = 'wtnhP', // "Percent with No Health Insurance Coverage (%)"
   NON_WHITE='pct_nonwhite', // inverse of pct white
+  COMMUTE = 'cw_pbtrnsP', // % commuting to work via public transportation (excluding taxicab)
+  SERVICE_SECTOR = 'srvcP', // % population employed in service occupations
+  POVERTY ='fambwpvP', // % families below poverty line
 
   ANIMATION_KEY = 'animation-key',
   DOT_POSITION = 'dot-position',
@@ -91,6 +94,13 @@ export enum KEYS {
   Y_MEDIAN_LABEL = 'yMedianLabel',
   X_DISPLAY_NAME = 'xDisplayName'
 }
+
+export const censusFieldMapping: { [key: string]: string } = {
+  [KEYS.NON_WHITE]: '% Non-white',
+  [KEYS.COMMUTE]: '% Commuting to work via public transportation',
+  [KEYS.SERVICE_SECTOR]: '% employed in service sector',
+  [KEYS.POVERTY]: '% of families below poverty line',
+};
 
 export const boroughMap: { [key: number]: string } = {
   1: 'Manhattan',

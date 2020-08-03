@@ -211,4 +211,4 @@ export const getUniqueNTAs = createSelector([
 ], (data) => data && [
   ...new Map(data
     .map((d:StationData) => ([d.NTACode, d.NTAName]))),
-].map(([key, name]) => ({ key, name })));
+].map(([key, name]) => ({ key, name })).sort((a, b) => ascending(a.name, b.name)));
