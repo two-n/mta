@@ -52,7 +52,7 @@ h2{
 .overlay{
   width: 100%;
   pointer-events: none;
-  div.axis-label{
+  div.axis-label, div.axis-title{
     font-size: $fontSizeSmall;
     position: absolute;
     top: 0;

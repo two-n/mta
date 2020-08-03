@@ -334,11 +334,18 @@ export default class MovingMap {
   setupAnnotations() {
     const [width, height] = this.dims;
     this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.x`)
-      .data(['←', 'Higher percentage still riding→'])
+      .data(['←Less Active', 'More Active→'])
       .join('div')
       .attr('class', `${C.AXIS}-${C.LABEL} ${C.NO_WRAP} x`)
       .style('left', (d, i) => i === 0 && `${M.left}px`)
       .style('right', (d, i) => i === 1 && `${M.right}px`)
+      .html((d) => d);
+
+    this.overlay.selectAll(`div.${C.AXIS}-${C.TITLE}.x`)
+      .data(['% still riding'])
+      .join('div')
+      .style('left', '50%')
+      .attr('class', `${C.AXIS}-${C.TITLE} ${C.NO_WRAP} x`)
       .html((d) => d);
 
     // Ref lines
@@ -366,13 +373,15 @@ export default class MovingMap {
 
     // AXES
     this.xAxisEl
+      .attr('transform', `translate(${0}, ${chartbottom})`)
       .transition()
       .duration(duration)
-      .attr('transform', `translate(${0}, ${chartbottom})`)
       .call(xAxis);
 
     this.overlay.selectAll(`.${C.AXIS}-${C.LABEL}.x`)
       .style('transform', `translateY(${chartbottom}px) translateY(100%)`);
+    this.overlay.selectAll(`.${C.AXIS}-${C.TITLE}.x`)
+      .style('transform', `translateY(${chartbottom}px) translateY(100%) translateX(-50%)`);
 
     this.refLines.select(`g.${C.ANNOTATION}.x`).select('path')
       .attr('d', `M ${0} ${M.top} V ${chartbottom}`);
@@ -410,7 +419,7 @@ export default class MovingMap {
       .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`);
     this.overlay.select(`.${C.ANNOTATION}-${C.LABEL}.x`)
       .style('transform', `translate(${this.xScale(AW)}px, ${M.top}px)`)
-      .html(`average of ${F.fPct(AW)} still riding`);
+      .html(`on average ${F.fPct(AW)} still riding`);
 
     // VISIBILITY
     this.parent.selectAll('.x')

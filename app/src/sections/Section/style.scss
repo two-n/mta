@@ -99,3 +99,14 @@ section.section {
     }
   }
 }
+
+@media (max-width: 480px) {
+.article{
+  .step{
+    .text{
+      font-size: $fontSizeSmall;
+    }
+  }
+
+}
+}

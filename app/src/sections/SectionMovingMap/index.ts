@@ -32,7 +32,7 @@ export default class SectionMovingMap extends Section {
       14: (key:string) => store.dispatch(A.setView(V.SCATTER, key)),
       15: (key:string) => store.dispatch(A.setView(V.SCATTER, key)),
       16: (key:string) => store.dispatch(A.setView(V.SCATTER, key)),
-      17: () => store.dispatch(A.setView(V.MAP_WITH_CONTROLS)),
+      18: () => store.dispatch(A.setView(V.MAP_WITH_CONTROLS)),
     };
     this.init();
   }

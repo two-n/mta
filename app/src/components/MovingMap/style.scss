@@ -127,7 +127,7 @@
   .x,
   .y {
     opacity: 0;
-    transition: opacity $durationOpacity;
+    transition: opacity $durationOpacity, transform $durationMovement;
     &.visible {
       opacity: 1;
     }
