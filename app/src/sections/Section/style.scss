@@ -67,7 +67,7 @@ section.section {
         &.vertical-center{
           top: 50%;
           transform: translateY(-50%);
-          font-size: 1.3em;
+          font-size: $fontSizeXLarge;
         }
 
         &:not(.empty) {
