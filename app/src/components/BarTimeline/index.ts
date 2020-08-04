@@ -89,10 +89,12 @@ export default class BarTimeline {
 
     this.datesWrapper = this.el.append('div').attr('class', 'dates');
     this.datesWrapper.selectAll('div.date')
-      .data(this.x.ticks(6))
+      .data([appConfig.startDate, appConfig.endDate])
       .join('div')
       .attr('class', 'date')
-      .html((d) => F.fMonth(d));
+      .html((d) => F.fMonthYr(d));
+    this.datesWrapper.append('div').attr('class', C.TITLE)
+      .html('Change in ridership in Million riders week over week - January 1 to June 8, 2020');
 
     this.refBoxes = this.el.append('div').attr('class', C.REFERENCE).selectAll('div.box')
       .data([swipes_avg_pre, swipes_avg_post])
