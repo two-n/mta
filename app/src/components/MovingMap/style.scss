@@ -164,7 +164,9 @@
 
   .Tooltip {
     .station-name {
-      font-family: $fontBold;
+      color: $colorBlack;
+      font-family: $fontExtraBold;
+      font-size: $fontSizeBase;
     }
   }
 }
