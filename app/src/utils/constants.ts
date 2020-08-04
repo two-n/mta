@@ -92,7 +92,8 @@ export enum KEYS {
   Y_KEY = 'yKey',
   Y_DISPLAY = 'yDisplayName',
   Y_MEDIAN_LABEL = 'yMedianLabel',
-  X_DISPLAY_NAME = 'xDisplayName'
+  X_DISPLAY_NAME = 'xDisplayName',
+  DATA_STEP = 'data-step'
 }
 
 export const censusFieldMapping: { [key: string]: string } = {

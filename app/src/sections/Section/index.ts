@@ -2,9 +2,9 @@ import { Store } from 'redux';
 import { select, Selection } from 'd3';
 import 'intersection-observer';
 import scrollama from 'scrollama';
-import { SectionDataType, State, StepDataType } from '../../utils/types';
+import { SectionDataType, State } from '../../utils/types';
 import './style.scss';
-import { CLASSES as C, SECTIONS as S } from '../../utils/constants';
+import { CLASSES as C, SECTIONS as S, KEYS } from '../../utils/constants';
 import { getSectionHash } from '../../utils/helpers';
 
 interface Props { data: SectionDataType,
@@ -72,12 +72,9 @@ export default class Section {
     // const data = select(element).data()[0] as StepDataType;
     this.steps.classed(C.ACTIVE, false);
     select(element).classed(C.ACTIVE, true);
-    // if (data) {
-    //   // console.log('data', data);
-    //   this.header
-    //     .html(data.text) // replace header text with current step data
-    //     .classed(C.FADE_IN, true);
-    // }
+
+    // update url as we scroll
+    window.location.hash = element.getAttribute(KEYS.DATA_STEP);
     select(element).classed(C.ACTIVE, true);
   }
 
@@ -119,7 +116,7 @@ export default class Section {
       .selectAll(`.${C.STEP}`).data(data.steps)
       .join('div')
       .attr('class', C.STEP)
-      .attr('data-step', (d) => getSectionHash(this.section, d.step_id));
+      .attr(KEYS.DATA_STEP, (d) => getSectionHash(this.section, d.step_id));
 
     this.steps.selectAll('.text')
       .data((d) => [d])

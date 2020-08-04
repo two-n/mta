@@ -3,7 +3,7 @@ import 'intersection-observer';
 import { SectionDataType } from '../../utils/types';
 import './style.scss';
 import { getSectionHash } from '../../utils/helpers';
-import { CLASSES as C, SECTIONS } from '../../utils/constants';
+import { CLASSES as C, SECTIONS, KEYS } from '../../utils/constants';
 
 import video from '../../assets/subway.mp4';
 import arrowPath from '../../assets/arrow.svg';
@@ -58,7 +58,7 @@ export default class Title {
   }
 
   scrollToFirstSection() {
-    const el = select(`[data-step=${getSectionHash(SECTIONS.S_INTRO, 0)}]`).node();
+    const el = select(`[${KEYS.DATA_STEP}=${getSectionHash(SECTIONS.S_INTRO, 0)}]`).node();
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   }
 }
