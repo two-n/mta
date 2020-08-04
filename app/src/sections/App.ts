@@ -1,17 +1,17 @@
 // pulls in all sections and initializes them
 // handles resize for them all
 import { Store } from 'redux';
-import { selectAll } from 'd3';
+import { selectAll, select } from 'd3';
 import * as Stickyfill from 'stickyfill';
 import SectionTimeline from './SectionTimeline';
 import SectionMovingMap from './SectionMovingMap';
 import SectionIntro from './SectionIntro';
 import Controls from '../components/Controls';
-import Navigation from '../components/Navigation';
+// import Navigation from '../components/Navigation';
 
 import * as S from '../redux/selectors';
 import { State } from '../utils/types';
-import { SECTIONS, CLASSES as C } from '../utils/constants';
+import { SECTIONS, CLASSES as C, KEYS } from '../utils/constants';
 import Title from './Title';
 
 export default class App {
@@ -30,9 +30,9 @@ export default class App {
     // TITLE
     this.Title = new Title({ data: sectionData[SECTIONS.S_TITLE] });
 
-    this.Naviation = new Navigation({
-      sections: sectionData,
-    });
+    // this.Naviation = new Navigation({
+    //   sections: sectionData,
+    // });
 
     // INTRO
     this.SectionIntro = new SectionIntro({ data: sectionData[SECTIONS.S_INTRO] });
@@ -59,6 +59,19 @@ export default class App {
 
     // setup resize event
     window.addEventListener('resize', () => this.handleResize());
+    window.addEventListener('unload', () => {
+      console.log('unload');
+      window.location.hash = '';
+    }); // reset window location
+    this.checkForHash();
+  }
+
+  checkForHash() {
+    if (window.location.hash) {
+      console.log('window.location.hash', window.location.hash);
+      const el = select(`[${KEYS.DATA_STEP}=${window.location.hash.slice(1)}]`).node();
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   handleResize() {
