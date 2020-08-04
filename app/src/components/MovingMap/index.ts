@@ -49,6 +49,7 @@ const geoPadding = { // distance from zoomed in shape
 
 const FORMAT_MAP: { [key: string]: (d: number) => string } = {
   [K.WHITE]: F.fPctNoMult,
+  [K.NON_WHITE]: F.fPctNoMult,
   [K.INCOME_PC]: F.sDollar,
   [K.ED_HEALTH_PCT]: F.fPctNoMult,
   [K.UNINSURED]: F.fPctNoMult,
@@ -175,7 +176,7 @@ export default class MovingMap {
     const [width, height] = this.dims;
     const { view, yKey, proj } = this;
     const { extent: EW } = S.getWeeklyDataExtent(this.state);
-    this.xScale.domain(EW); // update for new data
+    this.xScale.domain(EW).clamp(true); // update for new data
     // VISIBILITY
     this.tooltip.makeInvisible();
     // map
@@ -211,7 +212,6 @@ export default class MovingMap {
       .style('fill', (d) => (this.isHighlighted(d)
         ? (this.colorScale(this.getPctChange(d)))
         : null))
-      .classed('allow-pointer', ![V.ZOOM_SOHO, V.ZOOM_SOHO].includes(view))
       .classed(C.HIGHLIGHT, this.isHighlighted);
 
     const neighborhoodIndex = [V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE].indexOf(view);
@@ -473,7 +473,7 @@ export default class MovingMap {
     <div>`;
 
     return `<div class="name"> ${d.NTAName} <div>
-    ${[K.WHITE, K.INCOME_PC].map(statSpan).join('')}
+    ${Object.keys(this.yScales).map(statSpan).join('')}
     `;
   }
 

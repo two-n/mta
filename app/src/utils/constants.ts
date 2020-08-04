@@ -80,6 +80,7 @@ export enum KEYS {
   ED_HEALTH_PCT = 'edhlthcsaP', // Percent Employed in Educational Services, and Health Care and Social Assistance (%)"
   UNINSURED = 'nhinsP', // "Percent with No Health Insurance Coverage (%)"
   WHITE = 'wtnhP', // "Percent with No Health Insurance Coverage (%)"
+  NON_WHITE='pct_nonwhite', // inverse of pct white
 
   ANIMATION_KEY = 'animation-key',
   DOT_POSITION = 'dot-position',

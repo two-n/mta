@@ -10,7 +10,7 @@ import {
   mean,
 } from 'd3-array';
 import {
-  scaleSequential, geoContains, ascending, line,
+  geoContains, ascending, scaleSequential,
 } from 'd3';
 import { State, StationData } from '../../utils/types';
 import * as Helpers from '../../utils/helpers';
@@ -105,6 +105,7 @@ export const getDemoDataExtents = createSelector([
     [K.UNINSURED]: [0, quantile(acs.map(({ properties }) => +properties[K.UNINSURED]), 0.99)],
     [K.SNAP_PCT]: [0, quantile(acs.map(({ properties }) => +properties[K.SNAP_PCT]), 0.99)],
     [K.WHITE]: [0, quantile(acs.map(({ properties }) => +properties[K.WHITE]), 0.99)],
+    [K.NON_WHITE]: [0, quantile(acs.map(({ properties }) => +properties[K.NON_WHITE]), 0.99)],
   },
   averages: {
     [K.ED_HEALTH_PCT]: mean(acs, ({ properties }) => +properties[K.ED_HEALTH_PCT]),
@@ -112,17 +113,25 @@ export const getDemoDataExtents = createSelector([
     [K.UNINSURED]: mean(acs, ({ properties }) => +properties[K.UNINSURED]),
     [K.SNAP_PCT]: mean(acs, ({ properties }) => +properties[K.SNAP_PCT]),
     [K.WHITE]: mean(acs, ({ properties }) => +properties[K.WHITE]),
+    [K.NON_WHITE]: mean(acs, ({ properties }) => +properties[K.NON_WHITE]),
   },
 }));
+
+export const getWeeklyData = createSelector([
+  getSelectedWeek,
+  getStationRollup,
+], (week, stationStats) => [...stationStats].map(([, { timeline }]) => timeline.get(week)));
+
 
 export const getWeeklyDataExtent = createSelector([
   getSelectedWeek,
   getStationRollup,
 ], (week, stationStats): {extent: number[], average: number} => {
-  const currentWeekStationStats = [...stationStats].map(([, { timeline }]) => timeline.get(week));
+  const currentWeekSwipes = [...stationStats].map(([, { timeline }]) => timeline.get(week)).map((d) => d && d.swipes_pct_chg);
   return {
-    extent: extent(currentWeekStationStats.map((d) => d && d.swipes_pct_chg)),
-    average: mean(currentWeekStationStats.map((d) => d && d.swipes_pct_chg)),
+    extent: [quantile(currentWeekSwipes, 0.001),
+      quantile(currentWeekSwipes, 0.999)],
+    average: mean(currentWeekSwipes),
   };
 });
 
@@ -142,7 +151,8 @@ const getSummarySwipeExtent = createSelector([
 export const getColorScheme = createSelector([
   getSummarySwipeExtent,
 ], (e) => scaleSequential(colorInterpolator)
-  .domain(e as [number, number]));
+  .domain(e as [number, number])
+  .clamp(true));
 
 /** creates a map from NTACode => ACS summary data */
 export const getStationToACSMap = createSelector([
