@@ -19,7 +19,7 @@
         stroke: $colorLightGrey;
         stroke-width: 0.5px;
 
-        &.active{
+        &.active {
           stroke: black;
           stroke-width: 3px;
         }
@@ -49,7 +49,6 @@
     }
 
     .stations {
-
       .station {
         opacity: 0;
         pointer-events: none;
@@ -76,16 +75,16 @@
       &.visible {
         .station {
           pointer-events: all;
-          &:not(.highlight){
+          &:not(.highlight) {
             opacity: 0.4;
             fill: $colorLightGrey;
             pointer-events: none;
           }
 
-          &.highlight, &:hover {
+          &.highlight,
+          &:hover {
             opacity: 1;
           }
-
         }
       }
     }
@@ -165,10 +164,32 @@
   }
 
   .Tooltip {
-    .station-name {
-      color: $colorBlack;
-      font-family: $fontExtraBold;
-      font-size: $fontSizeBase;
+    .content {
+      max-width: 150px;
+
+      .station-name {
+        color: $colorBlack;
+        font-family: $fontBold;
+        font-size: $fontSizeSmall;
+      }
+
+      .neighborhood {
+        white-space: normal;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: min-content 1fr;
+        font-size: $fontSizeXSmall;
+        column-gap: 0.5em;
+
+        .stat-val {
+          font-family: $fontBold;
+        }
+      }
+    }
+    .swatches {
+      white-space: normal;
     }
   }
 }

@@ -508,15 +508,17 @@ export default class MovingMap {
   createTooltip(d:StationData) {
     const lineSwatches = d.line_name.toString().split('').map(LineSwatch).join('');
     const yVal = this.yKey && this.yScales[this.yKey] && this.yScales[this.yKey];
+    // <div class="neighborhood"> ${d.NTAName}</div>
     return `<div>
     <div class="station-name">${d.station}</div>
-    <div class="neighborhood"> ${d.NTAName}</div>
-    <div class="week">week of: ${F.fDayMonth(F.pWeek(this.week))}</div>
-    <div class="stat">% still riding: ${F.fPct(this.getPctChange(d))}</div>
-   ${yVal
-    ? `<div class="stat">${yVal.median}: ${yVal.format(this.getACS(d, this.yKey))}</div>`
+    <div class="stats-grid">
+    <div class="stat-name">week of: </div> <div class="stat-val">${F.fDayMonth(F.pWeek(this.week))}</div>
+      <div class="stat-name">% still riding: </div> <div class="stat-val">${F.fPct(this.getPctChange(d))}</div>
+    ${yVal
+    ? `<div class="stat-name">${yVal.median}: </div> <div class="stat-val">${yVal.format(this.getACS(d, this.yKey))}</div>`
     : ''}
-    ${lineSwatches}
+    </div>
+    <div class="swatches">${lineSwatches}<div>
     </div>`;
   }
 
