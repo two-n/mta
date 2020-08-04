@@ -6,6 +6,11 @@
   font-size: $fontSizeSmall;
   color: $colorMidGrey;
 
+  .title{
+    font-family: $fontRegular;
+    line-height: 1.5em;
+  }
+
   svg{
     overflow: visible;
     .tick {

@@ -17,14 +17,24 @@
   border-radius: 6px;
   box-shadow: 0px 1px 9px 1px $colorLightGrey ;
   background-color: $colorBackground;
-  transform: translateY(100%) translateX(-50%); // take out of view
-  // transform: translateX(-50%); // take out of view
+
+  transform: translateY(100%) translateX(-50%); // default: out of view from bottom
   transition: transform $durationMovement;
 
   &.visible{
-    transform: translateY(-1em) translateX(-50%); // take out of view
-
+    transform: translateY(-1em) translateX(-50%);
   }
+
+  // for map with controls phase
+    &.top{
+      &.visible{
+        transform: translateY(calc(-100vh + 1em)) translateY(100%) translateX(-50%);
+      }
+      // out of view from top
+      &:not(.visible){
+        transform: translateY(-100vh) translateX(-50%);
+      }
+    }
 
   .Input{
     width: calc(50% - 1em);

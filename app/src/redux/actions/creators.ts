@@ -18,9 +18,10 @@ export const setMapData = (data: any) => ({
   data,
 });
 export const SET_VIEW = 'SET_VIEW';
-export const setView = (view: VIEWS) => ({
+export const setView = (view: VIEWS, yKey?: string | null) => ({
   type: SET_VIEW,
   view,
+  yKey,
 });
 export const SET_WEEK = 'SET_WEEK';
 export const setWeek = (week: string) => ({

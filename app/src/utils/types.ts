@@ -6,6 +6,7 @@ export interface State {
   stationData: null | StationData[],
   mapData: null | MapData,
   view: VIEWS,
+  yKey: null | string,
   selectedWeek: string,
   selectedLine: string, // line_name
   selectedNta: string, // ntaCode

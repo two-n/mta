@@ -27,6 +27,7 @@ export const getSwipeData = (state: State) => state.swipeData;
 export const getStationData = (state: State) => state.stationData;
 export const getMapData = (state: State) => state.mapData;
 export const getView = (state: State) => state.view;
+export const getYKey = (state: State) => state.yKey;
 export const getSelectedWeek = (state: State) => state.selectedWeek;
 export const getSelectedLine = (state: State) => state.selectedLine;
 export const getSelectedNta = (state: State) => state.selectedNta;
