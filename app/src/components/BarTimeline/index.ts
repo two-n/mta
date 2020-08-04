@@ -1,6 +1,6 @@
 import { Store } from 'redux';
 import {
-  Selection, scaleLinear, max, scaleUtc, extent, bisector, select, interpolate,
+  Selection, scaleLinear, max, scaleUtc, extent, bisector, select, interpolate, event,
 } from 'd3';
 import * as S from '../../redux/selectors';
 import { State, StationTimelineItem, StepDataType } from '../../utils/types';
@@ -8,6 +8,7 @@ import {
   CLASSES as C, FORMATTERS as F, DIRECTIONS as D, SECTIONS, KEYS, appConfig,
 } from '../../utils/constants';
 import './style.scss';
+import Tooltip from '../Tooltip';
 
 interface Props {
   parent: Selection;
@@ -44,6 +45,8 @@ export default class BarTimeline {
     this.parent = parent.classed(C.TIMELINE, true);
     this.el = this.parent;
     this.handleTransition = this.handleTransition.bind(this);
+    this.onBarMouseover = this.onBarMouseover.bind(this);
+    this.onBarMouseout = this.onBarMouseout.bind(this);
   }
 
   init() {
@@ -75,7 +78,9 @@ export default class BarTimeline {
       .selectAll(`div.${C.BAR}-${C.WRAPPER}`)
       .data(this.timeline)
       .join('div')
-      .attr('class', `${C.BAR}-${C.WRAPPER}`);
+      .attr('class', `${C.BAR}-${C.WRAPPER}`)
+      .on('mouseover', this.onBarMouseover)
+      .on('mouseout', this.onBarMouseout);
 
     this.bars.selectAll(`div.${C.LABEL}`)
       .data((d) => [d])
@@ -102,6 +107,8 @@ export default class BarTimeline {
       .attr('class', (d, i) => `box ${i === 0 ? 'pre' : 'post'}`)
       .attr('data-pct', F.fPct(swipes_pct_chg))
       .attr('data-swipes', (d) => F.fSNum(d));
+
+    this.tooltip = new Tooltip({ parent: this.el });
   }
 
   draw() {
@@ -144,7 +151,7 @@ export default class BarTimeline {
           this._currentNum = this._currentNum || 0;
           const i = interpolate(this._currentNum, d.swipes);
           return function interp(t) {
-            select(this).html(F.fSNum(this._currentNum = i(t)));
+            select(this).html(F.fNumber(this._currentNum = i(t)));
           };
         } this._currentNum = 0;
       });
@@ -216,5 +223,18 @@ export default class BarTimeline {
     this.y.range([0, height - M.bottom - M.top]);
     this.x.range([M.left, width - M.right]);
     this.draw();
+  }
+
+  onBarMouseover(d:StationTimelineItem) {
+    const [width, height] = this.dims;
+    const { left, top } = this.el.node().getBoundingClientRect();
+    const { clientX: x, clientY: y } = event;
+    const content = `<div class="date">${F.fDayMonth(F.pWeek(d.date))}</div>
+    <div class="stat">Ridership: ${F.fNumber(d.swipes)}</div>`;
+    this.tooltip.update([x - left, y - top], content, y > height * 0.2, x > width * 0.7);
+  }
+
+  onBarMouseout() {
+    this.tooltip.makeInvisible();
   }
 }

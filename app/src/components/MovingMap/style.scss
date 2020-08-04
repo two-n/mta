@@ -52,6 +52,7 @@
 
       .station {
         opacity: 0;
+        pointer-events: none;
         transition: transform $durationMovement;
         cursor: pointer;
 
@@ -74,6 +75,7 @@
 
       &.visible {
         .station {
+          pointer-events: all;
           &:not(.highlight){
             opacity: 0.4;
             fill: $colorLightGrey;

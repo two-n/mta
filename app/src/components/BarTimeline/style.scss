@@ -45,9 +45,14 @@
         }
       }
 
-
         .label.visible {
           opacity: 1;
+        }
+
+        &:hover{
+          .bar{
+            border: 1px solid black;
+          }
         }
     }
   }
@@ -76,6 +81,7 @@
   }
 
   .reference {
+    pointer-events: none;
     position: absolute;
     top: 0;
     width: 100%;
@@ -135,7 +141,16 @@
       }
     }
   }
+
+  .Tooltip{
+    .date{
+      font-family: $fontBold;
+    }
+  }
+
 }
+
+
 
 @keyframes fadeToOrange {
   to {
