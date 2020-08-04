@@ -73,7 +73,7 @@ h2{
 }
 
 .active em{ // emphasis
-  animation: fadeToYellow $durationMovement  $durationOpacity 1 forwards;
+  // animation: fadeToYellow $durationMovement  $durationOpacity 1 forwards;
 }
 
 @keyframes fadeToYellow{

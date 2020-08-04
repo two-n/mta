@@ -1,11 +1,12 @@
-import { select, event } from 'd3';
+import { select, event, text } from 'd3';
 import 'intersection-observer';
 import { SectionDataType } from '../../utils/types';
 import './style.scss';
+import { getSectionHash } from '../../utils/helpers';
 import { CLASSES as C, SECTIONS } from '../../utils/constants';
 
 import video from '../../assets/subway.mp4';
-// import
+import arrowPath from '../../assets/arrow.svg';
 
 interface Props{
   data: SectionDataType;
@@ -31,6 +32,10 @@ export default class Title {
       <a href=${'https://www.aucherserr.com/'}>Aucher Serr</a>,
       <a href="http://two-n.com/">Two-N <span class="two-n"></span></a>`);
 
+    this.arrow = this.el.append('div').attr('class', 'arrow')
+      .on('click', this.scrollToFirstSection);
+    text(arrowPath).then((icon) => this.arrow.html(icon));
+
     // create outside of app to take up full screen
     this.videoWrapper = select('body').append('div')
       .attr('class', 'title-video');
@@ -50,5 +55,10 @@ export default class Title {
       const { y } = event;
       this.overlay.style('transform', `translate(-25%, ${y - 10}px) translateY(-100%)`);
     });
+  }
+
+  scrollToFirstSection() {
+    const el = select(`[data-step=${getSectionHash(SECTIONS.S_INTRO, 0)}]`).node();
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   }
 }
