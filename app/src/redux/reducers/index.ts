@@ -13,6 +13,7 @@ const initialState: State = {
   stationData: null,
   mapData: null,
   view: VIEWS.BLANK,
+  location: null,
   yKey: null,
   selectedWeek: F.fWeek(appConfig.endDate), // beginning with the end of phase 1
   selectedLine: null,
@@ -42,6 +43,8 @@ export default function reducer(state = initialState, action: Action): State {
       return { ...state, selectedLine: action.line };
     case A.SET_NTA:
       return { ...state, selectedNta: action.nta };
+    case A.SET_LOCATION:
+      return { ...state, location: action.location };
     default:
       return state;
   }

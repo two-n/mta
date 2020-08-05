@@ -5,6 +5,7 @@ export interface State {
   swipeData: null | SwipeData[],
   stationData: null | StationData[],
   mapData: null | MapData,
+  location: string | null,
   view: VIEWS,
   yKey: null | string,
   selectedWeek: string,
