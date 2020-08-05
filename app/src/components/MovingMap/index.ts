@@ -83,12 +83,12 @@ export default class MovingMap {
     // SELECTORS
     this.mapOutline = S.getMapOutline(this.state);
     this.linesData = S.getLinesData(this.state);
-    this.ntasData = S.getNTAFeatures(this.state);
     this.stationsGISData = S.getStationData(this.state);
     this.swipeData = S.getStationRollup(this.state);
     this.acsMap = S.getStationToACSMap(this.state);
     this.ntaMap = S.getNTAMap(this.state);
     this.selectedNTAFeatures = [this.ntaMap.get(SOHO), this.ntaMap.get(BROWNSVILLE)];
+    this.ntasData = [...this.ntaMap].map(([, feature]) => feature);
     this.view = S.getView(this.state);
     this.yKey = S.getYKey(this.state);
     this.week = S.getSelectedWeek(this.state);
@@ -205,7 +205,10 @@ export default class MovingMap {
     this.ntas
       .classed(C.VISIBLE, view >= V.MAP_WITH_CONTROLS)
       .selectAll('path')
-      .classed(C.ACTIVE, ({ properties }) => this.nta && this.nta === properties.NTACode);
+      .classed(C.ACTIVE, ({ properties }) => this.nta && this.nta === properties.NTACode)
+      .style('fill', ({ properties }) => ((this.nta && this.nta === properties.NTACode)
+        ? this.colorScale(properties[K.SWIPES_PCT_CHG])
+        : null));
 
     this.selectedNtas
       .classed(C.VISIBLE, view >= V.ZOOM_SOHO && view < V.SWARM);
@@ -279,7 +282,7 @@ export default class MovingMap {
     // neighborhood outlines
     this.ntas
       .selectAll('path')
-      .data(this.ntasData.features)
+      .data(this.ntasData)
       .join('path')
       .attr('vector-effect', 'non-scaling-stroke')
       .attr('d', this.geoPath);
