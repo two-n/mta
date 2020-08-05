@@ -2,6 +2,7 @@ import { Store } from 'redux';
 import { select, Selection } from 'd3';
 import 'intersection-observer';
 import scrollama from 'scrollama';
+import * as A from '../../redux/actions/creators';
 import { SectionDataType, State } from '../../utils/types';
 import './style.scss';
 import { CLASSES as C, SECTIONS as S, KEYS } from '../../utils/constants';
@@ -74,7 +75,7 @@ export default class Section {
     select(element).classed(C.ACTIVE, true);
 
     // update url as we scroll
-    window.location.hash = element.getAttribute(KEYS.DATA_STEP);
+    this.store.dispatch(A.setLocation(element.getAttribute(KEYS.DATA_STEP)));
     select(element).classed(C.ACTIVE, true);
   }
 
@@ -143,7 +144,7 @@ export default class Section {
     const stepH = Math.floor(window.innerHeight) * 0.7;
     this.steps.style('height', `${stepH}px`);
 
-    const figureHeight = window.innerHeight * 0.8;
+    const figureHeight = window.innerHeight;
     const figureMarginTop = (window.innerHeight - figureHeight) / 2;
 
     this.sticky

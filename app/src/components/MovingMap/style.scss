@@ -77,7 +77,7 @@
         .station {
           pointer-events: all;
           &:not(.highlight) {
-            opacity: 0.4;
+            opacity: 0.6;
             fill: $colorLightGrey;
             pointer-events: none;
           }

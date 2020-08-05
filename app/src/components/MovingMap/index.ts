@@ -33,19 +33,18 @@ interface ScaleObject {
 
 const M = {
   top: 30,
-  bottom: 30, // make room for control bar
+  bottom: 100,
   left: 30,
   right: 20,
-  swarmBottom: 125,
 };
-const CONTROL_HEIGHT = +styleVars.controlBarHeight.slice(0, -2);
+
 const R = isMobile() ? 3 : 4;
 const duration = +styleVars.durationMovement.slice(0, -2);
 const geoPadding = { // distance from zoomed in shape
   top: 30,
-  bottom: 50,
-  left: 20,
-  right: 50,
+  bottom: 30,
+  left: 30,
+  right: 40,
 };
 
 
@@ -212,7 +211,7 @@ export default class MovingMap {
     this.stations.style('transform', (d: StationData) => {
       switch (view) {
         case (V.SWARM):
-          return `translate(${d.x}px,${height - M.swarmBottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
+          return `translate(${d.x}px,${height - M.bottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
         case (V.SCATTER): {
           const yScale = this.yScales[yKey].scale;
           return `translate(
@@ -224,7 +223,9 @@ export default class MovingMap {
         }
       }
     })
-      .style('fill', (d) => this.colorScale(this.getPctChange(d)))
+      .attr('fill', (d) => (this.isHighlighted(d)
+        ? this.colorScale(this.getPctChange(d))
+        : null))
       .classed(C.HIGHLIGHT, this.isHighlighted);
 
     const neighborhoodIndex = [V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE].indexOf(view);
@@ -252,7 +253,7 @@ export default class MovingMap {
             .style('transform', (d, i) => (
               isLeft
                 ? `translate(${left - offsetX}px, ${top - offsetY}px) translateX(-100%) translateY(-25%)`
-                : `translate(${left - offsetX + w}px, ${top - offsetY}px)`));
+                : `translate(${left - offsetX + w}px, ${top - offsetY}px) translateY(-25%)`));
         }
       });
 
@@ -344,10 +345,7 @@ export default class MovingMap {
     const [width, height] = this.dims;
     const { averages: AD } = S.getDemoDataExtents(this.state);
     const { average: AW } = S.getWeeklyDataExtent(this.state);
-    const chartbottom = height
-    - ((view === V.SWARM) // swarm ends higher than the scatterplot
-      ? M.swarmBottom
-      : M.bottom + CONTROL_HEIGHT);
+    const chartbottom = height - M.bottom;
 
     // AXES
     this.xAxisEl
@@ -434,7 +432,8 @@ export default class MovingMap {
     this.xScale.range([M.left, width - M.right]);
 
     // update yScale ranges
-    Object.values(this.yScales).forEach((d) => d.scale.range([height - M.bottom - CONTROL_HEIGHT - R, M.top]));
+    Object.values(this.yScales).forEach((d) => d.scale
+      .range([height - M.bottom - R, M.top]));
     this.draw();
   }
 
@@ -443,12 +442,15 @@ export default class MovingMap {
    */
   handleStateChange() {
     this.state = this.store.getState();
-    this.view = S.getView(this.state);
-    this.yKey = S.getYKey(this.state);
-    this.week = S.getSelectedWeek(this.state);
-    this.line = S.getSelectedLine(this.state);
-    this.nta = ZOOM_MAP[this.view] || S.getSelectedNta(this.state);
-    this.handleViewTransition();
+    // only trigger if within sectoin
+    if (this.state.location.includes(SECTIONS.S_MOVING_MAP)) {
+      this.view = S.getView(this.state);
+      this.yKey = S.getYKey(this.state);
+      this.week = S.getSelectedWeek(this.state);
+      this.line = S.getSelectedLine(this.state);
+      this.nta = ZOOM_MAP[this.view] || S.getSelectedNta(this.state);
+      this.handleViewTransition();
+    }
   }
 
   onStationMouseover(d:StationData) {
@@ -523,8 +525,8 @@ export default class MovingMap {
       return [
         x0 - geoPadding.left,
         y0 - geoPadding.top,
-        (x1 - x0) + geoPadding.right,
-        (y1 - y0) + geoPadding.bottom,
+        (x1 - x0) + geoPadding.right + geoPadding.left,
+        (y1 - y0) + geoPadding.bottom + geoPadding.top,
       ];
     } return [0, 0, width, height]; // default
   }
