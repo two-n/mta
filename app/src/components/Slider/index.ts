@@ -44,7 +44,7 @@ export default class Slider {
   }
 
   update(newVal) {
-    this.input.attr('value', newVal);
+    this.input.node().value = newVal;
   }
 
   handleChange(d) {
