@@ -64,7 +64,7 @@ section.section {
         font-family: $fontBold;
         font-size: $fontSizeBase;
 
-        &.vertical-center{
+        &.vertical-center {
           top: 50%;
           transform: translateY(-50%);
           font-size: $fontSizeXLarge;
@@ -75,19 +75,19 @@ section.section {
           background-color: $colorBackground;
         }
 
-        .subtitle{
+        .subtitle {
           font-size: $fontSizeSmall;
           font-family: $fontLight;
           margin-top: 1em;
         }
 
-        a{
+        a {
           text-decoration: underline;
           color: $colorDarkGrey;
           cursor: pointer;
           pointer-events: all;
 
-          &:hover{
+          &:hover {
             text-decoration: none;
           }
         }
@@ -101,12 +101,17 @@ section.section {
 }
 
 @media (max-width: 480px) {
-.article{
-  .step{
-    .text{
-      font-size: $fontSizeSmall;
+  section.section {
+    .article {
+      .step {
+        .text {
+          font-size: $fontSizeSmall;
+
+          &.vertical-center {
+            font-size: $fontSizeLarge;
+          }
+        }
+      }
     }
   }
-
-}
 }
