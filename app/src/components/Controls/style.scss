@@ -4,9 +4,9 @@
   position: fixed;
   bottom: 0;
   left: 50%;
-  padding: 1em 2em;
+  padding: 1em 1.5em;
   margin: 0 auto;
-  width: 90%;
+  width: 100%;
   max-width: inherit;
   height: $controlBarHeight;
   display: grid;
@@ -23,19 +23,9 @@
   transition: transform $durationMovement;
 
   &.visible {
-    transform: translateY(-1em) translateX(-50%);
+    transform: translateY(0) translateX(-50%);
   }
 
-  // for map with controls phase
-  &.top {
-    &.visible {
-      transform: translateY(calc(-100vh + 1em)) translateY(100%) translateX(-50%);
-    }
-    // out of view from top
-    &:not(.visible) {
-      transform: translateY(-100vh) translateX(-50%);
-    }
-  }
 
   .Input {
     // width: calc(50% - 1em);

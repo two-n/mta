@@ -49,7 +49,6 @@ export default class Slider {
 
   handleChange(d) {
     const { target: { value } } = event;
-    console.log('event', event);
     const { onChange } = this.props;
     onChange(value);
   }
