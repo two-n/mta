@@ -22,6 +22,7 @@
         &.active {
           stroke: black;
           stroke-width: 3px;
+          fill: gainsboro;
         }
       }
 
@@ -31,7 +32,7 @@
 
       &.lines {
         path {
-          stroke: $colorMidGrey;
+          stroke: $colorBlack;
           stroke-width: 1px;
           fill: none;
         }
@@ -52,7 +53,7 @@
       .station {
         opacity: 0;
         pointer-events: none;
-        transition: transform $durationMovement, fill $durationOpacity;
+        transition: transform $durationMovement, fill $durationOpacity, opacity $durationOpacity;
         cursor: pointer;
 
         circle {
@@ -129,6 +130,10 @@
   .y {
     opacity: 0;
     transition: opacity $durationOpacity, transform $durationMovement;
+    &.axis-label.y{
+      font-family: $fontBold;
+    }
+
     &.visible {
       opacity: 1;
     }

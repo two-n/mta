@@ -491,7 +491,7 @@ export default class MovingMap {
     <div class="station-name">${d.station}</div>
     <div class="stats-grid">
     <div class="stat-name">week of: </div> <div class="stat-val">${F.fDayMonth(F.pWeek(this.week))}</div>
-      <div class="stat-name">% still riding: </div> <div class="stat-val">${F.fPct(this.getPctChange(d))}</div>
+      <div class="stat-name">still riding: </div> <div class="stat-val">${F.fPct(this.getPctChange(d))}</div>
     ${yVal
     ? `<div class="stat-name">${yVal.median}: </div> <div class="stat-val">${yVal.format(this.getACS(d, this.yKey))}</div>`
     : ''}

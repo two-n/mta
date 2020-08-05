@@ -139,7 +139,7 @@ export const METRIC_MAP: { [key: string]: {
   name: string,
 }} = {
   [KEYS.NON_WHITE]: {
-    format: FORMATTERS.fPctNoMult, median: 'Non-white', label: '', name: 'Non-white',
+    format: FORMATTERS.fPctNoMult, median: 'Non-white', label: '% Non-white', name: 'Non-white',
   },
   [KEYS.INCOME_PC]: {
     format: FORMATTERS.sDollar, median: 'Per Capita Income', label: 'Per Capita Income ($)', name: 'Per Capita Income',
