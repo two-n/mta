@@ -7,7 +7,7 @@ section#section-title {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  font-size: 17vmin; // dynamic with the width of the screen
+  font-size: min(9rem, 17vmin); // dynamic with the width of the screen
   cursor: default;
   color: $colorBackground;
 
