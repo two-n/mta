@@ -24,10 +24,12 @@ export default class Controls {
   constructor({ store }:Props) {
     this.store = store;
     this.state = store.getState();
-    this.init();
 
     this.toggleVisibility = this.toggleVisibility.bind(this);
+    this.animateWeeks = this.animateWeeks.bind(this);
+    this.findNextWeek = this.findNextWeek.bind(this);
     this.store.subscribe(this.toggleVisibility);
+    this.init();
   }
 
   init() {
@@ -62,15 +64,43 @@ export default class Controls {
     this.sliderTimeline = timeline
       .filter((d) => F.pWeek(d.date) >= appConfig.thresholdDate);
 
+    this.play = this.el.append('div').attr('class', 'play-button')
+      .html('Play')
+      .on('click', this.animateWeeks)
+      .append('span')
+      .attr('class', 'icon');
+
     this.slider = new Slider({
       parent: this.el,
       values: this.sliderTimeline,
       initialIndex: this.sliderTimeline.findIndex((d) => d.date === initialWeek),
-      onChange: (newIndex:number) => this.store.dispatch(A.setWeek(this.sliderTimeline[newIndex].date)),
+      onChange: (newIndex:number) => this.store
+        .dispatch(A.setWeek(this.sliderTimeline[newIndex].date)),
       name: 'dateSelection',
       description: 'Use the slider to change the date, or press <strong>play</strong> for animation.',
       colorScale,
     });
+  }
+
+  animateWeeks() {
+    const delay = 500; // millisecnds
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+      this.play.classed('pause', false);
+    } else {
+      this.play.classed('pause', true);
+      this.intervalId = setInterval(this.findNextWeek, delay);
+    }
+  }
+
+  findNextWeek() {
+    const week = S.getSelectedWeek(this.store.getState());
+    const index = this.sliderTimeline.findIndex((d) => d.date === week);
+    const nextWeek = (index < this.sliderTimeline.length - 1)
+      ? this.sliderTimeline[index + 1].date
+      : this.sliderTimeline[0].date;
+    this.store.dispatch(A.setWeek(nextWeek));
   }
 
   toggleVisibility() {

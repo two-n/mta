@@ -52,7 +52,7 @@
       .station {
         opacity: 0;
         pointer-events: none;
-        transition: transform $durationMovement;
+        transition: transform $durationMovement, fill $durationOpacity;
         cursor: pointer;
 
         circle {
