@@ -1,58 +1,59 @@
 @import "./styling/variables";
 
-body{
+body {
   font-family: $fontRegular;
   background-color: $colorBackground;
   -webkit-font-smoothing: antialiased;
   margin: 0;
-
 }
 
-#app{
+#app {
   padding: 1rem;
   max-width: 700px;
   margin: 0 auto;
   width: 100vw;
   box-sizing: border-box;
 
-  *{
+  * {
     box-sizing: border-box;
   }
 }
 
 /** DEFAULT ELEMENTS */
 
-h1{
+h1 {
   font-family: $fontBold;
   font-size: $fontSizeXXLarge;
   // max-width: 40rem;
 }
 
-h2{
+h2 {
   font-family: $fontBold;
   font-size: $fontSizeXLarge;
   // max-width: $maxTextWidth;
 }
 
-.axis{
+.axis {
   color: $colorMidGrey;
 
-  text.label{
+  text.label {
     text-anchor: middle;
     fill: $colorBlack;
     text-transform: uppercase;
   }
-  path, line{
+  path,
+  line {
     stroke: $colorMidGrey;
-    stroke-width: .25px;
+    stroke-width: 0.25px;
   }
 }
 // for annotations and axes labels
 // use divs for these for better text formatting options
-.overlay{
+.overlay {
   width: 100%;
   pointer-events: none;
-  div.axis-label, div.axis-title{
+  div.axis-label,
+  div.axis-title {
     font-size: $fontSizeSmall;
     position: absolute;
     top: 0;
@@ -61,27 +62,54 @@ h2{
     padding-bottom: 1em;
     box-sizing: border-box;
 
-    &.no-wrap{
+    &.no-wrap {
       white-space: nowrap;
     }
   }
 }
 
-.label{
-  font-size:$fontSizeSmall;
+.label {
+  font-size: $fontSizeSmall;
   font-family: $fontLight;
 }
 
-.active em{ // emphasis
-  // animation: fadeToYellow $durationMovement  $durationOpacity 1 forwards;
+.scroll-prompt-wrapper {
+  // to be same width as app
+  max-width: inherit;
+  width: inherit;
+  position: fixed;
+  top: 0;
+  z-index: 2;
+
+  .scroll-prompt {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    padding: 1rem;
+    max-width: 5em;
+    text-align: center;
+    opacity: 0;
+    cursor: pointer;
+
+    &.visible {
+      opacity: 0.3;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    &.bottom {
+      top: 80vh;
+    }
+  }
 }
 
-@keyframes fadeToYellow{
-  to{
+@keyframes fadeToYellow {
+  to {
     color: $colorYellow;
   }
 }
 
 @media (max-width: 480px) {
-
 }

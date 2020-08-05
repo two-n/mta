@@ -443,7 +443,7 @@ export default class MovingMap {
   handleStateChange() {
     this.state = this.store.getState();
     // only trigger if within sectoin
-    if (this.state.location.includes(SECTIONS.S_MOVING_MAP)) {
+    if (this.state.location && this.state.location.includes(SECTIONS.S_MOVING_MAP)) {
       this.view = S.getView(this.state);
       this.yKey = S.getYKey(this.state);
       this.week = S.getSelectedWeek(this.state);

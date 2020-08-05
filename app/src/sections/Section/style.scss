@@ -63,6 +63,7 @@ section.section {
         margin: 0 auto;
         font-family: $fontBold;
         font-size: $fontSizeBase;
+        z-index: 3;
 
         &.vertical-center {
           top: 50%;
