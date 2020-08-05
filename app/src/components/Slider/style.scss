@@ -12,9 +12,22 @@ $trackBorder: none;
     width: 100%;
   }
 
+  .dates{
+    display: flex;
+    justify-content: space-between;
+    font-size: $fontSizeXSmall;
+  }
+
+  .description{
+    margin-top: .5em;
+    font-family: $fontRegular;
+    font-size: $fontSizeSmall;
+  }
+
   // styling reference: http://danielstern.ca/range.css/#/
   input[type=range] {
     width: 100%;
+    margin: 5px 0;
     // margin: 13.8px 0;
     background-color: transparent;
     -webkit-appearance: none;
@@ -105,9 +118,4 @@ $trackBorder: none;
   }
 
 
-  .description{
-    margin-top: .5em;
-    font-family: $fontRegular;
-    font-size: $fontSizeSmall;
-  }
 }

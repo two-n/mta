@@ -8,10 +8,11 @@
   margin: 0 auto;
   width: 100%;
   max-width: inherit;
-  height: $controlBarHeight;
+  max-height: $controlBarHeight;
   display: grid;
   grid-template-columns: 1fr 4fr;
   column-gap: 1em;
+  row-gap: .5em;
   align-items: center;
   justify-items: center;
   border-radius: 6px;
@@ -52,9 +53,5 @@
     &:hover span {
       opacity: 1;
     }
-  }
-
-  .Slider {
-    padding: 1em 0;
   }
 }

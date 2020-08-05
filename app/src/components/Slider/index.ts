@@ -1,6 +1,7 @@
 import './style.scss';
-import { StationTimelineItem } from 'src/utils/types';
-import { event, ScaleLinear, ScaleSequential } from 'd3';
+import { event, ScaleSequential } from 'd3';
+import { StationTimelineItem } from '../../utils/types';
+import { FORMATTERS as F } from '../../utils/constants';
 
 interface Props {
   parent: Selection
@@ -24,6 +25,13 @@ export default class Slider {
     this.handleChange = this.handleChange.bind(this);
     this.el = parent.append('div').attr('class', 'Slider');
 
+    this.dates = this.el.append('div').attr('class', 'dates')
+      .selectAll('.date')
+      .data([values[0].date, values[values.length - 1].date])
+      .join('div')
+      .attr('class', 'date')
+      .html((d) => F.fMonthYr(F.pWeek(d)));
+
     this.input = this.el.append('input')
       .attr('type', 'range')
       .attr('name', name)
@@ -32,9 +40,6 @@ export default class Slider {
       .attr('value', initialIndex)
       .attr('step', 1)
       .on('change', this.handleChange);
-
-    // TOOD: add text for date above slider
-    // TODO: update track gradient with timeline colors
 
     if (description) {
       this.el.append('div')
