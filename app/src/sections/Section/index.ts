@@ -11,9 +11,6 @@ import { getSectionHash } from '../../utils/helpers';
 interface Props { data: SectionDataType,
   store: Store,
   sectionName: string }
-
-const fadeOutThreshold = 0.8;
-const fadeInThreshold = 0.2;
 /** Scaffolding for reusable section code */
 export default class Section {
   store: Store<State>

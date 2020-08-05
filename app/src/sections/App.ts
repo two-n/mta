@@ -14,6 +14,9 @@ import { State } from '../utils/types';
 import { SECTIONS, CLASSES as C, KEYS } from '../utils/constants';
 import Title from './Title';
 
+const KEEP_SCROLLING = 'Keep scrolling ↓';
+const SCROLL_TO_TOP = 'Scroll to top ↑';
+
 export default class App {
   [x: string]: any;
 
@@ -24,9 +27,12 @@ export default class App {
     const state = this.store.getState();
     const sectionData = S.getSectionData(state);
 
+    this.handleStateChange = this.handleStateChange.bind(this);
+
     // TITLE
     // load title before data is fully processed
     this.Title = new Title({ data: sectionData[SECTIONS.S_TITLE] });
+    this.store.subscribe(this.handleStateChange);
   }
 
   init() {
@@ -34,7 +40,10 @@ export default class App {
     const sectionData = S.getSectionData(state);
 
     // INTRO
-    this.SectionIntro = new SectionIntro({ data: sectionData[SECTIONS.S_INTRO] });
+    this.SectionIntro = new SectionIntro({
+      data: sectionData[SECTIONS.S_INTRO],
+      store: this.store,
+    });
 
     // SECTION 1
     this.SectionTimeline = new SectionTimeline({
@@ -52,6 +61,9 @@ export default class App {
       store: this.store,
     });
 
+    this.ScrollHelp = select('#app')
+      .append('div')
+      .attr('class', 'scroll-prompt');
 
     // polyfil for sticky positioning
     this.setupStickyfill();
@@ -62,6 +74,7 @@ export default class App {
       console.log('unload');
       window.location.hash = '';
     }); // reset window location
+
     this.checkForHash();
   }
 
@@ -76,6 +89,19 @@ export default class App {
   handleResize() {
     this.SectionTimeline.handleResize();
     this.SectionMovingMap.handleResize();
+  }
+
+  handleStateChange() {
+    const { location } = this.store.getState();
+    if (location) {
+      window.location.hash = location;
+    }
+
+    // this.ScrollHelp
+    //   .classed(C.VISIBLE, window.location.hash)// visible when after first page
+    //   .html((location && location.includes('intro')) // /find best proxy for first section
+    //     ? KEEP_SCROLLING
+    //     : SCROLL_TO_TOP);
   }
 
   setupStickyfill() {
