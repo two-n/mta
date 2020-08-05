@@ -39,7 +39,7 @@ export default class Slider {
       .attr('max', values.length - 1)
       .attr('value', initialIndex)
       .attr('step', 1)
-      .on('change', this.handleChange);
+      .on('input', this.handleChange);
 
     if (description) {
       this.el.append('div')

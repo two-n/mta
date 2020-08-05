@@ -62,7 +62,7 @@ export default class Controls {
     const initialWeek = S.getSelectedWeek(this.state);
 
     this.sliderTimeline = timeline
-      .filter((d) => F.pWeek(d.date) >= appConfig.thresholdDate);
+      .filter((d) => F.pWeek(d.date) > appConfig.thresholdDate);
 
     this.play = this.el.append('div').attr('class', 'play-button')
       .html('Play')
