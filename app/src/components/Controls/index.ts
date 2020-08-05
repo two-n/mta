@@ -2,12 +2,15 @@ import './style.scss';
 import { Store } from 'redux';
 import { State } from 'src/utils/types';
 import { select } from 'd3';
-import { CLASSES as C, VIEWS } from '../../utils/constants';
+import {
+  CLASSES as C, VIEWS, appConfig, FORMATTERS as F,
+} from '../../utils/constants';
 import * as S from '../../redux/selectors';
 import * as A from '../../redux/actions/creators';
 import Input from '../Input';
 import TimelineFilter from '../TimelineFilter';
 import { LineSwatch } from '../LineSwatch';
+import Slider from '../Slider';
 
 interface Props {
   store: Store<State>
@@ -53,12 +56,20 @@ export default class Controls {
 
 
     const { timeline } = S.getOverallTimeline(this.state);
+    const colorScale = S.getColorScheme(this.state);
     const initialWeek = S.getSelectedWeek(this.state);
-    this.timelineFilter = new TimelineFilter({
+
+    this.sliderTimeline = timeline
+      .filter((d) => F.pWeek(d.date) >= appConfig.thresholdDate);
+
+    this.slider = new Slider({
       parent: this.el,
-      timeline,
-      initialWeek,
-      updateWeek: (week:string) => this.store.dispatch(A.setWeek(week)),
+      values: this.sliderTimeline,
+      initialIndex: this.sliderTimeline.findIndex((d) => d.date === initialWeek),
+      onChange: (newIndex:number) => this.store.dispatch(A.setWeek(this.sliderTimeline[newIndex].date)),
+      name: 'dateSelection',
+      description: 'Use the slider to change the date, or press <strong>play</strong> for animation.',
+      colorScale,
     });
   }
 
@@ -67,7 +78,8 @@ export default class Controls {
     const view = S.getView(state);
     const newWeek = S.getSelectedWeek(state);
     this.el.classed(C.VISIBLE, view >= VIEWS.SCATTER && view < VIEWS.METHODOLOGY);
-    this.el.classed('top', view >= VIEWS.MAP_WITH_CONTROLS);
-    this.timelineFilter.updateVisibility(newWeek);
+    // TODO: update slider here based on play button
+    this.slider.update(this.sliderTimeline
+      .findIndex((d) => d.date === newWeek));
   }
 }
