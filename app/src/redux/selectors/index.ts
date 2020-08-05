@@ -161,9 +161,8 @@ export const getStationToACSMap = createSelector([
 ], (data) => data
   && new Map(data.map(({ properties }) => ([properties.NTACode, properties]))));
 
-
 // get bounding boxes surounding each focus neighborhood
-export const getSelectedNTAS = createSelector([
+export const getNTAMap = createSelector([
   getStationData,
   getStationRollup,
   getNTAFeatures,
@@ -176,24 +175,11 @@ export const getSelectedNTAS = createSelector([
       && swipes.get(d.unit).summary.swipes_pct_chg));
   };
 
-  return ntas && [
-    'MN24', // SOHO
-    'BK81', // Brownsville
-  ].map((code) => {
-    const nta = ntas.features.find((d) => d.properties.NTACode === code);
-    return {
-      ...nta,
-      properties: { ...nta.properties, [K.SWIPES_PCT_CHG]: getAvgPctChg(nta) },
-    };
-  });
+  return new Map(ntas.features.map((nta) => ([nta.properties.NTACode, {
+    ...nta,
+    properties: { ...nta.properties, [K.SWIPES_PCT_CHG]: getAvgPctChg(nta) },
+  }])));
 });
-
-export const getNTAbboxes = createSelector([
-  getSelectedNTAS,
-], ([soho, brownsville]) => (soho && brownsville && {
-  [V.ZOOM_SOHO]: bbox(soho),
-  [V.ZOOM_BROWNSVILLE]: bbox(brownsville),
-}));
 
 // UNIQUE VALUES
 export const getUniqueLines = createSelector([

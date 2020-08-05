@@ -4,6 +4,7 @@ import {
   scaleLinear, scaleBand,
   axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear, event, zoom,
 } from 'd3';
+import bbox from '@turf/bbox';
 import * as S from '../../redux/selectors/index';
 import { State, StationData } from '../../utils/types';
 import {
@@ -58,6 +59,14 @@ const FORMAT_MAP: { [key: string]: (d: number) => string } = {
   [K.POVERTY]: F.fPctNoMult,
 };
 
+
+const SOHO = 'MN24';
+const BROWNSVILLE = 'BK81';
+const ZOOM_MAP: {[view:string]: string} = {
+  [V.ZOOM_SOHO]: SOHO, // SOHO
+  [V.ZOOM_BROWNSVILLE]: BROWNSVILLE, // BROWNSVILLE
+};
+
 const MAP_VISIBLE = [V.MAP_OUTLINE, V.MAP_DOTS_LINES,
   V.MAP_DOTS_LINES_NTAS, V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE, V.MAP_WITH_CONTROLS];
 export default class MovingMap {
@@ -78,8 +87,8 @@ export default class MovingMap {
     this.stationsGISData = S.getStationData(this.state);
     this.swipeData = S.getStationRollup(this.state);
     this.acsMap = S.getStationToACSMap(this.state);
-    this.bboxes = S.getNTAbboxes(this.state);
-    this.selectedNTAFeatures = S.getSelectedNTAS(this.state);
+    this.ntaMap = S.getNTAMap(this.state);
+    this.selectedNTAFeatures = [this.ntaMap.get(SOHO), this.ntaMap.get(BROWNSVILLE)];
     this.view = S.getView(this.state);
     this.yKey = S.getYKey(this.state);
     this.week = S.getSelectedWeek(this.state);
@@ -90,7 +99,6 @@ export default class MovingMap {
     this.handleStateChange = this.handleStateChange.bind(this);
     this.createStatBox = this.createStatBox.bind(this);
     this.isHighlighted = this.isHighlighted.bind(this);
-    this.zoomed = this.zoomed.bind(this);
     this.store.subscribe(this.handleStateChange);
   }
 
@@ -169,10 +177,6 @@ export default class MovingMap {
   draw() {
     const [width, height] = this.dims;
     this.geoPath = geoPath().projection(this.proj);
-    this.zoomBehavior = zoom()
-      .scaleExtent([1, 8])
-      .extent([[0, 0], [width, height]])
-      .on('zoom', this.zoomed);
     this.el.attr('viewBox', `0 0 ${width} ${height}`);
     this.calcNodePositions();
 
@@ -237,23 +241,9 @@ export default class MovingMap {
     this.el
       .transition()
       .duration(duration)
-      .attr('viewBox', () => { // [x, y, width, height]
-        if (this.bboxes[view]) {
-          const [xMin, yMin, xMax, yMax] = this.bboxes[view];
-          const [x0, y0, x1, y1] = [
-            ...proj([xMin, yMax]),
-            ...proj([xMax, yMin])]; // swith yMin/Max b/c browser coordinate system
-          return [
-            x0 - geoPadding.left,
-            y0 - geoPadding.top,
-            (x1 - x0) + geoPadding.right,
-            (y1 - y0) + geoPadding.bottom,
-          ];
-        }
-        return [0, 0, width, height];
-      }).on('end interrupt', () => {
+      .attr('viewBox', () => this.calculateZoomViewbox(this.nta))
+      .on('end interrupt', () => {
         this.rescaleNodes();
-
         // if we are currently zoomed in on a neighborhood
         // find zoomed position of matching polygon and move annotation next to it
         if (neighborhoodIndex > -1) {
@@ -274,14 +264,6 @@ export default class MovingMap {
       });
 
     this.transitionAnnotations();
-
-    // ZOOM
-    if (view === V.MAP_WITH_CONTROLS) { // only time zoom is enabled
-      this.el
-        .call(this.zoomBehavior);
-    } else {
-      this.el.on('.zoom', null); // disable otherwise
-    }
   }
 
   setupGeographicElements() {
@@ -472,8 +454,7 @@ export default class MovingMap {
     this.yKey = S.getYKey(this.state);
     this.week = S.getSelectedWeek(this.state);
     this.line = S.getSelectedLine(this.state);
-    this.nta = S.getSelectedNta(this.state);
-    if (this.view !== V.MAP_WITH_CONTROLS) this.resetZoom();
+    this.nta = ZOOM_MAP[this.view] || S.getSelectedNta(this.state);
     this.handleViewTransition();
   }
 
@@ -527,22 +508,26 @@ export default class MovingMap {
     && (!this.line || d.line_name.toString().includes(this.line));
   }
 
-  zoomed() {
-    if (this.view === V.MAP_WITH_CONTROLS) {
-      this.geoEls.attr('transform', event.transform);
-      this.stationsG.attr('transform', event.transform);
-      this.rescaleNodes();
-    }
-  }
-
-  resetZoom() {
-    this.geoEls.attr('transform', null);
-    this.stationsG.attr('transform', null);
-  }
-
   rescaleNodes() {
     const matrix = this.geoEls.node().getCTM();
     // adjust circle positions
     this.stations.selectAll('circle').style('transform', `scale(${1 / matrix.a})`);
+  }
+
+  calculateZoomViewbox(ntaName:string | null) {
+    const [width, height] = this.dims;
+    if (ntaName && this.ntaMap.has(ntaName)) {
+      // calculate bounding box for selected neighborhood
+      const [xMin, yMin, xMax, yMax] = bbox(this.ntaMap.get(ntaName));
+      const [x0, y0, x1, y1] = [
+        ...this.proj([xMin, yMax]),
+        ...this.proj([xMax, yMin])]; // swith yMin/Max b/c browser coordinate system
+      return [
+        x0 - geoPadding.left,
+        y0 - geoPadding.top,
+        (x1 - x0) + geoPadding.right,
+        (y1 - y0) + geoPadding.bottom,
+      ];
+    } return [0, 0, width, height]; // default
   }
 }
