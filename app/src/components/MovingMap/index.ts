@@ -2,14 +2,14 @@ import { Store } from 'redux';
 import {
   Selection, geoAlbersUsa, geoPath,
   scaleLinear, scaleBand,
-  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear, event, zoom,
+  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear, event,
 } from 'd3';
 import bbox from '@turf/bbox';
 import * as S from '../../redux/selectors/index';
 import { State, StationData } from '../../utils/types';
 import {
   CLASSES as C, VIEWS as V,
-  KEYS as K, FORMATTERS as F, MTA_Colors, SECTIONS, censusFieldMapping,
+  KEYS as K, FORMATTERS as F, MTA_Colors, SECTIONS, METRIC_MAP,
 } from '../../utils/constants';
 import { calcSwarm, isMobile } from '../../utils/helpers';
 import './style.scss';
@@ -26,8 +26,9 @@ interface Props {
 interface ScaleObject {
   scale: ScaleLinear<number, number>,
   format: (d: number) => string,
-  label: string,
-  median: string
+  label: string, // axis label
+  median: string, // text for median line
+  name: string // name for tooltip/annotations
 }
 
 const M = {
@@ -45,18 +46,6 @@ const geoPadding = { // distance from zoomed in shape
   bottom: 50,
   left: 20,
   right: 50,
-};
-
-const FORMAT_MAP: { [key: string]: (d: number) => string } = {
-  [K.WHITE]: F.fPctNoMult,
-  [K.NON_WHITE]: F.fPctNoMult,
-  [K.INCOME_PC]: F.sDollar,
-  [K.ED_HEALTH_PCT]: F.fPctNoMult,
-  [K.UNINSURED]: F.fPctNoMult,
-  [K.SNAP_PCT]: F.fPctNoMult,
-  [K.COMMUTE]: F.fPctNoMult,
-  [K.SERVICE_SECTOR]: F.fPctNoMult,
-  [K.POVERTY]: F.fPctNoMult,
 };
 
 
@@ -124,9 +113,7 @@ export default class MovingMap {
       ...obj,
       [d[K.Y_KEY]]: {
         scale: scaleLinear().domain(E[d[K.Y_KEY]] as number[]),
-        label: d[K.Y_DISPLAY],
-        median: d[K.Y_MEDIAN_LABEL] || d[K.Y_DISPLAY],
-        format: FORMAT_MAP[d[K.Y_KEY]],
+        ...METRIC_MAP[d[K.Y_KEY]],
       },
     }), {});
 
@@ -264,7 +251,7 @@ export default class MovingMap {
             .style('max-width', `${left - offsetX}px`)
             .style('transform', (d, i) => (
               isLeft
-                ? `translate(${left - offsetX}px, ${top - offsetY}px) translateX(-100%)`
+                ? `translate(${left - offsetX}px, ${top - offsetY}px) translateX(-100%) translateY(-25%)`
                 : `translate(${left - offsetX + w}px, ${top - offsetY}px)`));
         }
       });
@@ -483,12 +470,16 @@ export default class MovingMap {
 
   createStatBox({ properties: d }) {
     const statSpan = (stat:string) => `<div class="stat">
-      <span class="key"> ${censusFieldMapping[stat] || this.yScales[stat].median}: <span>
-      <span class="value">${FORMAT_MAP[stat](d[stat])} <span>
-    <div>`;
+      <span class="key"> ${METRIC_MAP[stat].name}: </span>
+      <span class="value">${METRIC_MAP[stat].format(d[stat])} </span>
+    </div>`;
 
-    return `<div class="name"> ${d.NTAName} <div>
-    ${[K.NON_WHITE, K.INCOME_PC, K.POVERTY, K.SERVICE_SECTOR, K.COMMUTE].map(statSpan).join('')}
+    return `<div class="name"> ${d.NTAName} </div>
+    <div class="stats-grid">
+    ${[K.NON_WHITE, K.POVERTY, K.SERVICE_SECTOR, K.COMMUTE, K.INCOME_PC]
+    .map(statSpan)
+    .join('')}
+    </div>
     `;
   }
 
