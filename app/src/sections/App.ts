@@ -21,18 +21,17 @@ export default class App {
 
   constructor(store: Store) {
     this.store = store;
+    const state = this.store.getState();
+    const sectionData = S.getSectionData(state);
+
+    // TITLE
+    // load title before data is fully processed
+    this.Title = new Title({ data: sectionData[SECTIONS.S_TITLE] });
   }
 
   init() {
     const state = this.store.getState();
     const sectionData = S.getSectionData(state);
-
-    // TITLE
-    this.Title = new Title({ data: sectionData[SECTIONS.S_TITLE] });
-
-    // this.Naviation = new Navigation({
-    //   sections: sectionData,
-    // });
 
     // INTRO
     this.SectionIntro = new SectionIntro({ data: sectionData[SECTIONS.S_INTRO] });
