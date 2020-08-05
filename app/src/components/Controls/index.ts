@@ -85,22 +85,28 @@ export default class Controls {
   animateWeeks() {
     const delay = 500; // millisecnds
     if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
-      this.play.classed('pause', false);
+      this.resetInterval();
     } else {
       this.play.classed('pause', true);
       this.intervalId = setInterval(this.findNextWeek, delay);
     }
   }
 
+  resetInterval() {
+    clearInterval(this.intervalId);
+    this.intervalId = null;
+    this.play.classed('pause', false);
+  }
+
   findNextWeek() {
     const week = S.getSelectedWeek(this.store.getState());
     const index = this.sliderTimeline.findIndex((d) => d.date === week);
-    const nextWeek = (index < this.sliderTimeline.length - 1)
+    const isAtEnd = (index === this.sliderTimeline.length - 1);
+    const nextWeek = !isAtEnd
       ? this.sliderTimeline[index + 1].date
       : this.sliderTimeline[0].date;
     this.store.dispatch(A.setWeek(nextWeek));
+    if (isAtEnd) this.resetInterval(); // turn off at end of dates
   }
 
   toggleVisibility() {

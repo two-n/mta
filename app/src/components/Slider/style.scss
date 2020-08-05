@@ -1,8 +1,9 @@
 @import "../../styling/variables";
 
-$trackColor: linear-gradient(90deg, rgba(61,105,108,1) 0%, rgba(84,177,184,1) 30%, rgba(184,114,66,1) 60%, rgba(135,108,67,1) 100%);
-$thumbWidth: 1rem;
-$trackHeight: .7rem;
+$trackColor: $colorBlack;
+$thumbWidth: .75rem;
+$trackHeight: 5px;
+$trackBorder: none;
 
 .Slider{
   width: 100%;
@@ -23,14 +24,14 @@ $trackHeight: .7rem;
   }
   input[type=range]::-webkit-slider-runnable-track {
     background: $trackColor;
-    border: 0.2px solid #010101;
+    border: $trackBorder;
     border-radius: 1.3px;
     width: 100%;
     height: $trackHeight;
     cursor: pointer;
   }
   input[type=range]::-webkit-slider-thumb {
-    margin-top: calc(#{$trackHeight} / -4);
+    margin-top: calc(#{$thumbWidth} / -4);
     width: $thumbWidth;
     height:$thumbWidth;
     background: #ffffff;
@@ -44,7 +45,7 @@ $trackHeight: .7rem;
   }
   input[type=range]::-moz-range-track {
     background: $trackColor;
-    border: 0.2px solid #010101;
+    border: $trackBorder;
     border-radius: 1.3px;
     width: 100%;
     height: $trackHeight;
@@ -69,12 +70,12 @@ $trackHeight: .7rem;
   }
   input[type=range]::-ms-fill-lower {
     background: #2a6495;
-    border: 0.2px solid #010101;
+    border: $trackBorder;
     border-radius: 2.6px;
   }
   input[type=range]::-ms-fill-upper {
     background: #3071a9;
-    border: 0.2px solid #010101;
+    border: $trackBorder;
     border-radius: 2.6px;
   }
   input[type=range]::-ms-thumb {
@@ -105,6 +106,7 @@ $trackHeight: .7rem;
 
 
   .description{
+    margin-top: .5em;
     font-family: $fontRegular;
     font-size: $fontSizeSmall;
   }
