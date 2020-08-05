@@ -205,10 +205,15 @@ export default class MovingMap {
     this.ntas
       .classed(C.VISIBLE, view >= V.MAP_WITH_CONTROLS)
       .selectAll('path')
-      .classed(C.ACTIVE, ({ properties }) => this.nta && this.nta === properties.NTACode)
-      .style('fill', ({ properties }) => ((this.nta && this.nta === properties.NTACode)
-        ? this.colorScale(properties[K.SWIPES_PCT_CHG])
-        : null));
+      .classed(C.ACTIVE, ({ properties }) => this.nta && this.nta === properties.NTACode);
+
+    if (view === V.MAP_WITH_CONTROLS) {
+      // solve for uneven path bug, need to bring path to the top
+      this.ntas
+        .selectAll('path')
+        .filter(({ properties }) => this.nta && this.nta === properties.NTACode)
+        .raise();
+    }
 
     this.selectedNtas
       .classed(C.VISIBLE, view >= V.ZOOM_SOHO && view < V.SWARM);
@@ -232,9 +237,7 @@ export default class MovingMap {
         }
       }
     })
-      .style('fill', (d) => (this.isHighlighted(d)
-        ? (this.colorScale(this.getPctChange(d)))
-        : null))
+      .style('fill', (d) => this.colorScale(this.getPctChange(d)))
       .classed(C.HIGHLIGHT, this.isHighlighted);
 
     const neighborhoodIndex = [V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE].indexOf(view);
@@ -514,7 +517,8 @@ export default class MovingMap {
   rescaleNodes() {
     const matrix = this.geoEls.node().getCTM();
     // adjust circle positions
-    this.stations.selectAll('circle').style('transform', `scale(${1 / matrix.a})`);
+    this.stations.selectAll('circle')
+      .attr('transform', `scale(${1 / Math.max(matrix.a - 1, 1)})`); // don't scale too much
   }
 
   calculateZoomViewbox(ntaName:string | null) {

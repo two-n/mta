@@ -71,16 +71,6 @@ export const getNTAFeatures = createSelector([
   getMapData,
 ], (data) => topojson.feature(data, data.objects.acs_nta));
 
-export const getGeoMeshInterior = createSelector([
-  getMapData,
-], (data) => topojson.mesh(data, data.objects.acs_nta,
-  (a, b) => a !== b));
-
-export const getGeoMeshExterior = createSelector([
-  getMapData,
-], (data) => topojson.mesh(data, data.objects.acs_nta,
-  (a, b) => a === b));
-
 
 /** EXTENTS */
 /** Returns an object {extents: {
@@ -169,7 +159,7 @@ export const getNTAMap = createSelector([
 ], (stations, swipes, ntas) => {
   // helper function to grab relevant stations and return their average percent change
   const getAvgPctChg = (nta) => {
-    const relevantStations = stations.filter((d) => geoContains(nta, [d.long, d.lat]));
+    const relevantStations = stations.filter((d) => d.NTACode === nta.properties.NTACode);
     return mean(relevantStations
       .map((d) => swipes.get(d.unit)
       && swipes.get(d.unit).summary.swipes_pct_chg));
