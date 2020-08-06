@@ -21,6 +21,7 @@ export type SectionDataType = {
   steps: StepDataType[],
   title: string
   subtitle?: string;
+  datasources?: SectionDataType[]
 }
 
 export type StepDataType = {

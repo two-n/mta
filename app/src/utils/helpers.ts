@@ -1,4 +1,4 @@
-import { ScaleLinear, window } from 'd3';
+import { ScaleLinear, window, selectAll } from 'd3';
 import { StationData, AppDataType } from './types';
 
 export const isMobile = () => window.innerWidth < 500;
@@ -78,5 +78,14 @@ export const calcSwarm = (
 
   return circles;
 };
+
+/** adds attributes to all links on page
+ * to ensure they all open in a separate tab */
+export function linkFix() {
+  const links = selectAll('a');
+  links
+    .attr('rel', 'noopener')
+    .attr('target', '_blank');
+}
 
 export default {};
