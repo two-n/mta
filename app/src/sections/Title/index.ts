@@ -41,7 +41,9 @@ export default class Title {
       .attr('class', 'title-video');
 
     this.video = this.videoWrapper.append('video')
+      .attr('preload', 'auto')
       .attr('autoplay', true)
+      .attr('muted', true)
       .attr('src', video); // chrome needs the source here
 
     this.video.append('source')
