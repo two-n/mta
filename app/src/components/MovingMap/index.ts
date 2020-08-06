@@ -32,10 +32,11 @@ interface ScaleObject {
 }
 
 const M = {
-  top: 50,
-  bottom: 100,
+  top: 40,
+  bottom: 50,
   left: 30,
   right: 20,
+  swarmBottom: 40,
 };
 
 const R = isMobile() ? 3 : 4;
@@ -211,7 +212,7 @@ export default class MovingMap {
     this.stations.style('transform', (d: StationData) => {
       switch (view) {
         case (V.SWARM):
-          return `translate(${d.x}px,${height - M.bottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
+          return `translate(${d.x}px,${height - M.swarmBottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
         case (V.SCATTER): {
           const yScale = this.yScales[yKey].scale;
           return `translate(
@@ -350,7 +351,9 @@ export default class MovingMap {
     const [width, height] = this.dims;
     const { averages: AD } = S.getDemoDataExtents(this.state);
     const { average: AW } = S.getWeeklyDataExtent(this.state);
-    const chartbottom = height - M.bottom;
+    const chartbottom = view === V.SWARM
+      ? height - M.swarmBottom
+      : height - M.bottom;
 
     // AXES
     this.xAxisEl
@@ -413,6 +416,7 @@ export default class MovingMap {
     this.parent.selectAll('.y')
       .classed(C.VISIBLE, !!this.yKey);
     this.overlay.classed(C.VISIBLE, view >= V.MAP_OUTLINE);
+    this.legend.el.classed(C.VISIBLE, ![V.SWARM, V.SCATTER].includes(view));
   }
 
   getPctChange(station: StationData) {
