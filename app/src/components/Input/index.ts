@@ -29,6 +29,10 @@ export default class Input {
     this.display = this.el.append('div')
       .attr('class', 'display');
 
+    this.input.on('focus', () => {
+      // reset value
+      this.display.html('');
+    });
 
     this.close = this.el.append('div').attr('class', 'close')
       .on('click', () => {
