@@ -88,19 +88,20 @@ h2 {
     top: 1rem;
     right: 2rem;
     padding: 1rem;
-     width: min-content;
+    width: min-content;
     text-align: center;
     opacity: 0;
-    cursor: pointer;
 
     &.visible {
       opacity: 0.3;
+    }
 
+    &:not(.bottom) {
+      cursor: pointer;
       &:hover {
         opacity: 1;
       }
     }
-
     &.bottom {
       top: 80vh;
     }
