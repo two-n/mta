@@ -76,9 +76,12 @@ export default class Controls {
       onChange: (newIndex:number) => this.store
         .dispatch(A.setWeek(this.sliderTimeline[newIndex].date)),
       name: 'dateSelection',
-      description: 'Use the slider to change the date, or press <strong>play</strong> for animation.',
       colorScale,
     });
+
+    this.el.append('div')
+      .attr('class', 'description')
+      .html('Use the slider to change the date, or press <strong>play</strong> for animation.');
   }
 
   animateWeeks() {
@@ -111,10 +114,15 @@ export default class Controls {
   toggleVisibility() {
     const state = this.store.getState();
     const view = S.getView(state);
-    const newWeek = S.getSelectedWeek(state);
     this.el.classed(C.VISIBLE, view >= VIEWS.SCATTER
       && !state.location.includes(SECTIONS.S_METHODOLOGY));
-    this.slider.update(this.sliderTimeline
-      .findIndex((d) => d.date === newWeek));
+
+    const newWeek = S.getSelectedWeek(state);
+    if (this.prevWeek !== newWeek) {
+      this.slider // slider takes an index value
+        .update(this.sliderTimeline
+          .findIndex((d) => d.date === newWeek));
+      this.prevWeek = newWeek;
+    }
   }
 }
