@@ -38,16 +38,20 @@ export default class Methodology extends Section {
       .html((d) => d.text);
 
     // data sources
-    this.datasources = this.el.append('div', 'data-sources');
+    this.datasources = this.el.append('div')
+      .attr('class', 'data-sources');
 
     this.datasources.append('div')
       .attr('class', 'title')
-      .html('Datasources used');
+      .html('Datasources');
     this.datasources.selectAll('.data-source')
       .data(data.datasources)
       .join('div')
       .attr('class', 'data-source')
       .html((d) => `${d.source}, ${d.accessed}`);
+
+    this.el.append('div').attr('class', 'footer')
+      .html(data.footer);
   }
 
   // generic window resize listener event

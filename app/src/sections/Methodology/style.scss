@@ -1,5 +1,56 @@
 @import "../../styling/variables";
 
 section#section-methodology{
+  min-height: 100vh;
+  position: relative;
+  .title{
+    font-size: $fontSizeLarge;
+    font-family: $fontBold;
+    padding: 1em 0;
+  }
+
+  .step{
+    font-family: $fontLight;
+    padding: .5em 0;
+
+  }
+
+  .data-sources{
+    .title{
+      font-size: $fontSizeMid;
+    }
+
+    .data-source{
+      font-family: $fontLight;
+
+    }
+  }
+
+  a {
+    color: inherit;
+    font-family: $fontBold;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .footer{
+    position: absolute;
+    left: 50%;
+    width: 210px;
+    bottom: 0;
+    transform: translateX(calc(-50% + 1em)) translateY(-100%); // adjust for icon
+
+    span.two-n{
+    position: absolute;
+    display: inline-flex;
+    width: 2em;
+    height: 2em;
+    background: no-repeat center/contain url(../../assets/2n_logo_black.png);
+    transform: translateX(-2.5em);
+    }
+
+  }
 
 }
+
+
