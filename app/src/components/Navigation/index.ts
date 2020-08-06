@@ -1,11 +1,13 @@
-import { select } from 'd3';
+import { select, text } from 'd3';
 import { AppDataType, StepDataType, SectionDataType } from '../../utils/types';
 import './style.scss';
 import { getSectionHash } from '../../utils/helpers';
 
+
 interface Props {
   sections: AppDataType
 }
+
 
 export default class Navigation {
   [x: string]:any;
@@ -13,7 +15,6 @@ export default class Navigation {
   constructor({ sections }:Props) {
     this.onClick = this.onClick.bind(this);
     this.sections = Object.entries(sections); // [sectionName, object]
-
     this.el = select('#app').append('div')
       .attr('class', 'Navigation');
 

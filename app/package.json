@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "env NODE_ENV=production PUBLIC_URL=http://prototypes.two-n.com/mta/ webpack",
-    "start": "webpack-dev-server --hot",
+    "start": "webpack-dev-server --hot --host 0.0.0.0",
     "deploy": "rsync -avz --delete ./dist/ twoninc@two-n.com:/home/twoninc/prototypes.two-n.com/mta/"
   },
   "author": "auchers <aucher@two-n.com>",
@@ -37,6 +37,7 @@
     "sass": "^1.26.8",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.2.1",
+    "svg-inline-loader": "^0.8.2",
     "ts-loader": "^7.0.4",
     "typescript": "^3.9.3",
     "webpack": "^4.43.0",

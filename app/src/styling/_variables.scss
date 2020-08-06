@@ -3,8 +3,6 @@ $fontRegular: "Helvetica Neue Regular";
 $fontBold: "Helvetica Neue Bold";
 $fontExtraBold: "Helvetica Neue Condensed Black";
 $fontLight: "Helvetica Neue Light";
-$fontThin: "Helvetica Neue Thin";
-$fontMedium: "Helvetica Neue Medium";
 
 $fontSizeBase: 1rem;
 $fontSizeMid: 1.3rem;
@@ -21,11 +19,12 @@ $colorYellow: #E5A139;
 $colorDarkGrey: #707070;
 $colorLightGrey: #ccc;
 $colorMidGrey: #777;
-$boxShadow: 0px 3px 6px -3px $colorLightGrey;
+$colorDarkBlue: #0039A6;
+$boxShadow: 0px 3px 6px -3px $colorMidGrey;
 
 /** SPACING/MARGINS/PADDING */
 $maxTextWidth: 20rem;
-$controlBarHeight: 140px;
+$controlBarHeight: 100px;
 $thickBorderWidth: 8px;
 
 /** TRANSITIONS */

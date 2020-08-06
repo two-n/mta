@@ -7,7 +7,7 @@ section.section {
     position: sticky;
     display: flex;
     flex-direction: column;
-    padding: 0 0.5em;
+    padding:$controlBarHeight 0.5em;
 
     .section-header {
       opacity: 0;
@@ -15,7 +15,7 @@ section.section {
       width: 100%;
       font-family: $fontLight;
       font-size: $fontSizeBase;
-      height: 4em;
+      // height: 4em;
       flex-shrink: 0; // don't collapse when text empty
       font-weight: unset;
       padding: 0 1em 1em 1em;
@@ -63,15 +63,55 @@ section.section {
         margin: 0 auto;
         font-family: $fontBold;
         font-size: $fontSizeBase;
+        z-index: 3;
+
+        &.vertical-center {
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: $fontSizeXLarge;
+        }
 
         &:not(.empty) {
           border-top: $thickBorderWidth solid black;
           background-color: $colorBackground;
         }
+
+        .subtitle {
+          font-size: $fontSizeSmall;
+          font-family: $fontLight;
+          margin-top: 1em;
+        }
+
+        a {
+          text-decoration: underline;
+          color: $colorDarkGrey;
+          cursor: pointer;
+          pointer-events: all;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
       }
 
       &.active {
         opacity: 1;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  section.section {
+    .article {
+      .step {
+        .text {
+          font-size: .8rem;
+
+          &.vertical-center {
+            font-size: $fontSizeLarge;
+          }
+        }
       }
     }
   }

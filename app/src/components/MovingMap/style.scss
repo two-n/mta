@@ -16,9 +16,14 @@
       }
       path {
         fill: #eee;
-        // fill: transparent;
         stroke: $colorLightGrey;
         stroke-width: 0.5px;
+
+        &.active {
+          stroke: black;
+          stroke-width: 3px;
+          fill: gainsboro;
+        }
       }
 
       &.outline path {
@@ -45,20 +50,16 @@
     }
 
     .stations {
-
       .station {
         opacity: 0;
-        transition: transform $durationMovement;
+        pointer-events: none;
+        transition: transform $durationMovement, fill $durationOpacity, opacity $durationOpacity;
         cursor: pointer;
 
         circle {
           transition: transform $durationOpacity;
           stroke: white;
           stroke-width: 0.5;
-        }
-
-        &:not(.allow-pointer) {
-          pointer-events: none;
         }
 
         &:hover {
@@ -74,16 +75,17 @@
 
       &.visible {
         .station {
-          &:not(.highlight){
-            opacity: 0.4;
+          pointer-events: all;
+          &:not(.highlight) {
+            opacity: 0.6;
             fill: $colorLightGrey;
             pointer-events: none;
           }
 
-          &.highlight, &:hover {
+          &.highlight,
+          &:hover {
             opacity: 1;
           }
-
         }
       }
     }
@@ -119,15 +121,19 @@
 
     .color-legend {
       position: absolute;
-      right: 0;
-      bottom: 2em;
+      right: 1rem;
+      bottom: 1rem;
     }
   }
 
   .x,
   .y {
     opacity: 0;
-    transition: opacity $durationOpacity;
+    transition: opacity $durationOpacity, transform $durationMovement;
+    &.axis-label.y{
+      font-family: $fontBold;
+    }
+
     &.visible {
       opacity: 1;
     }
@@ -135,10 +141,11 @@
 
   .nta-annotation {
     position: absolute;
-    width: 120px;
+    width: 175px;
     padding: 1em;
     opacity: 0;
     transition: opacity 0 0;
+    text-transform: capitalize;
 
     &.visible {
       transition: opacity $durationOpacity $durationMovement;
@@ -149,21 +156,58 @@
       font-family: $fontExtraBold;
       font-size: $fontSizeBase;
     }
+    .stats-grid{
+      display: grid;
+      grid-template-columns: auto auto;
+      row-gap: .15em;
 
-    .stat {
-      font-size: $fontSizeSmall;
-      .key {
-        font-family: $fontMedium;
-      }
-      .value {
-        font-family: $fontLight;
+      .stat {
+        grid-column: 1/3;
+        align-items: center;
+        font-size: $fontSizeSmall;
+        display: grid;
+        column-gap: .5em;
+        grid: inherit;
+
+        .key {
+          font-family: $fontRegular;
+        }
+        .value {
+          font-family: $fontBold;
+          text-align: right;
+          align-self: end;
+        }
       }
     }
   }
 
   .Tooltip {
-    .station-name {
-      font-family: $fontBold;
+    .content {
+      max-width: 150px;
+
+      .station-name {
+        color: $colorBlack;
+        font-family: $fontBold;
+        font-size: $fontSizeSmall;
+      }
+
+      .neighborhood {
+        white-space: normal;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: min-content 1fr;
+        font-size: $fontSizeXSmall;
+        column-gap: 0.5em;
+
+        .stat-val {
+          font-family: $fontBold;
+        }
+      }
+    }
+    .swatches {
+      white-space: normal;
     }
   }
 }

@@ -10,7 +10,7 @@ import {
   mean,
 } from 'd3-array';
 import {
-  scaleSequential, geoContains, ascending, line,
+  geoContains, ascending, scaleSequential,
 } from 'd3';
 import { State, StationData } from '../../utils/types';
 import * as Helpers from '../../utils/helpers';
@@ -27,6 +27,7 @@ export const getSwipeData = (state: State) => state.swipeData;
 export const getStationData = (state: State) => state.stationData;
 export const getMapData = (state: State) => state.mapData;
 export const getView = (state: State) => state.view;
+export const getYKey = (state: State) => state.yKey;
 export const getSelectedWeek = (state: State) => state.selectedWeek;
 export const getSelectedLine = (state: State) => state.selectedLine;
 export const getSelectedNta = (state: State) => state.selectedNta;
@@ -70,16 +71,6 @@ export const getNTAFeatures = createSelector([
   getMapData,
 ], (data) => topojson.feature(data, data.objects.acs_nta));
 
-export const getGeoMeshInterior = createSelector([
-  getMapData,
-], (data) => topojson.mesh(data, data.objects.acs_nta,
-  (a, b) => a !== b));
-
-export const getGeoMeshExterior = createSelector([
-  getMapData,
-], (data) => topojson.mesh(data, data.objects.acs_nta,
-  (a, b) => a === b));
-
 
 /** EXTENTS */
 /** Returns an object {extents: {
@@ -105,6 +96,7 @@ export const getDemoDataExtents = createSelector([
     [K.UNINSURED]: [0, quantile(acs.map(({ properties }) => +properties[K.UNINSURED]), 0.99)],
     [K.SNAP_PCT]: [0, quantile(acs.map(({ properties }) => +properties[K.SNAP_PCT]), 0.99)],
     [K.WHITE]: [0, quantile(acs.map(({ properties }) => +properties[K.WHITE]), 0.99)],
+    [K.NON_WHITE]: [0, quantile(acs.map(({ properties }) => +properties[K.NON_WHITE]), 0.99)],
   },
   averages: {
     [K.ED_HEALTH_PCT]: mean(acs, ({ properties }) => +properties[K.ED_HEALTH_PCT]),
@@ -112,17 +104,25 @@ export const getDemoDataExtents = createSelector([
     [K.UNINSURED]: mean(acs, ({ properties }) => +properties[K.UNINSURED]),
     [K.SNAP_PCT]: mean(acs, ({ properties }) => +properties[K.SNAP_PCT]),
     [K.WHITE]: mean(acs, ({ properties }) => +properties[K.WHITE]),
+    [K.NON_WHITE]: mean(acs, ({ properties }) => +properties[K.NON_WHITE]),
   },
 }));
+
+export const getWeeklyData = createSelector([
+  getSelectedWeek,
+  getStationRollup,
+], (week, stationStats) => [...stationStats].map(([, { timeline }]) => timeline.get(week)));
+
 
 export const getWeeklyDataExtent = createSelector([
   getSelectedWeek,
   getStationRollup,
 ], (week, stationStats): {extent: number[], average: number} => {
-  const currentWeekStationStats = [...stationStats].map(([, { timeline }]) => timeline.get(week));
+  const currentWeekSwipes = [...stationStats].map(([, { timeline }]) => timeline.get(week)).map((d) => d && d.swipes_pct_chg);
   return {
-    extent: extent(currentWeekStationStats.map((d) => d && d.swipes_pct_chg)),
-    average: mean(currentWeekStationStats.map((d) => d && d.swipes_pct_chg)),
+    extent: [quantile(currentWeekSwipes, 0.001),
+      quantile(currentWeekSwipes, 0.999)],
+    average: mean(currentWeekSwipes),
   };
 });
 
@@ -142,7 +142,8 @@ const getSummarySwipeExtent = createSelector([
 export const getColorScheme = createSelector([
   getSummarySwipeExtent,
 ], (e) => scaleSequential(colorInterpolator)
-  .domain(e as [number, number]));
+  .domain(e as [number, number])
+  .clamp(true));
 
 /** creates a map from NTACode => ACS summary data */
 export const getStationToACSMap = createSelector([
@@ -150,39 +151,25 @@ export const getStationToACSMap = createSelector([
 ], (data) => data
   && new Map(data.map(({ properties }) => ([properties.NTACode, properties]))));
 
-
 // get bounding boxes surounding each focus neighborhood
-export const getSelectedNTAS = createSelector([
+export const getNTAMap = createSelector([
   getStationData,
   getStationRollup,
   getNTAFeatures,
 ], (stations, swipes, ntas) => {
   // helper function to grab relevant stations and return their average percent change
   const getAvgPctChg = (nta) => {
-    const relevantStations = stations.filter((d) => geoContains(nta, [d.long, d.lat]));
+    const relevantStations = stations.filter((d) => d.NTACode === nta.properties.NTACode);
     return mean(relevantStations
       .map((d) => swipes.get(d.unit)
       && swipes.get(d.unit).summary.swipes_pct_chg));
   };
 
-  return ntas && [
-    'MN24', // SOHO
-    'BK81', // Brownsville
-  ].map((code) => {
-    const nta = ntas.features.find((d) => d.properties.NTACode === code);
-    return {
-      ...nta,
-      properties: { ...nta.properties, [K.SWIPES_PCT_CHG]: getAvgPctChg(nta) },
-    };
-  });
+  return new Map(ntas.features.map((nta) => ([nta.properties.NTACode, {
+    ...nta,
+    properties: { ...nta.properties, [K.SWIPES_PCT_CHG]: getAvgPctChg(nta) },
+  }])));
 });
-
-export const getNTAbboxes = createSelector([
-  getSelectedNTAS,
-], ([soho, brownsville]) => (soho && brownsville && {
-  [V.ZOOM_SOHO]: bbox(soho),
-  [V.ZOOM_BROWNSVILLE]: bbox(brownsville),
-}));
 
 // UNIQUE VALUES
 export const getUniqueLines = createSelector([
@@ -200,4 +187,4 @@ export const getUniqueNTAs = createSelector([
 ], (data) => data && [
   ...new Map(data
     .map((d:StationData) => ([d.NTACode, d.NTAName]))),
-].map(([key, name]) => ({ key, name })));
+].map(([key, name]) => ({ key, name })).sort((a, b) => ascending(a.name, b.name)));

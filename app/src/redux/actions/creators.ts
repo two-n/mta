@@ -18,9 +18,10 @@ export const setMapData = (data: any) => ({
   data,
 });
 export const SET_VIEW = 'SET_VIEW';
-export const setView = (view: VIEWS) => ({
+export const setView = (view: VIEWS, yKey?: string | null) => ({
   type: SET_VIEW,
   view,
+  yKey,
 });
 export const SET_WEEK = 'SET_WEEK';
 export const setWeek = (week: string) => ({
@@ -36,4 +37,9 @@ export const SET_NTA = 'SET_NTA';
 export const setNTA = (nta: string) => ({
   type: SET_NTA,
   nta,
+});
+export const SET_LOCATION = 'SET_LOCATION';
+export const setLocation = (scrollHash: string) => ({
+  type: SET_LOCATION,
+  location: scrollHash,
 });

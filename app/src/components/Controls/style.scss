@@ -1,39 +1,56 @@
 @import "../../styling/variables";
 
-#controls{
+#controls {
   position: fixed;
   bottom: 0;
   left: 50%;
-  padding: 1em 2em;
+  padding: 1em 1.5em;
   margin: 0 auto;
-  width: 90%;
+  width: 100%;
   max-width: inherit;
-  height: $controlBarHeight;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  column-gap: 1em;
+  row-gap: .5em;
+  align-items: center;
   justify-items: center;
-  justify-content: space-between;
   border-radius: 6px;
-  box-shadow: 0px 1px 9px 1px $colorLightGrey ;
+  box-shadow: 0px 1px 9px 1px $colorLightGrey;
   background-color: $colorBackground;
-  transform: translateY(100%) translateX(-50%); // take out of view
-  // transform: translateX(-50%); // take out of view
+
+  // transform: translateY(calc(-1em)) translateX(-50%); // default: out of view from bottom
+  transform: translateY(100%) translateX(-50%); // default: out of view from bottom
   transition: transform $durationMovement;
 
-  &.visible{
-    transform: translateY(-1em) translateX(-50%); // take out of view
-
+  &.visible {
+    transform: translateY(0) translateX(-50%);
   }
 
-  .Input{
-    width: calc(50% - 1em);
-    margin: 0 .5em;
+
+  .Input {
+    // width: calc(50% - 1em);
+    width: 100%;
+    margin: 0 0.5em;
   }
 
-  .filterTimeline{
-    flex-basis: 100%;
-    padding: 1em 0;
-  }
+  .play-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    span.icon {
+      background: no-repeat center/contain url(../../assets/play_arrow.svg);
+      width: 1.5em;
+      height: 1.5em;
+      display: inline-flex;
+      margin-left: 0.25em;
+      opacity: 0.7;
 
+      &.pause{
+        background: no-repeat center/contain url(../../assets/pause_arrow.svg);
+      }
+    }
+    &:hover span {
+      opacity: 1;
+    }
+  }
 }

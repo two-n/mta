@@ -2,17 +2,15 @@ import { Store } from 'redux';
 import { select, Selection } from 'd3';
 import 'intersection-observer';
 import scrollama from 'scrollama';
-import { SectionDataType, State, StepDataType } from '../../utils/types';
+import * as A from '../../redux/actions/creators';
+import { SectionDataType, State } from '../../utils/types';
 import './style.scss';
-import { CLASSES as C, SECTIONS as S } from '../../utils/constants';
+import { CLASSES as C, SECTIONS as S, KEYS } from '../../utils/constants';
 import { getSectionHash } from '../../utils/helpers';
 
 interface Props { data: SectionDataType,
   store: Store,
   sectionName: string }
-
-const fadeOutThreshold = 0.8;
-const fadeInThreshold = 0.2;
 /** Scaffolding for reusable section code */
 export default class Section {
   store: Store<State>
@@ -70,24 +68,22 @@ export default class Section {
   onStepEnter({ element, index, direction }) {
     // console.log('enter: element, index, direction', element, index, direction);
     // const data = select(element).data()[0] as StepDataType;
+    this.steps.classed(C.ACTIVE, false);
+    select(element).classed(C.ACTIVE, true);
 
-    // if (data) {
-    //   // console.log('data', data);
-    //   this.header
-    //     .html(data.text) // replace header text with current step data
-    //     .classed(C.FADE_IN, true);
-    // }
+    // update url as we scroll
+    this.store.dispatch(A.setLocation(element.getAttribute(KEYS.DATA_STEP)));
     select(element).classed(C.ACTIVE, true);
   }
 
   onStepProgress({ element, index, progress }) {
     // console.log('progress: element, index, progress', element, index, progress);
-    select(element).classed(C.ACTIVE, progress < fadeOutThreshold && progress > fadeInThreshold);
+    // select(element).classed(C.ACTIVE, progress < fadeOutThreshold && progress > fadeInThreshold);
   }
 
   onStepExit({ element, index, direction }) {
     // console.log('exit: element, index, direction', element, index, direction);
-    select(element).classed(C.ACTIVE, false);
+    // select(element).classed(C.ACTIVE, false);
     // this.header
     //   .classed(C.FADE_IN, false);// remove class to allow css animation to be re-triggered
   }
@@ -118,14 +114,21 @@ export default class Section {
       .selectAll(`.${C.STEP}`).data(data.steps)
       .join('div')
       .attr('class', C.STEP)
-      .attr('data-step', (d) => getSectionHash(this.section, d.step_id));
+      .attr(KEYS.DATA_STEP, (d) => getSectionHash(this.section, d.step_id));
 
     this.steps.selectAll('.text')
       .data((d) => [d])
       .join('div')
       .attr('class', 'text')
       .classed('empty', (d) => !d.text)
-      .html((d) => d.text);
+      .classed('vertical-center', (d) => d.isMiddle) // for headings that should be in the middle
+      .html((d) => d.text)
+      .filter((d) => d.subtitle)
+      .selectAll(C.SUBTITLE)
+      .data((d) => [d.subtitle])
+      .join('div')
+      .attr('class', C.SUBTITLE)
+      .html((d) => d);
   }
 
   setUpGraphic() {
@@ -138,7 +141,7 @@ export default class Section {
     const stepH = Math.floor(window.innerHeight) * 0.7;
     this.steps.style('height', `${stepH}px`);
 
-    const figureHeight = window.innerHeight * 0.8;
+    const figureHeight = window.innerHeight;
     const figureMarginTop = (window.innerHeight - figureHeight) / 2;
 
     this.sticky

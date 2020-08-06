@@ -27,7 +27,7 @@ export default class TimelineFilter {
     this.timeline = timeline;
     this.updateWeek = updateWeek;
 
-    this.update = this.update.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.init();
   }
 
@@ -44,7 +44,7 @@ export default class TimelineFilter {
       .data(this.timeline)
       .join('div')
       .attr('class', `${C.BAR}-${C.WRAPPER}`)
-      .on('click', (d) => this.update(d.date));
+      .on('click', (d) => this.handleClick(d.date));
 
     this.bars.append('div').attr('class', `${C.LABEL}`)
       .html((d) => `${F.fDayMonth(F.pWeek(d.date))}`);
@@ -52,17 +52,17 @@ export default class TimelineFilter {
     this.bars.append('div').attr('class', `${C.BAR}`)
       .style('height', (d) => `${this.y(d.swipes)}%`);
 
-    this.handleVisibility();
+    this.updateVisibility();
   }
 
-  handleVisibility() {
+  updateVisibility(newWeek = this.week) {
+    this.week = newWeek;
     this.bars.classed(C.ACTIVE, (d) => F.pWeek(d.date) <= F.pWeek(this.week))
       .classed('last', (d) => d.date === this.week);
   }
 
-  update(newWeek:string) {
-    this.week = newWeek;
+  handleClick(newWeek:string) {
     this.updateWeek(newWeek); // dispatches action
-    this.handleVisibility();
+    this.updateVisibility(newWeek);
   }
 }
