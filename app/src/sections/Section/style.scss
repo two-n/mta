@@ -48,9 +48,7 @@ section.section {
     pointer-events: none;
 
     .step {
-      // border: $colorYellow 2px solid;
       width: 100%;
-      pointer-events: none;
       min-height: 500px;
       margin-bottom: 100vh; // used to add some space for transitions between steps
 
@@ -64,6 +62,7 @@ section.section {
         font-family: $fontBold;
         font-size: $fontSizeBase;
         z-index: 3;
+        pointer-events: all;
 
         &.vertical-center {
           top: 50%;
@@ -86,7 +85,6 @@ section.section {
           text-decoration: underline;
           color: $colorDarkGrey;
           cursor: pointer;
-          pointer-events: all;
 
           &:hover {
             text-decoration: none;

@@ -336,6 +336,11 @@ export default class MovingMap {
       .join('div')
       .attr('class', 'nta-annotation')
       .html(this.createStatBox);
+
+    this.dynamicAnnotation = this.overlay.selectAll('.dynamic-annotation')
+      .data([null])
+      .join('div')
+      .attr('class', 'dynamic-annotation nta-annotation');
   }
 
   transitionAnnotations() {
@@ -389,6 +394,11 @@ export default class MovingMap {
         .style('transform', `translate(${width - M.right}px, ${yScale(AD[this.yKey])}px) translateX(-100%)`)
         .html(`${format(AD[this.yKey])} ${median}`);
     }
+
+    this.dynamicAnnotation.classed(C.VISIBLE, (view === V.MAP_WITH_CONTROLS))
+      .html((view === V.MAP_WITH_CONTROLS && this.nta)
+        ? this.createStatBox(this.ntaMap.get(this.nta))
+        : '');
 
     // average lines and labels
     this.refLines.select(`.${C.ANNOTATION}.x`)
