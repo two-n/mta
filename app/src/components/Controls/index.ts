@@ -62,6 +62,7 @@ export default class Controls {
 
     this.sliderTimeline = timeline
       .filter((d) => F.pWeek(d.date) > appConfig.thresholdDate);
+    this.initialIndex = this.sliderTimeline.findIndex((d) => d.date === initialWeek);
 
     this.play = this.el.append('div').attr('class', 'play-button')
       .html('Play')
@@ -72,7 +73,7 @@ export default class Controls {
     this.slider = new Slider({
       parent: this.el,
       values: this.sliderTimeline,
-      initialIndex: this.sliderTimeline.findIndex((d) => d.date === initialWeek),
+      initialIndex: this.initialIndex,
       onChange: (newIndex:number) => this.store
         .dispatch(A.setWeek(this.sliderTimeline[newIndex].date)),
       name: 'dateSelection',
@@ -106,7 +107,7 @@ export default class Controls {
     const isAtEnd = (index === this.sliderTimeline.length - 1);
     const nextWeek = !isAtEnd
       ? this.sliderTimeline[index + 1].date
-      : this.sliderTimeline[0].date;
+      : this.sliderTimeline[this.initialIndex].date;
     this.store.dispatch(A.setWeek(nextWeek));
     if (isAtEnd) this.resetInterval(); // turn off at end of dates
   }
