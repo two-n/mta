@@ -32,7 +32,7 @@ interface ScaleObject {
 }
 
 const M = {
-  top: 30,
+  top: 50,
   bottom: 100,
   left: 30,
   right: 20,

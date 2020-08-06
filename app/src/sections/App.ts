@@ -18,7 +18,7 @@ import Title from './Title';
 import Methodology from './Methodology';
 
 const KEEP_SCROLLING = 'Keep scrolling ↓';
-const SCROLL_TO_TOP = 'Jump to top ↑';
+const SCROLL_TO_TOP = 'Back to top ↑';
 
 export default class App {
   [x: string]: any;
