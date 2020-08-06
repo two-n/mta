@@ -101,6 +101,7 @@ section#section-title {
     z-index: 1;
     mix-blend-mode: color-dodge;
     border-bottom: 2px black solid;
+    pointer-events: none;
   }
 }
 
