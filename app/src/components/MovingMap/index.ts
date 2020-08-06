@@ -516,7 +516,9 @@ export default class MovingMap {
 
   calculateZoomViewbox(ntaName:string | null) {
     const [width, height] = this.dims;
-    if (ntaName && this.ntaMap.has(ntaName)) {
+    const { view } = this;
+    if ([V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE, V.MAP_WITH_CONTROLS].includes(view)
+    && ntaName && this.ntaMap.has(ntaName)) {
       // calculate bounding box for selected neighborhood
       const [xMin, yMin, xMax, yMax] = bbox(this.ntaMap.get(ntaName));
       const [x0, y0, x1, y1] = [

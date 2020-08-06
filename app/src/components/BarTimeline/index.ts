@@ -203,12 +203,12 @@ export default class BarTimeline {
     this.steps = new Map(this.section.steps
       .filter((step) => step.date) // select all the steps that have dates in them
       .map((d) => { // find the closest data values (for y positionint)
-        const closestIndex = this.bisect.left(this.timeline, F.pDate(d.date));
+        const closestIndex = this.bisect.left(this.timeline, F.pWeek(F.fWeek(F.pDate(d.date))));
         return [d.step_id, {
           ...d,
           label: d.label,
-          date: this.timeline[closestIndex].date, // matche it up with closest week
-          swipes: this.timeline[closestIndex].swipes,
+          date: this.timeline[closestIndex] && this.timeline[closestIndex].date, // matche it up with closest week
+          swipes: this.timeline[closestIndex] && this.timeline[closestIndex].swipes,
         }];
       }));
 
