@@ -17,8 +17,8 @@ import { SECTIONS, CLASSES as C, KEYS } from '../utils/constants';
 import Title from './Title';
 import Methodology from './Methodology';
 
-const KEEP_SCROLLING = 'Keep scrolling â†“';
-const SCROLL_TO_TOP = 'Jump to top â†‘';
+const KEEP_SCROLLING = 'Keep scrolling ↓';
+const SCROLL_TO_TOP = 'Jump to top ↑';
 
 export default class App {
   [x: string]: any;

@@ -3,12 +3,11 @@ import { Store } from 'redux';
 import { State } from 'src/utils/types';
 import { select } from 'd3';
 import {
-  CLASSES as C, VIEWS, appConfig, FORMATTERS as F,
+  CLASSES as C, VIEWS, appConfig, FORMATTERS as F, SECTIONS,
 } from '../../utils/constants';
 import * as S from '../../redux/selectors';
 import * as A from '../../redux/actions/creators';
 import Input from '../Input';
-import TimelineFilter from '../TimelineFilter';
 import { LineSwatch } from '../LineSwatch';
 import Slider from '../Slider';
 
@@ -113,8 +112,8 @@ export default class Controls {
     const state = this.store.getState();
     const view = S.getView(state);
     const newWeek = S.getSelectedWeek(state);
-    this.el.classed(C.VISIBLE, view >= VIEWS.SCATTER && view < VIEWS.METHODOLOGY);
-    // TODO: update slider here based on play button
+    this.el.classed(C.VISIBLE, view >= VIEWS.SCATTER
+      && !state.location.includes(SECTIONS.S_METHODOLOGY));
     this.slider.update(this.sliderTimeline
       .findIndex((d) => d.date === newWeek));
   }

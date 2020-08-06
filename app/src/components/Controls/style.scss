@@ -17,6 +17,7 @@
   border-radius: 6px;
   box-shadow: 0px 1px 9px 1px $colorLightGrey;
   background-color: $colorBackground;
+  z-index: 2;
 
   // transform: translateY(calc(-1em)) translateX(-50%); // default: out of view from bottom
   transform: translateY(100%) translateX(-50%); // default: out of view from bottom

@@ -1,7 +1,7 @@
 @import "../../styling/variables";
 
 section#section-methodology{
-  min-height: 100vh;
+  border-top: 1px solid black;
   position: relative;
   .title{
     font-size: $fontSizeLarge;
@@ -34,11 +34,12 @@ section#section-methodology{
   }
 
   .footer{
-    position: absolute;
+    position: relative;
     left: 50%;
     width: 210px;
     bottom: 0;
-    transform: translateX(calc(-50% + 1em)) translateY(-100%); // adjust for icon
+    transform: translateX(calc(-50% + 1em)); // adjust for icon
+    padding-top: 5rem;
 
     span.two-n{
     position: absolute;
