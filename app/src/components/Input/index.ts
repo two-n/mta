@@ -1,7 +1,8 @@
 
 import './style.scss';
-import { Selection, event, select } from 'd3';
+import { Selection, select } from 'd3';
 import autoComplete from '@tarekraafat/autocomplete.js';
+import { CLASSES as C } from '../../utils/constants';
 
 interface Props {
   parent: Selection;
@@ -32,12 +33,14 @@ export default class Input {
     this.input.on('focus', () => {
       // reset value
       this.display.html('');
+      this.el.select('ul').classed(C.VISIBLE, true);
     });
 
     this.close = this.el.append('div').attr('class', 'close')
       .on('click', () => {
         // reset value
         this.display.html('');
+        this.el.select('ul').classed(C.VISIBLE, false);
         this.input.node().value = '';
         updateVal(null);
       });
@@ -65,6 +68,7 @@ export default class Input {
       resultItem: {
         content: (data, source) => {
           select(source).html(`<div>${data.match} ${data.value.content || ''}</div>`);
+          this.el.select('ul').classed(C.VISIBLE, true);
         },
         element: 'li',
       },
@@ -73,6 +77,7 @@ export default class Input {
         const { value: { content, name, key } } = feedback.selection;
         this.display.html(content || name);
         this.input.node().value = ' ';
+        this.el.select('ul').classed(C.VISIBLE, false);
         if (key) updateVal(key);
       },
     });

@@ -22,6 +22,11 @@ $rowHeight: 1.5rem;
     position: absolute;
     background-color: $colorBackground;
     z-index: 2;
+    opacity: 0;
+
+    &.visible{
+      opacity: 1;
+    }
 
     li{
       position: relative;
