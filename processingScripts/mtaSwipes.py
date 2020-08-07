@@ -30,7 +30,7 @@ def fetchWeeklyLinks():
   .find(class_="last")
   .find_all("a"))
 
-  startDate = datetime.datetime(2019,1,1) # 01/01/2019
+  startDate = datetime.datetime(2020,1,1) # 01/01/2019
   def parseDate(str):
     return datetime.datetime.strptime(str, "%A, %B %d, %Y") # ex: Saturday, June 06, 2020
 
@@ -53,10 +53,10 @@ def pullAndParseWeeklyData(link):
   # read body
   df = pd.read_csv(link, header=2, skipinitialspace=True) # start reading on third line
   df[WEEK] = parseDate(dates[0])
-  df[WEEK_END] = parseDate(dates[1])
+  # df[WEEK_END] = parseDate(dates[1]) // UNCOMMENT to include week-end
   df[TOTAL] = df.drop([REMOTE,STATION], axis=1).sum(axis=1)
 
-  return df[[WEEK, WEEK_END, STATION, REMOTE, TOTAL]]
+  return df[[WEEK, STATION, REMOTE, TOTAL]]
 
 def main():
   """
