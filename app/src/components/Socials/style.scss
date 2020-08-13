@@ -1,0 +1,24 @@
+@import "../../styling/variables";
+
+.socials{
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: row;
+
+  a{
+    width: 1.2rem;
+    height: 1.2rem;
+    display: inline-flex;
+    margin-right: .5rem;
+
+    &.twitter{
+      background: no-repeat center url(../../assets/twitter.svg);
+    }
+    &.fb{
+      background: no-repeat center url(../../assets/facebook.svg);
+    }
+    &.linkedin{
+      background: no-repeat center url(../../assets/linkedin.svg);
+    }
+  }
+}

@@ -5,6 +5,7 @@ import './style.scss';
 import { CLASSES as C, SECTIONS, KEYS } from '../../utils/constants';
 import { getSectionHash } from '../../utils/helpers';
 import Section from '../Section';
+import Socials from '../../components/Socials';
 
 interface Props{
   data: SectionDataType;
@@ -37,6 +38,9 @@ export default class Methodology extends Section {
       .attr(KEYS.DATA_STEP, (d) => getSectionHash(this.section, d.step_id))
       .html((d) => d.text);
 
+    // socials
+    this.socials = new Socials({ parent: this.el });
+
     // data sources
     this.datasources = this.el.append('div')
       .attr('class', 'data-sources');
@@ -49,6 +53,7 @@ export default class Methodology extends Section {
       .join('div')
       .attr('class', 'data-source')
       .html((d) => `${d.source}, ${d.accessed}`);
+
 
     this.el.append('div').attr('class', 'footer')
       .html(data.footer);

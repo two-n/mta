@@ -48,6 +48,11 @@ section#section-title {
     }
   }
 
+  .socials a{
+    z-index:  2;
+    filter: invert(1);
+  }
+
   .arrow {
     position: absolute;
     left: 50%;
