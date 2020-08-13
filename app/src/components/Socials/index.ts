@@ -6,7 +6,7 @@ interface Props{
 }
 
 const TEXT = 'MTA Ridership during COVID-19';
-const URL = 'http://prototypes.two-n.com/mta/';
+const URL = (source:string) => encodeURIComponent(`http://prototypes.two-n.com/mta?utm_source=${source}`);
 
 export default class Socials {
   [x: string]: any;
@@ -22,7 +22,7 @@ export default class Socials {
 
     // TWITTER
     this.socials.append('a').attr('class', 'twitter')
-      .attr('href', `https://twitter.com/intent/tweet?text=${TEXT}&url=${URL}&via=${'2nfo'}&hashtags=${[
+      .attr('href', `https://twitter.com/intent/tweet?text=${TEXT}&url=${URL('twitter')}&via=${'2nfo'}&hashtags=${[
         'mta',
         'datavis',
         'COVID-19',
@@ -31,9 +31,9 @@ export default class Socials {
 
     // FACEBOOK
     this.socials.append('a').attr('class', 'fb')
-      .attr('href', `https://www.facebook.com/sharer/sharer.php?u=${URL}`);
+      .attr('href', `https://www.facebook.com/sharer/sharer.php?u=${URL('facebook')}`);
 
     this.socials.append('a').attr('class', 'linkedin')
-      .attr('href', `https://www.linkedin.com/shareArticle?url=${URL}&title=${TEXT}`);
+      .attr('href', `https://www.linkedin.com/shareArticle?url=${URL('linkedin')}&title=${TEXT}`);
   }
 }
