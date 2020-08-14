@@ -96,12 +96,6 @@ export enum KEYS {
   DATA_STEP = 'data-step'
 }
 
-export const censusFieldMapping: { [key: string]: string } = {
-  [KEYS.NON_WHITE]: '% Non-white',
-  [KEYS.COMMUTE]: '% Commuting to work via public transportation',
-  [KEYS.SERVICE_SECTOR]: '% employed in service sector',
-  [KEYS.POVERTY]: '% of families below poverty line',
-};
 
 export const boroughMap: { [key: number]: string } = {
   1: 'Manhattan',
@@ -136,6 +130,38 @@ export const FORMATTERS = {
   sDollar: format('$,.0s'),
   sNumber: '.0s',
   sPct: '.0%',
+};
+
+export const METRIC_MAP: { [key: string]: {
+  format: (d: number) => string,
+  median: string,
+  label: string,
+  name: string,
+}} = {
+  [KEYS.NON_WHITE]: {
+    format: FORMATTERS.fPctNoMult, median: 'Non-white', label: '% Non-white', name: 'Non-white',
+  },
+  [KEYS.INCOME_PC]: {
+    format: FORMATTERS.sDollar, median: 'Per Capita Income', label: 'Per Capita Income ($)', name: 'Per Capita Income',
+  },
+  [KEYS.ED_HEALTH_PCT]: {
+    format: FORMATTERS.fPctNoMult, median: 'Employed in sector', label: '% Employed in Education, Health Care and Social Assistance', name: 'Employed in Education, Health Care and Social Assistance',
+  },
+  [KEYS.UNINSURED]: {
+    format: FORMATTERS.fPctNoMult, median: 'Without health insurance', label: '% Without health insurance', name: 'Without health insurance',
+  },
+  [KEYS.SNAP_PCT]: {
+    format: FORMATTERS.fPctNoMult, median: 'Received SNAP benefits', label: '% Received SNAP benefits in last 12 months', name: 'Received SNAP benefits',
+  },
+  [KEYS.COMMUTE]: {
+    format: FORMATTERS.fPctNoMult, median: '', label: '', name: 'Commuting to work via public transportation',
+  },
+  [KEYS.SERVICE_SECTOR]: {
+    format: FORMATTERS.fPctNoMult, median: 'Employed in service sector', label: '% Employed in service sector', name: 'Employed in service sector',
+  },
+  [KEYS.POVERTY]: {
+    format: FORMATTERS.fPctNoMult, median: 'Families below poverty line', label: '% Families below poverty line', name: 'Families below poverty line',
+  },
 };
 
 const colorDomain = ['#3D696C', '#54B1B8', '#B87242', '#FFBD59'];

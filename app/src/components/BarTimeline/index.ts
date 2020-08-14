@@ -99,7 +99,7 @@ export default class BarTimeline {
       .attr('class', 'date')
       .html((d) => F.fMonthYr(d));
     this.datesWrapper.append('div').attr('class', C.TITLE)
-      .html('Change in ridership in Million riders week over week - January 1 to June 8, 2020');
+      .html('Change in ridership in million riders week over week - January 1 to June 8, 2020');
 
     this.refBoxes = this.el.append('div').attr('class', C.REFERENCE).selectAll('div.box')
       .data([swipes_avg_pre, swipes_avg_post])
@@ -229,7 +229,7 @@ export default class BarTimeline {
     const [width, height] = this.dims;
     const { left, top } = this.el.node().getBoundingClientRect();
     const { clientX: x, clientY: y } = event;
-    const content = `<div class="date">${F.fDayMonth(F.pWeek(d.date))}</div>
+    const content = `<div class="date">Week of ${F.fDayMonth(F.pWeek(d.date))}</div>
     <div class="stat">Ridership: ${F.fNumber(d.swipes)}</div>`;
     this.tooltip.update([x - left, y - top], content, y > height * 0.2, x > width * 0.7);
   }

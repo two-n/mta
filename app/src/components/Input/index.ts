@@ -60,7 +60,7 @@ export default class Input {
       },
       resultItem: {
         content: (data, source) => {
-          select(source).html(`${data.match} ${data.value.content || ''}`);
+          select(source).html(`<div>${data.match} ${data.value.content || ''}</div>`);
         },
         element: 'li',
       },

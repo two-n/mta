@@ -38,3 +38,8 @@ export const setNTA = (nta: string) => ({
   type: SET_NTA,
   nta,
 });
+export const SET_LOCATION = 'SET_LOCATION';
+export const setLocation = (scrollHash: string) => ({
+  type: SET_LOCATION,
+  location: scrollHash,
+});

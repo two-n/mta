@@ -2,13 +2,14 @@ import { Store } from 'redux';
 import {
   Selection, geoAlbersUsa, geoPath,
   scaleLinear, scaleBand,
-  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear, event, zoom,
+  axisBottom, axisLeft, scaleOrdinal, select, ScaleLinear, event,
 } from 'd3';
+import bbox from '@turf/bbox';
 import * as S from '../../redux/selectors/index';
 import { State, StationData } from '../../utils/types';
 import {
   CLASSES as C, VIEWS as V,
-  KEYS as K, FORMATTERS as F, MTA_Colors, SECTIONS, censusFieldMapping,
+  KEYS as K, FORMATTERS as F, MTA_Colors, SECTIONS, METRIC_MAP,
 } from '../../utils/constants';
 import { calcSwarm, isMobile } from '../../utils/helpers';
 import './style.scss';
@@ -25,37 +26,33 @@ interface Props {
 interface ScaleObject {
   scale: ScaleLinear<number, number>,
   format: (d: number) => string,
-  label: string,
-  median: string
+  label: string, // axis label
+  median: string, // text for median line
+  name: string // name for tooltip/annotations
 }
 
 const M = {
   top: 30,
-  bottom: 30, // make room for control bar
+  bottom: 100,
   left: 30,
   right: 20,
-  swarmBottom: 125,
 };
-const CONTROL_HEIGHT = +styleVars.controlBarHeight.slice(0, -2);
+
 const R = isMobile() ? 3 : 4;
 const duration = +styleVars.durationMovement.slice(0, -2);
 const geoPadding = { // distance from zoomed in shape
   top: 30,
-  bottom: 50,
-  left: 20,
-  right: 50,
+  bottom: 30,
+  left: 30,
+  right: 40,
 };
 
-const FORMAT_MAP: { [key: string]: (d: number) => string } = {
-  [K.WHITE]: F.fPctNoMult,
-  [K.NON_WHITE]: F.fPctNoMult,
-  [K.INCOME_PC]: F.sDollar,
-  [K.ED_HEALTH_PCT]: F.fPctNoMult,
-  [K.UNINSURED]: F.fPctNoMult,
-  [K.SNAP_PCT]: F.fPctNoMult,
-  [K.COMMUTE]: F.fPctNoMult,
-  [K.SERVICE_SECTOR]: F.fPctNoMult,
-  [K.POVERTY]: F.fPctNoMult,
+
+const SOHO = 'MN24';
+const BROWNSVILLE = 'BK81';
+const ZOOM_MAP: {[view:string]: string} = {
+  [V.ZOOM_SOHO]: SOHO, // SOHO
+  [V.ZOOM_BROWNSVILLE]: BROWNSVILLE, // BROWNSVILLE
 };
 
 const MAP_VISIBLE = [V.MAP_OUTLINE, V.MAP_DOTS_LINES,
@@ -74,12 +71,12 @@ export default class MovingMap {
     // SELECTORS
     this.mapOutline = S.getMapOutline(this.state);
     this.linesData = S.getLinesData(this.state);
-    this.ntasData = S.getNTAFeatures(this.state);
     this.stationsGISData = S.getStationData(this.state);
     this.swipeData = S.getStationRollup(this.state);
     this.acsMap = S.getStationToACSMap(this.state);
-    this.bboxes = S.getNTAbboxes(this.state);
-    this.selectedNTAFeatures = S.getSelectedNTAS(this.state);
+    this.ntaMap = S.getNTAMap(this.state);
+    this.selectedNTAFeatures = [this.ntaMap.get(SOHO), this.ntaMap.get(BROWNSVILLE)];
+    this.ntasData = [...this.ntaMap].map(([, feature]) => feature);
     this.view = S.getView(this.state);
     this.yKey = S.getYKey(this.state);
     this.week = S.getSelectedWeek(this.state);
@@ -90,7 +87,6 @@ export default class MovingMap {
     this.handleStateChange = this.handleStateChange.bind(this);
     this.createStatBox = this.createStatBox.bind(this);
     this.isHighlighted = this.isHighlighted.bind(this);
-    this.zoomed = this.zoomed.bind(this);
     this.store.subscribe(this.handleStateChange);
   }
 
@@ -116,9 +112,7 @@ export default class MovingMap {
       ...obj,
       [d[K.Y_KEY]]: {
         scale: scaleLinear().domain(E[d[K.Y_KEY]] as number[]),
-        label: d[K.Y_DISPLAY],
-        median: d[K.Y_MEDIAN_LABEL] || d[K.Y_DISPLAY],
-        format: FORMAT_MAP[d[K.Y_KEY]],
+        ...METRIC_MAP[d[K.Y_KEY]],
       },
     }), {});
 
@@ -169,10 +163,6 @@ export default class MovingMap {
   draw() {
     const [width, height] = this.dims;
     this.geoPath = geoPath().projection(this.proj);
-    this.zoomBehavior = zoom()
-      .scaleExtent([1, 8])
-      .extent([[0, 0], [width, height]])
-      .on('zoom', this.zoomed);
     this.el.attr('viewBox', `0 0 ${width} ${height}`);
     this.calcNodePositions();
 
@@ -203,6 +193,14 @@ export default class MovingMap {
       .selectAll('path')
       .classed(C.ACTIVE, ({ properties }) => this.nta && this.nta === properties.NTACode);
 
+    if (view === V.MAP_WITH_CONTROLS) {
+      // solve for uneven path bug, need to bring path to the top
+      this.ntas
+        .selectAll('path')
+        .filter(({ properties }) => this.nta && this.nta === properties.NTACode)
+        .raise();
+    }
+
     this.selectedNtas
       .classed(C.VISIBLE, view >= V.ZOOM_SOHO && view < V.SWARM);
 
@@ -213,7 +211,7 @@ export default class MovingMap {
     this.stations.style('transform', (d: StationData) => {
       switch (view) {
         case (V.SWARM):
-          return `translate(${d.x}px,${height - M.swarmBottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
+          return `translate(${d.x}px,${height - M.bottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
         case (V.SCATTER): {
           const yScale = this.yScales[yKey].scale;
           return `translate(
@@ -225,8 +223,8 @@ export default class MovingMap {
         }
       }
     })
-      .style('fill', (d) => (this.isHighlighted(d)
-        ? (this.colorScale(this.getPctChange(d)))
+      .attr('fill', (d) => (this.isHighlighted(d)
+        ? this.colorScale(this.getPctChange(d))
         : null))
       .classed(C.HIGHLIGHT, this.isHighlighted);
 
@@ -237,23 +235,9 @@ export default class MovingMap {
     this.el
       .transition()
       .duration(duration)
-      .attr('viewBox', () => { // [x, y, width, height]
-        if (this.bboxes[view]) {
-          const [xMin, yMin, xMax, yMax] = this.bboxes[view];
-          const [x0, y0, x1, y1] = [
-            ...proj([xMin, yMax]),
-            ...proj([xMax, yMin])]; // swith yMin/Max b/c browser coordinate system
-          return [
-            x0 - geoPadding.left,
-            y0 - geoPadding.top,
-            (x1 - x0) + geoPadding.right,
-            (y1 - y0) + geoPadding.bottom,
-          ];
-        }
-        return [0, 0, width, height];
-      }).on('end interrupt', () => {
+      .attr('viewBox', () => this.calculateZoomViewbox(this.nta))
+      .on('end interrupt', () => {
         this.rescaleNodes();
-
         // if we are currently zoomed in on a neighborhood
         // find zoomed position of matching polygon and move annotation next to it
         if (neighborhoodIndex > -1) {
@@ -268,20 +252,12 @@ export default class MovingMap {
             .style('max-width', `${left - offsetX}px`)
             .style('transform', (d, i) => (
               isLeft
-                ? `translate(${left - offsetX}px, ${top - offsetY}px) translateX(-100%)`
-                : `translate(${left - offsetX + w}px, ${top - offsetY}px)`));
+                ? `translate(${left - offsetX}px, ${top - offsetY}px) translateX(-100%) translateY(-25%)`
+                : `translate(${left - offsetX + w}px, ${top - offsetY}px) translateY(-25%)`));
         }
       });
 
     this.transitionAnnotations();
-
-    // ZOOM
-    if (view === V.MAP_WITH_CONTROLS) { // only time zoom is enabled
-      this.el
-        .call(this.zoomBehavior);
-    } else {
-      this.el.on('.zoom', null); // disable otherwise
-    }
   }
 
   setupGeographicElements() {
@@ -297,7 +273,7 @@ export default class MovingMap {
     // neighborhood outlines
     this.ntas
       .selectAll('path')
-      .data(this.ntasData.features)
+      .data(this.ntasData)
       .join('path')
       .attr('vector-effect', 'non-scaling-stroke')
       .attr('d', this.geoPath);
@@ -369,10 +345,7 @@ export default class MovingMap {
     const [width, height] = this.dims;
     const { averages: AD } = S.getDemoDataExtents(this.state);
     const { average: AW } = S.getWeeklyDataExtent(this.state);
-    const chartbottom = height
-    - ((view === V.SWARM) // swarm ends higher than the scatterplot
-      ? M.swarmBottom
-      : M.bottom + CONTROL_HEIGHT);
+    const chartbottom = height - M.bottom;
 
     // AXES
     this.xAxisEl
@@ -459,7 +432,8 @@ export default class MovingMap {
     this.xScale.range([M.left, width - M.right]);
 
     // update yScale ranges
-    Object.values(this.yScales).forEach((d) => d.scale.range([height - M.bottom - CONTROL_HEIGHT - R, M.top]));
+    Object.values(this.yScales).forEach((d) => d.scale
+      .range([height - M.bottom - R, M.top]));
     this.draw();
   }
 
@@ -468,13 +442,15 @@ export default class MovingMap {
    */
   handleStateChange() {
     this.state = this.store.getState();
-    this.view = S.getView(this.state);
-    this.yKey = S.getYKey(this.state);
-    this.week = S.getSelectedWeek(this.state);
-    this.line = S.getSelectedLine(this.state);
-    this.nta = S.getSelectedNta(this.state);
-    if (this.view !== V.MAP_WITH_CONTROLS) this.resetZoom();
-    this.handleViewTransition();
+    // only trigger if within sectoin
+    if (this.state.location && this.state.location.includes(SECTIONS.S_MOVING_MAP)) {
+      this.view = S.getView(this.state);
+      this.yKey = S.getYKey(this.state);
+      this.week = S.getSelectedWeek(this.state);
+      this.line = S.getSelectedLine(this.state);
+      this.nta = ZOOM_MAP[this.view] || S.getSelectedNta(this.state);
+      this.handleViewTransition();
+    }
   }
 
   onStationMouseover(d:StationData) {
@@ -496,12 +472,16 @@ export default class MovingMap {
 
   createStatBox({ properties: d }) {
     const statSpan = (stat:string) => `<div class="stat">
-      <span class="key"> ${censusFieldMapping[stat] || this.yScales[stat].median}: <span>
-      <span class="value">${FORMAT_MAP[stat](d[stat])} <span>
-    <div>`;
+      <span class="key"> ${METRIC_MAP[stat].name}: </span>
+      <span class="value">${METRIC_MAP[stat].format(d[stat])} </span>
+    </div>`;
 
-    return `<div class="name"> ${d.NTAName} <div>
-    ${[K.NON_WHITE, K.INCOME_PC, K.POVERTY, K.SERVICE_SECTOR, K.COMMUTE].map(statSpan).join('')}
+    return `<div class="name"> ${d.NTAName} </div>
+    <div class="stats-grid">
+    ${[K.NON_WHITE, K.POVERTY, K.SERVICE_SECTOR, K.COMMUTE, K.INCOME_PC]
+    .map(statSpan)
+    .join('')}
+    </div>
     `;
   }
 
@@ -513,7 +493,7 @@ export default class MovingMap {
     <div class="station-name">${d.station}</div>
     <div class="stats-grid">
     <div class="stat-name">week of: </div> <div class="stat-val">${F.fDayMonth(F.pWeek(this.week))}</div>
-      <div class="stat-name">% still riding: </div> <div class="stat-val">${F.fPct(this.getPctChange(d))}</div>
+      <div class="stat-name">still riding: </div> <div class="stat-val">${F.fPct(this.getPctChange(d))}</div>
     ${yVal
     ? `<div class="stat-name">${yVal.median}: </div> <div class="stat-val">${yVal.format(this.getACS(d, this.yKey))}</div>`
     : ''}
@@ -527,22 +507,27 @@ export default class MovingMap {
     && (!this.line || d.line_name.toString().includes(this.line));
   }
 
-  zoomed() {
-    if (this.view === V.MAP_WITH_CONTROLS) {
-      this.geoEls.attr('transform', event.transform);
-      this.stationsG.attr('transform', event.transform);
-      this.rescaleNodes();
-    }
-  }
-
-  resetZoom() {
-    this.geoEls.attr('transform', null);
-    this.stationsG.attr('transform', null);
-  }
-
   rescaleNodes() {
     const matrix = this.geoEls.node().getCTM();
     // adjust circle positions
-    this.stations.selectAll('circle').style('transform', `scale(${1 / matrix.a})`);
+    this.stations.selectAll('circle')
+      .attr('transform', `scale(${1 / Math.max(matrix.a - 1, 1)})`); // don't scale too much
+  }
+
+  calculateZoomViewbox(ntaName:string | null) {
+    const [width, height] = this.dims;
+    if (ntaName && this.ntaMap.has(ntaName)) {
+      // calculate bounding box for selected neighborhood
+      const [xMin, yMin, xMax, yMax] = bbox(this.ntaMap.get(ntaName));
+      const [x0, y0, x1, y1] = [
+        ...this.proj([xMin, yMax]),
+        ...this.proj([xMax, yMin])]; // swith yMin/Max b/c browser coordinate system
+      return [
+        x0 - geoPadding.left,
+        y0 - geoPadding.top,
+        (x1 - x0) + geoPadding.right + geoPadding.left,
+        (y1 - y0) + geoPadding.bottom + geoPadding.top,
+      ];
+    } return [0, 0, width, height]; // default
   }
 }
