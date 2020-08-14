@@ -1,6 +1,6 @@
 import { Store } from 'redux';
 import {
-  Selection, scaleLinear, max, scaleUtc, extent, bisector, select, interpolate,
+  Selection, scaleLinear, max, scaleUtc, extent, bisector, select, interpolate, event,
 } from 'd3';
 import * as S from '../../redux/selectors';
 import { State, StationTimelineItem, StepDataType } from '../../utils/types';
@@ -8,6 +8,7 @@ import {
   CLASSES as C, FORMATTERS as F, DIRECTIONS as D, SECTIONS, KEYS, appConfig,
 } from '../../utils/constants';
 import './style.scss';
+import Tooltip from '../Tooltip';
 
 interface Props {
   parent: Selection;
@@ -44,6 +45,8 @@ export default class BarTimeline {
     this.parent = parent.classed(C.TIMELINE, true);
     this.el = this.parent;
     this.handleTransition = this.handleTransition.bind(this);
+    this.onBarMouseover = this.onBarMouseover.bind(this);
+    this.onBarMouseout = this.onBarMouseout.bind(this);
   }
 
   init() {
@@ -75,7 +78,9 @@ export default class BarTimeline {
       .selectAll(`div.${C.BAR}-${C.WRAPPER}`)
       .data(this.timeline)
       .join('div')
-      .attr('class', `${C.BAR}-${C.WRAPPER}`);
+      .attr('class', `${C.BAR}-${C.WRAPPER}`)
+      .on('mouseover', this.onBarMouseover)
+      .on('mouseout', this.onBarMouseout);
 
     this.bars.selectAll(`div.${C.LABEL}`)
       .data((d) => [d])
@@ -89,16 +94,21 @@ export default class BarTimeline {
 
     this.datesWrapper = this.el.append('div').attr('class', 'dates');
     this.datesWrapper.selectAll('div.date')
-      .data(this.x.ticks(6))
+      .data([appConfig.startDate, appConfig.endDate])
       .join('div')
       .attr('class', 'date')
-      .html((d) => F.fMonth(d));
+      .html((d) => F.fMonthYr(d));
+    this.datesWrapper.append('div').attr('class', C.TITLE)
+      .html('Change in ridership in Million riders week over week - January 1 to June 8, 2020');
 
     this.refBoxes = this.el.append('div').attr('class', C.REFERENCE).selectAll('div.box')
       .data([swipes_avg_pre, swipes_avg_post])
       .join('div')
       .attr('class', (d, i) => `box ${i === 0 ? 'pre' : 'post'}`)
-      .attr('data-pct', F.fPct(swipes_pct_chg));
+      .attr('data-pct', F.fPct(swipes_pct_chg))
+      .attr('data-swipes', (d) => F.fSNum(d));
+
+    this.tooltip = new Tooltip({ parent: this.el });
   }
 
   draw() {
@@ -126,13 +136,12 @@ export default class BarTimeline {
     const { tStopsMap } = this;
     const [width, height] = this.dims;
     const stepData = select(element).data()[0] as StepDataType;
-    const isBarVisible = (d) => (!!stepData.date
-      || (!stepData.date && stepData.step_id < tStopsMap.get(TS.FADE_BARS) && stepData.step_id > 3));
+    const isBarVisible = (d) => (stepData.date || (!stepData.date && stepData.step_id < tStopsMap.get(TS.FADE_BARS)));
 
-    const isTimlineVisible = stepData.date || stepData.step_id < tStopsMap.get(TS.MOVE_REFS);
+    const isTimlineVisible = stepData.step_id < tStopsMap.get(TS.MOVE_REFS);
 
     this.bars.select(`.${C.LABEL}`)
-      .classed(C.VISIBLE, isBarVisible)
+      .classed(C.VISIBLE, (d) => isBarVisible(d) && this.availableDates.includes(d.date))
       .transition()
       .duration(DURATION * 7)
       .delay((d, i) => (direction === D.DOWN ? i : 0) * DELAY)
@@ -142,7 +151,7 @@ export default class BarTimeline {
           this._currentNum = this._currentNum || 0;
           const i = interpolate(this._currentNum, d.swipes);
           return function interp(t) {
-            select(this).html(F.fSNum(this._currentNum = i(t)));
+            select(this).html(F.fNumber(this._currentNum = i(t)));
           };
         } this._currentNum = 0;
       });
@@ -162,6 +171,7 @@ export default class BarTimeline {
 
     this.refBoxes
       .classed(C.ACTIVE, stepData.step_id >= tStopsMap.get(TS.DRAW_BOXES))
+      .classed(`${C.ACTIVE}-${C.LABEL}`, stepData.step_id >= tStopsMap.get(TS.FADE_BARS))
       .style('transform', (d, i) => {
         if (stepData.step_id >= tStopsMap.get(TS.MOVE_REFS)) {
           return (i === 0)
@@ -201,6 +211,9 @@ export default class BarTimeline {
           swipes: this.timeline[closestIndex].swipes,
         }];
       }));
+
+    // get list of all dates to highlight
+    this.availableDates = [...this.steps].map(([, { date }]) => date);
   }
 
   handleResize() {
@@ -210,5 +223,18 @@ export default class BarTimeline {
     this.y.range([0, height - M.bottom - M.top]);
     this.x.range([M.left, width - M.right]);
     this.draw();
+  }
+
+  onBarMouseover(d:StationTimelineItem) {
+    const [width, height] = this.dims;
+    const { left, top } = this.el.node().getBoundingClientRect();
+    const { clientX: x, clientY: y } = event;
+    const content = `<div class="date">${F.fDayMonth(F.pWeek(d.date))}</div>
+    <div class="stat">Ridership: ${F.fNumber(d.swipes)}</div>`;
+    this.tooltip.update([x - left, y - top], content, y > height * 0.2, x > width * 0.7);
+  }
+
+  onBarMouseout() {
+    this.tooltip.makeInvisible();
   }
 }

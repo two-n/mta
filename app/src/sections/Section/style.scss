@@ -67,7 +67,7 @@ section.section {
         &.vertical-center{
           top: 50%;
           transform: translateY(-50%);
-          font-size: 1.3em;
+          font-size: $fontSizeXLarge;
         }
 
         &:not(.empty) {
@@ -80,6 +80,17 @@ section.section {
           font-family: $fontLight;
           line-height: 1.5rem;
         }
+
+        a{
+          text-decoration: underline;
+          color: $colorDarkGrey;
+          cursor: pointer;
+          pointer-events: all;
+
+          &:hover{
+            text-decoration: none;
+          }
+        }
       }
 
       &.active {
@@ -87,4 +98,15 @@ section.section {
       }
     }
   }
+}
+
+@media (max-width: 480px) {
+.article{
+  .step{
+    .text{
+      font-size: $fontSizeSmall;
+    }
+  }
+
+}
 }

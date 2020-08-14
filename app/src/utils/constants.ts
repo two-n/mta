@@ -83,14 +83,25 @@ export enum KEYS {
   UNINSURED = 'nhinsP', // "Percent with No Health Insurance Coverage (%)"
   WHITE = 'wtnhP', // "Percent with No Health Insurance Coverage (%)"
   NON_WHITE='pct_nonwhite', // inverse of pct white
+  COMMUTE = 'cw_pbtrnsP', // % commuting to work via public transportation (excluding taxicab)
+  SERVICE_SECTOR = 'srvcP', // % population employed in service occupations
+  POVERTY ='fambwpvP', // % families below poverty line
 
   ANIMATION_KEY = 'animation-key',
   DOT_POSITION = 'dot-position',
   Y_KEY = 'yKey',
   Y_DISPLAY = 'yDisplayName',
   Y_MEDIAN_LABEL = 'yMedianLabel',
-  X_DISPLAY_NAME = 'xDisplayName'
+  X_DISPLAY_NAME = 'xDisplayName',
+  DATA_STEP = 'data-step'
 }
+
+export const censusFieldMapping: { [key: string]: string } = {
+  [KEYS.NON_WHITE]: '% Non-white',
+  [KEYS.COMMUTE]: '% Commuting to work via public transportation',
+  [KEYS.SERVICE_SECTOR]: '% employed in service sector',
+  [KEYS.POVERTY]: '% of families below poverty line',
+};
 
 export const boroughMap: { [key: number]: string } = {
   1: 'Manhattan',
@@ -111,7 +122,7 @@ export const MTA_Colors = [
 export const FORMATTERS = {
   fMonth: utcFormat('%b'),
   fDayMonth: utcFormat('%b-%d'),
-  fMonthYr: utcFormat('%b-%Y'),
+  fMonthYr: utcFormat('%B %Y'),
   fDay: utcFormat('%a'),
   fDate: utcFormat('%d-%m-%Y'),
   pDate: utcParse('%d-%m-%Y'),

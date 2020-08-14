@@ -52,7 +52,7 @@ h2{
 .overlay{
   width: 100%;
   pointer-events: none;
-  div.axis-label{
+  div.axis-label, div.axis-title{
     font-size: $fontSizeSmall;
     position: absolute;
     top: 0;
@@ -70,6 +70,16 @@ h2{
 .label{
   font-size:$fontSizeSmall;
   font-family: $fontLight;
+}
+
+.active em{ // emphasis
+  // animation: fadeToYellow $durationMovement  $durationOpacity 1 forwards;
+}
+
+@keyframes fadeToYellow{
+  to{
+    color: $colorYellow;
+  }
 }
 
 @media (max-width: 480px) {

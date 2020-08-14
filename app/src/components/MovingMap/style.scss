@@ -19,7 +19,7 @@
         stroke: $colorLightGrey;
         stroke-width: 0.5px;
 
-        &.active{
+        &.active {
           stroke: black;
           stroke-width: 3px;
         }
@@ -49,9 +49,9 @@
     }
 
     .stations {
-
       .station {
         opacity: 0;
+        pointer-events: none;
         transition: transform $durationMovement;
         cursor: pointer;
 
@@ -74,16 +74,17 @@
 
       &.visible {
         .station {
-          &:not(.highlight){
+          pointer-events: all;
+          &:not(.highlight) {
             opacity: 0.4;
             fill: $colorLightGrey;
             pointer-events: none;
           }
 
-          &.highlight, &:hover {
+          &.highlight,
+          &:hover {
             opacity: 1;
           }
-
         }
       }
     }
@@ -127,7 +128,7 @@
   .x,
   .y {
     opacity: 0;
-    transition: opacity $durationOpacity;
+    transition: opacity $durationOpacity, transform $durationMovement;
     &.visible {
       opacity: 1;
     }
@@ -139,6 +140,7 @@
     padding: 1em;
     opacity: 0;
     transition: opacity 0 0;
+    text-transform: capitalize;
 
     &.visible {
       transition: opacity $durationOpacity $durationMovement;
@@ -153,7 +155,7 @@
     .stat {
       font-size: $fontSizeSmall;
       .key {
-        font-family: $fontMedium;
+        font-family: $fontRegular;
       }
       .value {
         font-family: $fontLight;
@@ -162,8 +164,32 @@
   }
 
   .Tooltip {
-    .station-name {
-      font-family: $fontBold;
+    .content {
+      max-width: 150px;
+
+      .station-name {
+        color: $colorBlack;
+        font-family: $fontBold;
+        font-size: $fontSizeSmall;
+      }
+
+      .neighborhood {
+        white-space: normal;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: min-content 1fr;
+        font-size: $fontSizeXSmall;
+        column-gap: 0.5em;
+
+        .stat-val {
+          font-family: $fontBold;
+        }
+      }
+    }
+    .swatches {
+      white-space: normal;
     }
   }
 }

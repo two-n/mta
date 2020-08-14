@@ -8,7 +8,7 @@ import * as S from '../../redux/selectors/index';
 import { State, StationData } from '../../utils/types';
 import {
   CLASSES as C, VIEWS as V,
-  KEYS as K, FORMATTERS as F, MTA_Colors, SECTIONS,
+  KEYS as K, FORMATTERS as F, MTA_Colors, SECTIONS, censusFieldMapping,
 } from '../../utils/constants';
 import { calcSwarm, isMobile } from '../../utils/helpers';
 import './style.scss';
@@ -53,6 +53,9 @@ const FORMAT_MAP: { [key: string]: (d: number) => string } = {
   [K.ED_HEALTH_PCT]: F.fPctNoMult,
   [K.UNINSURED]: F.fPctNoMult,
   [K.SNAP_PCT]: F.fPctNoMult,
+  [K.COMMUTE]: F.fPctNoMult,
+  [K.SERVICE_SECTOR]: F.fPctNoMult,
+  [K.POVERTY]: F.fPctNoMult,
 };
 
 const MAP_VISIBLE = [V.MAP_OUTLINE, V.MAP_DOTS_LINES,
@@ -334,11 +337,18 @@ export default class MovingMap {
   setupAnnotations() {
     const [width, height] = this.dims;
     this.overlay.selectAll(`div.${C.AXIS}-${C.LABEL}.x`)
-      .data(['←', 'Higher percentage still riding→'])
+      .data(['←Less Active', 'More Active→'])
       .join('div')
       .attr('class', `${C.AXIS}-${C.LABEL} ${C.NO_WRAP} x`)
       .style('left', (d, i) => i === 0 && `${M.left}px`)
       .style('right', (d, i) => i === 1 && `${M.right}px`)
+      .html((d) => d);
+
+    this.overlay.selectAll(`div.${C.AXIS}-${C.TITLE}.x`)
+      .data(['% still riding'])
+      .join('div')
+      .style('left', '50%')
+      .attr('class', `${C.AXIS}-${C.TITLE} ${C.NO_WRAP} x`)
       .html((d) => d);
 
     // Ref lines
@@ -366,13 +376,15 @@ export default class MovingMap {
 
     // AXES
     this.xAxisEl
+      .attr('transform', `translate(${0}, ${chartbottom})`)
       .transition()
       .duration(duration)
-      .attr('transform', `translate(${0}, ${chartbottom})`)
       .call(xAxis);
 
     this.overlay.selectAll(`.${C.AXIS}-${C.LABEL}.x`)
       .style('transform', `translateY(${chartbottom}px) translateY(100%)`);
+    this.overlay.selectAll(`.${C.AXIS}-${C.TITLE}.x`)
+      .style('transform', `translateY(${chartbottom}px) translateY(100%) translateX(-50%)`);
 
     this.refLines.select(`g.${C.ANNOTATION}.x`).select('path')
       .attr('d', `M ${0} ${M.top} V ${chartbottom}`);
@@ -410,7 +422,7 @@ export default class MovingMap {
       .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`);
     this.overlay.select(`.${C.ANNOTATION}-${C.LABEL}.x`)
       .style('transform', `translate(${this.xScale(AW)}px, ${M.top}px)`)
-      .html(`average of ${F.fPct(AW)} still riding`);
+      .html(`on average ${F.fPct(AW)} still riding`);
 
     // VISIBILITY
     this.parent.selectAll('.x')
@@ -484,27 +496,29 @@ export default class MovingMap {
 
   createStatBox({ properties: d }) {
     const statSpan = (stat:string) => `<div class="stat">
-      <span class="key"> ${this.yScales[stat].median}: <span>
+      <span class="key"> ${censusFieldMapping[stat] || this.yScales[stat].median}: <span>
       <span class="value">${FORMAT_MAP[stat](d[stat])} <span>
     <div>`;
 
     return `<div class="name"> ${d.NTAName} <div>
-    ${Object.keys(this.yScales).map(statSpan).join('')}
+    ${[K.NON_WHITE, K.INCOME_PC, K.POVERTY, K.SERVICE_SECTOR, K.COMMUTE].map(statSpan).join('')}
     `;
   }
 
   createTooltip(d:StationData) {
     const lineSwatches = d.line_name.toString().split('').map(LineSwatch).join('');
     const yVal = this.yKey && this.yScales[this.yKey] && this.yScales[this.yKey];
+    // <div class="neighborhood"> ${d.NTAName}</div>
     return `<div>
     <div class="station-name">${d.station}</div>
-    <div class="neighborhood"> ${d.NTAName}</div>
-    <div class="week">week of: ${F.fDayMonth(F.pWeek(this.week))}</div>
-    <div class="stat">% still riding: ${F.fPct(this.getPctChange(d))}</div>
-   ${yVal
-    ? `<div class="stat">${yVal.median}: ${yVal.format(this.getACS(d, this.yKey))}</div>`
+    <div class="stats-grid">
+    <div class="stat-name">week of: </div> <div class="stat-val">${F.fDayMonth(F.pWeek(this.week))}</div>
+      <div class="stat-name">% still riding: </div> <div class="stat-val">${F.fPct(this.getPctChange(d))}</div>
+    ${yVal
+    ? `<div class="stat-name">${yVal.median}: </div> <div class="stat-val">${yVal.format(this.getACS(d, this.yKey))}</div>`
     : ''}
-    ${lineSwatches}
+    </div>
+    <div class="swatches">${lineSwatches}<div>
     </div>`;
   }
 
