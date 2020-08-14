@@ -79,26 +79,28 @@ h2 {
   width: inherit;
   position: fixed;
   top: 0;
-  z-index: 2;
+  font-size: $fontSizeSmall;
+  text-transform: uppercase;
 
   .scroll-prompt {
     position: absolute;
     top: 1rem;
     right: 2rem;
     padding: 1rem;
-    max-width: 5em;
+    width: min-content;
     text-align: center;
     opacity: 0;
-    cursor: pointer;
 
     &.visible {
       opacity: 0.3;
+    }
 
+    &:not(.bottom) {
+      cursor: pointer;
       &:hover {
         opacity: 1;
       }
     }
-
     &.bottom {
       top: 80vh;
     }

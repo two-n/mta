@@ -15,7 +15,7 @@ const initialState: State = {
   view: VIEWS.BLANK,
   location: null,
   yKey: null,
-  selectedWeek: F.fWeek(appConfig.endDate), // beginning with the end of phase 1
+  selectedWeek: F.fWeek(appConfig.initialSelectedDate), // nys on pause
   selectedLine: null,
   selectedNta: null,
 };

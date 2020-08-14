@@ -12,11 +12,13 @@ import Controls from '../components/Controls';
 import * as S from '../redux/selectors';
 import * as A from '../redux/actions/creators';
 import { State } from '../utils/types';
+import { linkFix } from '../utils/helpers';
 import { SECTIONS, CLASSES as C, KEYS } from '../utils/constants';
 import Title from './Title';
+import Methodology from './Methodology';
 
 const KEEP_SCROLLING = 'Keep scrolling ↓';
-const SCROLL_TO_TOP = 'Jump to top ↑';
+const SCROLL_TO_TOP = 'Back to top ↑';
 
 export default class App {
   [x: string]: any;
@@ -62,6 +64,11 @@ export default class App {
       store: this.store,
     });
 
+    this.Methodology = new Methodology({
+      data: sectionData[SECTIONS.S_METHODOLOGY],
+      store: this.store,
+    });
+
     this.ScrollHelp = select('#app')
       .append('div')
       .attr('class', 'scroll-prompt-wrapper')
@@ -78,6 +85,7 @@ export default class App {
     // setup resize event
     window.addEventListener('resize', () => this.handleResize());
     this.checkForHash();
+    linkFix();
   }
 
   checkForHash() {

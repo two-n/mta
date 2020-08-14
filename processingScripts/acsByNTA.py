@@ -5,44 +5,44 @@ import geopandas
 # ref: https://www1.nyc.gov/assets/planning/download/pdf/data-maps/open-data/nta_acs_2014_2018_datadictionary.pdf?r=1
 # Economic variables
 columnsToKeepEcon= [
-    "BoroCode",
-    "BoroName",
+    # "BoroCode",
+    # "BoroName",
     "NTACode",
     "NTAName",
 
     # Commuting to work
     "cw_pbtrnsP", # % commuting to work via public transportation (excluding taxicab)
-    "mntrvtmE", # mean travel time to work (minutes)
+    # "mntrvtmE", # mean travel time to work (minutes)
 
     # Occupation
-    "mgbsciartP", # % population employed in Management, business, science and arts
+    # "mgbsciartP", # % population employed in Management, business, science and arts
     "srvcP", # % population employed in service occupations
-    "salesoffP", # % population employed in sales and office occupations
-    "infoP", # % population employed information
+    # "salesoffP", # % population employed in sales and office occupations
+    # "infoP", # % population employed information
 
     # Industry
-    "prfsmgawmP", # % population employed in Professional, scientific, and management, and administrative and waste management services
+    # "prfsmgawmP", # % population employed in Professional, scientific, and management, and administrative and waste management services
     "edhlthcsaP", # % population employed in Educational services, and health care and social assistance
-    "artenrafsP", # % population employed in Arts, entertainment, and recreation, and accommodation and food services
+    # "artenrafsP", # % population employed in Arts, entertainment, and recreation, and accommodation and food services
     "pubadminP", # % population employed in Public administration
     "gvtwrkrP", # % population government workers
 
 
     # Income and benefits
-    "mdhhincE", # median household income ($)
-    "mnhhincE", # mean household income ($)
+    # "mdhhincE", # median household income ($)
+    # "mnhhincE", # mean household income ($)
     "inc_snapP", # % with Food Stamps/SNAP benefits in last 12 months
     "percapincE", # per capita income ($)
 
     # Health Insurance
-    "hinsP", # % with health insurance
-    "pvhinsP", # % with health insurance who have private insurance
-    "pbhinsP", # % with health insurance who have public insurance
+    # "hinsP", # % with health insurance
+    # "pvhinsP", # % with health insurance who have private insurance
+    # "pbhinsP", # % with health insurance who have public insurance
     "nhinsP", # % with no health insurance coverage
-    "nhinsE", # population with no health insurance coverage
-    "emnhinsP", # % employed in labor force with no health insurance
-    "uemnhinsP", # % unemployed in labor force with no health insurance
-    "nlfnhinsP", # % not in labor force with no health insurance
+    # "nhinsE", # population with no health insurance coverage
+    # "emnhinsP", # % employed in labor force with no health insurance
+    # "uemnhinsP", # % unemployed in labor force with no health insurance
+    # "nlfnhinsP", # % not in labor force with no health insurance
 
     # Poverty
     "fambwpvP", # % families below poverty line
@@ -53,9 +53,9 @@ columnsToKeepEcon= [
 columnsToKeepDemo = [
     "NTACode",
     # Demographics
-    "blnhP", # % Black or African American Alone
+    # "blnhP", # % Black or African American Alone
     "wtnhP", # % White Alone
-    "hsp1P", # % Hispanic/Latino (of any race) Alone
+    # "hsp1P", # % Hispanic/Latino (of any race) Alone
     ]
 
 def pullInACSGeoJson():
@@ -90,8 +90,17 @@ def handleSpatialJoin(ntas, stations):
   Merges stations into their enclosing ntas.
   """
   stationsWithNTA = geopandas.sjoin(stations, ntas, how="left", op="intersects")
-  stationColsToKeep = ['station_code', 'station',"GTFS_stop_id", "C/A","line_name",
-  'BoroCode', 'BoroName', 'NTACode', 'NTAName', "geometry", "lat", "long", "unit"]
+  stationColsToKeep = [
+    'station_code',
+  'station',
+  "GTFS_stop_id",
+  "C/A",
+  "line_name",
+  # 'BoroCode',
+  # 'BoroName',
+  'NTACode',
+  'NTAName',
+  "geometry", "lat", "long", "unit"]
 
   return stationsWithNTA[stationColsToKeep]
 

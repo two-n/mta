@@ -21,10 +21,10 @@ export const processStations = (data: SwipeData[],
 
   // calculate average for each weekday
   const preSwipes = mean(sumByWeek
-    .filter(({ WEEK }:weeklySum) => WEEK < appConfig.thresholdDate),
+    .filter(({ WEEK }:weeklySum) => WEEK <= appConfig.thresholdDate),
   ({ TOTAL }) => TOTAL);
   const postSwipes = mean(sumByWeek
-    .filter(({ WEEK }:weeklySum) => WEEK >= appConfig.thresholdDate && WEEK <= appConfig.endDate),
+    .filter(({ WEEK }:weeklySum) => WEEK > appConfig.thresholdDate && WEEK <= appConfig.endDate),
   ({ TOTAL }) => TOTAL);
 
   const summary: StationSummary = {

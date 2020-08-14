@@ -32,10 +32,11 @@ interface ScaleObject {
 }
 
 const M = {
-  top: 30,
-  bottom: 100,
-  left: 30,
+  top: 40,
+  bottom: 50,
+  left: 40, // enough room for dollar symbol
   right: 20,
+  swarmBottom: 40,
 };
 
 const R = isMobile() ? 3 : 4;
@@ -211,7 +212,7 @@ export default class MovingMap {
     this.stations.style('transform', (d: StationData) => {
       switch (view) {
         case (V.SWARM):
-          return `translate(${d.x}px,${height - M.bottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
+          return `translate(${d.x}px,${height - M.swarmBottom - R - d.y}px)`; // x and y come from the `calcSwarm` function
         case (V.SCATTER): {
           const yScale = this.yScales[yKey].scale;
           return `translate(
@@ -336,6 +337,11 @@ export default class MovingMap {
       .join('div')
       .attr('class', 'nta-annotation')
       .html(this.createStatBox);
+
+    this.dynamicAnnotation = this.overlay.selectAll('.dynamic-annotation')
+      .data([null])
+      .join('div')
+      .attr('class', 'dynamic-annotation nta-annotation');
   }
 
   transitionAnnotations() {
@@ -345,7 +351,9 @@ export default class MovingMap {
     const [width, height] = this.dims;
     const { averages: AD } = S.getDemoDataExtents(this.state);
     const { average: AW } = S.getWeeklyDataExtent(this.state);
-    const chartbottom = height - M.bottom;
+    const chartbottom = view === V.SWARM
+      ? height - M.swarmBottom
+      : height - M.bottom;
 
     // AXES
     this.xAxisEl
@@ -390,6 +398,11 @@ export default class MovingMap {
         .html(`${format(AD[this.yKey])} ${median}`);
     }
 
+    this.dynamicAnnotation.classed(C.VISIBLE, (view === V.MAP_WITH_CONTROLS))
+      .html((view === V.MAP_WITH_CONTROLS && this.nta)
+        ? this.createStatBox(this.ntaMap.get(this.nta))
+        : '');
+
     // average lines and labels
     this.refLines.select(`.${C.ANNOTATION}.x`)
       .style('transform', `translate(${this.xScale(AW)}px, ${0}px)`);
@@ -403,6 +416,7 @@ export default class MovingMap {
     this.parent.selectAll('.y')
       .classed(C.VISIBLE, !!this.yKey);
     this.overlay.classed(C.VISIBLE, view >= V.MAP_OUTLINE);
+    this.legend.el.classed(C.VISIBLE, ![V.SWARM, V.SCATTER].includes(view));
   }
 
   getPctChange(station: StationData) {
@@ -516,7 +530,9 @@ export default class MovingMap {
 
   calculateZoomViewbox(ntaName:string | null) {
     const [width, height] = this.dims;
-    if (ntaName && this.ntaMap.has(ntaName)) {
+    const { view } = this;
+    if ([V.ZOOM_SOHO, V.ZOOM_BROWNSVILLE, V.MAP_WITH_CONTROLS].includes(view)
+    && ntaName && this.ntaMap.has(ntaName)) {
       // calculate bounding box for selected neighborhood
       const [xMin, yMin, xMax, yMax] = bbox(this.ntaMap.get(ntaName));
       const [x0, y0, x1, y1] = [

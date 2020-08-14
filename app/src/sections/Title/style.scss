@@ -48,6 +48,11 @@ section#section-title {
     }
   }
 
+  .socials a{
+    z-index:  2;
+    filter: invert(1);
+  }
+
   .arrow {
     position: absolute;
     left: 50%;
@@ -82,7 +87,7 @@ section#section-title {
   video {
     position: absolute;
     min-width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -101,6 +106,7 @@ section#section-title {
     z-index: 1;
     mix-blend-mode: color-dodge;
     border-bottom: 2px black solid;
+    pointer-events: none;
   }
 }
 

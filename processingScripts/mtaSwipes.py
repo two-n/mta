@@ -9,6 +9,7 @@ import datetime
 
 # Keys
 WEEK="WEEK"
+WEEK_END="WEEK_END"
 TOTAL="TOTAL"
 REMOTE="REMOTE"
 STATION="STATION"
@@ -29,22 +30,30 @@ def fetchWeeklyLinks():
   .find(class_="last")
   .find_all("a"))
 
-  startDate = datetime.datetime(2019,1,1) # 01/01/2019
+  startDate = datetime.datetime(2020,1,1) # 01/01/2019
   def parseDate(str):
     return datetime.datetime.strptime(str, "%A, %B %d, %Y") # ex: Saturday, June 06, 2020
 
-  allLinks = list(map((lambda x: [parseDate(x.text), baseUrl+x["href"]]), aTags))
-  return list(filter(lambda linkRow: linkRow[0]>= startDate, allLinks))
+  filteredLinks = list(filter(lambda x: parseDate(x.text)>= startDate, aTags))
+  return list(map(lambda x: baseUrl+x["href"], filteredLinks))
 
-def pullAndParseWeeklyData(weekArray):
+def pullAndParseWeeklyData(link):
   """
-  Recieves parameter `weekArray` of the form [date, link].
+  Recieves parameter `weekArray` of the form [link].
   Fetches data from `link` and returns a dataframe.
   """
-  date, link = weekArray
 
+  def parseDate(str):
+    return datetime.datetime.strptime(str, "%m/%d/%Y") # ex: 04/07/2020
+
+  # get date range (stored in header)
+  row = pd.read_csv(link, nrows=1) # pull out header from first row to get start dates
+  dates = row.iloc[0,1].split('-')
+
+  # read body
   df = pd.read_csv(link, header=2, skipinitialspace=True) # start reading on third line
-  df[WEEK] = date
+  df[WEEK] = parseDate(dates[0])
+  # df[WEEK_END] = parseDate(dates[1]) // UNCOMMENT to include week-end
   df[TOTAL] = df.drop([REMOTE,STATION], axis=1).sum(axis=1)
 
   return df[[WEEK, STATION, REMOTE, TOTAL]]

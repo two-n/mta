@@ -3,12 +3,11 @@ import { Store } from 'redux';
 import { State } from 'src/utils/types';
 import { select } from 'd3';
 import {
-  CLASSES as C, VIEWS, appConfig, FORMATTERS as F,
+  CLASSES as C, VIEWS, appConfig, FORMATTERS as F, SECTIONS,
 } from '../../utils/constants';
 import * as S from '../../redux/selectors';
 import * as A from '../../redux/actions/creators';
 import Input from '../Input';
-import TimelineFilter from '../TimelineFilter';
 import { LineSwatch } from '../LineSwatch';
 import Slider from '../Slider';
 
@@ -63,6 +62,7 @@ export default class Controls {
 
     this.sliderTimeline = timeline
       .filter((d) => F.pWeek(d.date) > appConfig.thresholdDate);
+    this.initialIndex = this.sliderTimeline.findIndex((d) => d.date === initialWeek);
 
     this.play = this.el.append('div').attr('class', 'play-button')
       .html('Play')
@@ -73,13 +73,16 @@ export default class Controls {
     this.slider = new Slider({
       parent: this.el,
       values: this.sliderTimeline,
-      initialIndex: this.sliderTimeline.findIndex((d) => d.date === initialWeek),
+      initialIndex: this.initialIndex,
       onChange: (newIndex:number) => this.store
         .dispatch(A.setWeek(this.sliderTimeline[newIndex].date)),
       name: 'dateSelection',
-      description: 'Use the slider to change the date, or press <strong>play</strong> for animation.',
       colorScale,
     });
+
+    this.el.append('div')
+      .attr('class', 'description')
+      .html('Use the slider to change the date, or press <strong>play</strong> for animation.');
   }
 
   animateWeeks() {
@@ -104,7 +107,7 @@ export default class Controls {
     const isAtEnd = (index === this.sliderTimeline.length - 1);
     const nextWeek = !isAtEnd
       ? this.sliderTimeline[index + 1].date
-      : this.sliderTimeline[0].date;
+      : this.sliderTimeline[this.initialIndex].date;
     this.store.dispatch(A.setWeek(nextWeek));
     if (isAtEnd) this.resetInterval(); // turn off at end of dates
   }
@@ -112,10 +115,15 @@ export default class Controls {
   toggleVisibility() {
     const state = this.store.getState();
     const view = S.getView(state);
+    this.el.classed(C.VISIBLE, view >= VIEWS.SCATTER
+      && !state.location.includes(SECTIONS.S_METHODOLOGY));
+
     const newWeek = S.getSelectedWeek(state);
-    this.el.classed(C.VISIBLE, view >= VIEWS.SCATTER && view < VIEWS.METHODOLOGY);
-    // TODO: update slider here based on play button
-    this.slider.update(this.sliderTimeline
-      .findIndex((d) => d.date === newWeek));
+    if (this.prevWeek !== newWeek) {
+      this.slider // slider takes an index value
+        .update(this.sliderTimeline
+          .findIndex((d) => d.date === newWeek));
+      this.prevWeek = newWeek;
+    }
   }
 }

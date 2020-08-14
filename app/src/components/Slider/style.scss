@@ -12,16 +12,18 @@ $trackBorder: none;
     width: 100%;
   }
 
+  .date, .current-date{
+    font-size: $fontSizeXSmall;
+
+    span{
+      font-family: $fontBold;
+    }
+  }
+
   .dates{
     display: flex;
     justify-content: space-between;
-    font-size: $fontSizeXSmall;
-  }
-
-  .description{
-    margin-top: .5em;
-    font-family: $fontRegular;
-    font-size: $fontSizeSmall;
+    opacity: .6;
   }
 
   // styling reference: http://danielstern.ca/range.css/#/

@@ -58,7 +58,7 @@ export default class Section {
     this.scroller.setup({
       step: `#${this.section} .${C.STEP}`,
       progress: true,
-      offset: 0.6, // how far from the top to trigger a step
+      offset: 0.2, // how far from the top to trigger a step
     })
       .onStepEnter(this.onStepEnter)
       .onStepProgress(this.onStepProgress)

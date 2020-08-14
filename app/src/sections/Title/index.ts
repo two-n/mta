@@ -4,6 +4,7 @@ import { SectionDataType } from '../../utils/types';
 import './style.scss';
 import { getSectionHash } from '../../utils/helpers';
 import { CLASSES as C, SECTIONS, KEYS } from '../../utils/constants';
+import Socials from '../../components/Socials';
 
 import video from '../../assets/subway.mp4';
 import arrowPath from '../../assets/arrow.svg';
@@ -32,6 +33,8 @@ export default class Title {
       <a href=${'https://www.aucherserr.com/'}>Aucher Serr</a>,
       <a href="http://two-n.com/">Two-N <span class="two-n"></span></a>`);
 
+    this.socials = new Socials({ parent: this.el });
+
     this.arrow = this.el.append('div').attr('class', 'arrow')
       .on('click', this.scrollToFirstSection);
     text(arrowPath).then((icon) => this.arrow.html(icon));
@@ -41,7 +44,9 @@ export default class Title {
       .attr('class', 'title-video');
 
     this.video = this.videoWrapper.append('video')
+      .attr('preload', 'auto')
       .attr('autoplay', true)
+      .attr('muted', true)
       .attr('src', video); // chrome needs the source here
 
     this.video.append('source')
