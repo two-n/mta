@@ -34,7 +34,7 @@ interface ScaleObject {
 const M = {
   top: 40,
   bottom: 50,
-  left: 30,
+  left: 40, // enough room for dollar symbol
   right: 20,
   swarmBottom: 40,
 };
