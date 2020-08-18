@@ -6,7 +6,7 @@ interface Props{
 }
 
 const TEXT = 'MTA Ridership during COVID-19';
-const URL = (source:string) => encodeURIComponent(`http://projects.two-n.com/mta?utm_source=${source}`);
+const URL = (source:string) => encodeURIComponent(`https://projects.two-n.com/mta?utm_source=${source}`);
 
 export default class Socials {
   [x: string]: any;
