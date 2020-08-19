@@ -181,6 +181,7 @@ export default class BarTimeline {
         } return '';
       })
       .classed(C.GRADIENT, (d, i) => (stepData.step_id >= tStopsMap.get(TS.GRADIENT)))
+      .classed('center', (d, i) => (stepData.step_id >= tStopsMap.get(TS.MOVE_REFS)))
       .style('width', (d, i) => {
         if (i === 0) return `${this.middleX}px`;
         return stepData.step_id >= tStopsMap.get(TS.MOVE_REFS)

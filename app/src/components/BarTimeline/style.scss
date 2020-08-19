@@ -122,6 +122,10 @@
         opacity: 1;
       }
 
+      &.center.post{
+        margin-left: calc(#{$thickBorderWidth}/2);
+      }
+
       &.gradient {
         &.post{
           background-color:$colorYellow;
