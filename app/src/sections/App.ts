@@ -103,8 +103,9 @@ export default class App {
 
   handleStateChange() {
     const { location } = this.store.getState();
-    if (location) {
-      window.location.hash = location;
+    if (location && history.pushState) {
+      // window.location.hash = location;
+      history.pushState(null, null, `#${location}`);
     }
 
     this.ScrollHelp
