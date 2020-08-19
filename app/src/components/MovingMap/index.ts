@@ -39,7 +39,7 @@ const M = {
   swarmBottom: 40,
 };
 
-const R = isMobile() ? 3 : 4;
+const R = 3;// isMobile() ? 3 : 4;
 const duration = +styleVars.durationMovement.slice(0, -2);
 const geoPadding = { // distance from zoomed in shape
   top: 30,
@@ -525,7 +525,7 @@ export default class MovingMap {
     const matrix = this.geoEls.node().getCTM();
     // adjust circle positions
     this.stations.selectAll('circle')
-      .attr('transform', `scale(${1 / Math.max(matrix.a - 1, 1)})`); // don't scale too much
+      .attr('transform', `scale(${1 / Math.max(matrix.a - 2.5, 1)})`); // don't scale too much
   }
 
   calculateZoomViewbox(ntaName:string | null) {
