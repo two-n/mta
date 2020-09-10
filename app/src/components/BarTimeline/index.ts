@@ -123,13 +123,14 @@ export default class BarTimeline {
 
     const threshold = this.timeline[this.bisect.left(this.timeline, appConfig.thresholdDate)];
     const middleBar = this.bars.filter((d) => d.date === threshold.date);
-    this.middleX = middleBar.node().offsetLeft + this.barW;
+    this.refBorderWidth = 2.5;
+    this.middleX = middleBar.node().offsetLeft + this.barW + this.refBorderWidth;
 
     this.refBoxes
       .style('height', (d) => `${this.y(d)}px`)
       .style('width', (d, i) => `${i === 0 ? this.middleX : width - this.middleX}px`)
-      .style('left', (d, i) => (i === 1) && `${this.middleX}px`)
-      .style('right', (d, i) => (i === 0) && `${width - this.middleX}px`);
+      .style('left', (d, i) => (i === 1) && `${this.middleX - this.refBorderWidth}px`)
+      .style('right', (d, i) => (i === 0) && `${(width - this.middleX)}px`);
   }
 
   handleTransition(element:any, index:number, direction: D) {
@@ -180,11 +181,12 @@ export default class BarTimeline {
         } return '';
       })
       .classed(C.GRADIENT, (d, i) => (stepData.step_id >= tStopsMap.get(TS.GRADIENT)))
+      .classed('center', (d, i) => (stepData.step_id >= tStopsMap.get(TS.MOVE_REFS)))
       .style('width', (d, i) => {
         if (i === 0) return `${this.middleX}px`;
         return stepData.step_id >= tStopsMap.get(TS.MOVE_REFS)
           ? `${this.middleX}px`
-          : `${width - this.middleX}px`;
+          : `${width - this.middleX + this.refBorderWidth}px`;
       });
   }
 

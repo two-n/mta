@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "env NODE_ENV=production PUBLIC_URL=http://projects.two-n.com/mta/ webpack",
+    "build": "env NODE_ENV=production PUBLIC_URL=https://projects.two-n.com/mta/ webpack",
     "start": "webpack-dev-server --hot --host 0.0.0.0",
     "deploy": "rsync -avz --delete ./dist/ twoninc@two-n.com:/home/twoninc/projects.two-n.com/mta/",
     "archie": "aml-gdoc-server"

@@ -6,8 +6,12 @@
 *_checkpoints
 
 # Turnstile data
-data/
-data/Turnstiles/Turnstile_Usage_Data__2020.csv
+/*
+!/data
+/data/*
+# include the data/README file
+!/data/README.md
+
 
 # QGIS Files
 *.qgz
