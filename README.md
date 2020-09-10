@@ -20,7 +20,7 @@ This app was built with TypeScript, leveraging Webpack for code bundling.
 In order to run, first navigate into the `/app` folder (`cd app`). From there you will have the following scripts available:
 
 #### `yarn start`
-starts a hot-reloading webpack development
+starts a hot-reloading webpack development server
 
 #### `yarn build`
 creates a production level code build, saved to `app/dist` folder
